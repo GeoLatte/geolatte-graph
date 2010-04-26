@@ -15,12 +15,6 @@
 
 package org.geolatte.data;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 /**
  * Created by IntelliJ IDEA.
  * User: maesenka
@@ -28,53 +22,53 @@ import static org.junit.Assert.assertTrue;
  * Time: 5:18:57 PM
  * To change this template use File | Settings | File Templates.
  */
-public class TestPMinQueue {
-
-    PMinQueue<Float> minQueue;
-
-    @Before
-    public void setup(){
-        minQueue = new PMinQueue<Float>();
-        minQueue.add(Float.valueOf(100f), 100f);
-        minQueue.add(Float.valueOf(50f), 50f);
-        minQueue.add(Float.valueOf(10f), 10f);
-        minQueue.add(Float.valueOf(50f), 50f);
-        minQueue.add(Float.valueOf(40f), 40f);
-        minQueue.add(Float.valueOf(80f), 80f);
-        minQueue.add(Float.valueOf(30f), 30f);
-        minQueue.add(Float.valueOf(120f), 120f);
-    }   
-
-    @Test
-    public void test_min_queue_min_order() {
-        assertEquals(Float.valueOf(10f), minQueue.extractMin());
-        minQueue.add(Float.valueOf(1.0f), 1.0f);
-        assertEquals(Float.valueOf(1f), minQueue.extractMin());        
-    }
-
-    @Test
-    public void test_get_value() {
-        Float f = minQueue.get(Float.valueOf(80f));
-        assertEquals(Float.valueOf(80f), f);
-    }
-
-    @Test
-    public void test_isEmpty() {
-        assertTrue(!minQueue.isEmpty());
-        PMinQueue<Float> emptyQueue = new PMinQueue<Float>();
-        assertTrue(emptyQueue.isEmpty());
-    }
-
-
-    @Test
-    public void test_update() {
-        Float value = Float.valueOf(80f);
-        minQueue.update(value, 0.0f);
-        Float minValue = minQueue.extractMin();
-        assertEquals(value, minValue);
-    }
-
-
-
-
-}
+//public class TestPMinQueue {
+//
+//    PMinQueue<Float> minQueue;
+//
+//    @Before
+//    public void setup(){
+//        minQueue = new PMinQueue<Float>();
+//        minQueue.add(Float.valueOf(100f), 100f);
+//        minQueue.add(Float.valueOf(50f), 50f);
+//        minQueue.add(Float.valueOf(10f), 10f);
+//        minQueue.add(Float.valueOf(50f), 50f);
+//        minQueue.add(Float.valueOf(40f), 40f);
+//        minQueue.add(Float.valueOf(80f), 80f);
+//        minQueue.add(Float.valueOf(30f), 30f);
+//        minQueue.add(Float.valueOf(120f), 120f);
+//    }
+//
+//    @Test
+//    public void test_min_queue_min_order() {
+//        assertEquals(Float.valueOf(10f), minQueue.extractMin());
+//        minQueue.add(Float.valueOf(1.0f), 1.0f);
+//        assertEquals(Float.valueOf(1f), minQueue.extractMin());
+//    }
+//
+//    @Test
+//    public void test_get_value() {
+//        Float f = minQueue.get(Float.valueOf(80f));
+//        assertEquals(Float.valueOf(80f), f);
+//    }
+//
+//    @Test
+//    public void test_isEmpty() {
+//        assertTrue(!minQueue.isEmpty());
+//        PMinQueue<Float> emptyQueue = new PMinQueue<Float>();
+//        assertTrue(emptyQueue.isEmpty());
+//    }
+//
+//
+//    @Test
+//    public void test_update() {
+//        Float value = Float.valueOf(80f);
+//        minQueue.update(value, 0.0f);
+//        Float minValue = minQueue.extractMin();
+//        assertEquals(value, minValue);
+//    }
+//
+//
+//
+//
+//}

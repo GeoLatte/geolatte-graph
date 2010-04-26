@@ -1,15 +1,15 @@
 package org.geolatte.graph;
 
-interface PredGraph<N> {
+public interface PredGraph<N extends Nodal> {
 
-	public abstract PredGraph<N> getPredecessor();
+    public abstract PredGraph<N> getPredecessor();
 
-	public void setPredecessor(PredGraph<N> pred);
-	
-	public abstract float getWeight();
+    public void setPredecessor(PredGraph<N> pred);
 
-	public abstract void setWeight(float d);
+    public abstract float getWeight();
 
-	public abstract N getNode();
+    public abstract void setWeight(float d);
+
+    public abstract InternalNode<N> getInternalNode();
 
 }

@@ -20,8 +20,8 @@ import java.util.Comparator;
 /**
  * @author Karel Maesen, Geovise BVBA
  *         creation-date: Apr 22, 2010
- *
- * Node in a Pairing Heap
+ *         <p/>
+ *         MyNode in a Pairing Heap
  */
 public class PairNode<E> implements Comparable<PairNode<E>> {
     private E element;
@@ -30,49 +30,50 @@ public class PairNode<E> implements Comparable<PairNode<E>> {
     private PairNode<E> prev;
     private Comparator<E> comparator;
 
-    
-    protected PairNode(E element, Comparator<E> comparator){
+
+    protected PairNode(E element, Comparator<E> comparator) {
         if (comparator == null && !(element instanceof Comparable))
             throw new IllegalArgumentException("Require either explicit comparator, or Comparable element object.");
         this.element = element;
         this.comparator = comparator;
     }
 
-    public void setElement(E element){
+    public void setElement(E element) {
         this.element = element;
     }
-    public E getElement(){
+
+    public E getElement() {
         return element;
     }
 
-    public void setLeftChild(PairNode<E> node ){
+    public void setLeftChild(PairNode<E> node) {
         this.leftChild = node;
     }
 
-    public void setPrev(PairNode<E> node){
+    public void setPrev(PairNode<E> node) {
         this.prev = node;
     }
 
-    public void setNextSibling(PairNode<E> node){
+    public void setNextSibling(PairNode<E> node) {
         this.nextSibling = node;
     }
 
-    public PairNode<E> getLeftChild(){
+    public PairNode<E> getLeftChild() {
         return leftChild;
     }
 
-    public PairNode<E> getNextSibling(){
+    public PairNode<E> getNextSibling() {
         return nextSibling;
     }
 
 
-    public PairNode<E> getPrev(){
+    public PairNode<E> getPrev() {
         return this.prev;
     }
 
     public int compareTo(PairNode<E> o) {
         if (this.comparator == null) {
-            return ((Comparable)this.element).compareTo(o.getElement());
+            return ((Comparable) this.element).compareTo(o.getElement());
         } else {
             return this.comparator.compare(this.getElement(), o.getElement());
         }

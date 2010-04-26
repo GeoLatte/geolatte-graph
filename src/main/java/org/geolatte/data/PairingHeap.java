@@ -20,30 +20,29 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- *@author karel  Maesen, Geovise BVBA
- *
- * An implementation of the Pairing Heap as discussed in
- * 'The Pairing Heap: A New Form of Self-Adjusting Heap'
- * by Fredman, e.a., Algorithmica (1986) 1: 111 - 129.
- *
- * This implementation is based on the implementation
- * in the GNU C++ standard library (libstdc++)
+ * @author karel  Maesen, Geovise BVBA
+ *         <p/>
+ *         An implementation of the Pairing Heap as discussed in
+ *         'The Pairing Heap: A New Form of Self-Adjusting Heap'
+ *         by Fredman, e.a., Algorithmica (1986) 1: 111 - 129.
+ *         <p/>
+ *         This implementation is based on the implementation
+ *         in the GNU C++ standard library (libstdc++)
  */
 public class PairingHeap<E> {
 
     private PairNode<E> root;
     private Comparator<E> comparator;
 
-    public PairingHeap(){
+    public PairingHeap() {
     }
 
-    public PairingHeap(Comparator<E> comparator){
+    public PairingHeap(Comparator<E> comparator) {
         this.comparator = comparator;
     }
 
 
-
-    public PairNode<E> insert(E element){
+    public PairNode<E> insert(E element) {
         PairNode<E> node = new PairNode<E>(element, this.comparator);
         if (root == null) {
             root = node;
@@ -52,9 +51,6 @@ public class PairingHeap<E> {
         }
         return node;
     }
-
-
-
 
     public boolean isEmpty() {
         return (root == null);
@@ -67,14 +63,14 @@ public class PairingHeap<E> {
     }
 
 
-    public E extractMin(){
+    public E extractMin() {
         if (isEmpty()) {
             throw new IllegalStateException("Heap is empty.");
         }
 
         PairNode<E> oldRoot = root;
 
-        if (root.getLeftChild() == null){
+        if (root.getLeftChild() == null) {
             root = null;
         } else {
             root = combineSiblings(root.getLeftChild());
@@ -83,17 +79,17 @@ public class PairingHeap<E> {
     }
 
 
-    public void decreaseKey(PairNode<E> node, E newValue){
-        if (node == null) throw new IllegalArgumentException("Node  cannot be NULL.");
+    public void decreaseKey(PairNode<E> node, E newValue) {
+        if (node == null) throw new IllegalArgumentException("MyNode  cannot be NULL.");
         if (compare(node.getElement(), newValue) < 0) {
             return; // newValue must be smaller.
         }
         node.setElement(newValue);
-        if (!node.equals(root)){
-            if (node.getNextSibling() != null){
+        if (!node.equals(root)) {
+            if (node.getNextSibling() != null) {
                 node.getNextSibling().setPrev(node.getPrev());
             }
-            if (node.equals(node.getPrev().getLeftChild())){
+            if (node.equals(node.getPrev().getLeftChild())) {
                 node.getPrev().setLeftChild(node.getNextSibling());
             } else {
                 node.getPrev().setNextSibling(node.getNextSibling());
@@ -108,12 +104,13 @@ public class PairingHeap<E> {
         if (this.comparator != null) {
             return this.comparator.compare(element, newValue);
         }
-        return ((Comparable<E>)element).compareTo(newValue);
+        return ((Comparable<E>) element).compareTo(newValue);
     }
 
 
     private PairNode<E> compareAndLink(PairNode<E> first, PairNode<E> second) {
-        if (root == null || root.getNextSibling() != null) throw new IllegalStateException("first argument must not be null, and must not have a sibling");
+        if (root == null || root.getNextSibling() != null)
+            throw new IllegalStateException("first argument must not be null, and must not have a sibling");
 
         if (second == null) return first;
 
@@ -122,7 +119,7 @@ public class PairingHeap<E> {
             second.setPrev(first.getPrev());
             first.setPrev(second);
             first.setNextSibling(second.getLeftChild());
-            if (first.getNextSibling() != null){
+            if (first.getNextSibling() != null) {
                 first.getNextSibling().setPrev(first);
             }
             second.setLeftChild(first);
@@ -135,7 +132,7 @@ public class PairingHeap<E> {
                 first.getNextSibling().setPrev(first);
             }
             second.setNextSibling(first.getLeftChild());
-            if (second.getNextSibling()!= null){
+            if (second.getNextSibling() != null) {
                 second.getNextSibling().setPrev(second);
             }
             first.setLeftChild(second);
@@ -143,12 +140,12 @@ public class PairingHeap<E> {
         }
     }
 
-    private PairNode<E> combineSiblings(PairNode<E> firstSibling){
+    private PairNode<E> combineSiblings(PairNode<E> firstSibling) {
         if (firstSibling.getNextSibling() == null) return firstSibling;
 
         //store subtrees in a list
         List<PairNode<E>> treeList = new ArrayList<PairNode<E>>();
-        while (firstSibling != null){
+        while (firstSibling != null) {
             treeList.add(firstSibling);
             firstSibling.getPrev().setNextSibling(null);
             firstSibling = firstSibling.getNextSibling();
@@ -157,24 +154,24 @@ public class PairingHeap<E> {
         //combine subtrees two at a time
         int lastCombinedIndex = 0;
         int i = 0;
-        for (; i+1 < treeList.size(); i += 2){
-            PairNode<E> combined = compareAndLink(treeList.get(i), treeList.get(i+1));
+        for (; i + 1 < treeList.size(); i += 2) {
+            PairNode<E> combined = compareAndLink(treeList.get(i), treeList.get(i + 1));
             treeList.set(i, combined);
         }
 
         int j = i - 2;
-        if (j == (treeList.size() - 3)){
-            PairNode<E> combined = compareAndLink(treeList.get(j), treeList.get(j+2));
+        if (j == (treeList.size() - 3)) {
+            PairNode<E> combined = compareAndLink(treeList.get(j), treeList.get(j + 2));
             treeList.set(j, combined);
         }
 
 
         //merge right - to left
-        for (; j >= 2; j -= 2){
-            PairNode<E> combined = compareAndLink(treeList.get(j-2), treeList.get(j));
-            treeList.set(j-2, combined);
+        for (; j >= 2; j -= 2) {
+            PairNode<E> combined = compareAndLink(treeList.get(j - 2), treeList.get(j));
+            treeList.set(j - 2, combined);
         }
-        return treeList.get(0);                
+        return treeList.get(0);
     }
 
 }

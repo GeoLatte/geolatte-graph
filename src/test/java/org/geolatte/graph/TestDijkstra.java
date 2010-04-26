@@ -8,16 +8,16 @@ import static org.junit.Assert.assertTrue;
 
 public class TestDijkstra {
 
-    static Node[] nodes;
+    static MyNode[] myNodes;
     static float[][] weights;
 
     static {
-        nodes = new Node[]{
-                new Node(0, 0, 0),
-                new Node(1, 100, 200),
-                new Node(2, 100, 100),
-                new Node(3, 200, 200),
-                new Node(4, 200, 100)
+        myNodes = new MyNode[]{
+                new MyNode(0, 0, 0),
+                new MyNode(1, 100, 200),
+                new MyNode(2, 100, 100),
+                new MyNode(3, 200, 200),
+                new MyNode(4, 200, 100)
         };
 
         weights = new float[][]{
@@ -29,39 +29,39 @@ public class TestDijkstra {
         };
     }
 
-    private Node copy(Node nd) {
-        return new Node(nd.getID(), nd.getX(), nd.getY());
+    private MyNode copy(MyNode nd) {
+        return new MyNode(nd.getID(), nd.getX(), nd.getY());
     }
 
     @Test
     public void testExecute() throws Exception {
         Envelope env = new Envelope(0, 200, 0, 200);
 
-        GraphBuilder<Node, EdgeWeightImpl> builder = Graphs.createGridIndexedGraphBuilder(env, 10);
+        GraphBuilder<MyNode, EdgeWeightImpl> builder = Graphs.createGridIndexedGraphBuilder(env, 10);
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 if (weights[i][j] > 0f) {
-                    builder.addEdge(copy(nodes[i]), copy(nodes[j]), new EdgeWeightImpl(weights[i][j]), weights[i][j]);
+                    builder.addEdge(copy(myNodes[i]), copy(myNodes[j]), new EdgeWeightImpl(weights[i][j]), weights[i][j]);
                 }
             }
         }
 
 
-        Graph<Node, EdgeWeightImpl> graph = builder.build();
-        for (Node nd : graph) {
+        Graph<MyNode, EdgeWeightImpl> graph = builder.build();
+        for (InternalNode<MyNode> nd : graph) {
             System.out.println(nd);
         }
 
-        GraphAlgorithm<Path<Node>> algorithm = GraphAlgorithmFactory.instance.createDijkstra(graph, nodes[0], nodes[3]);
+        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithmFactory.instance.createDijkstra(graph, myNodes[0], myNodes[3]);
 
         algorithm.execute();
 
-        Path<Node> p = algorithm.getResult();
+        Path<MyNode> p = algorithm.getResult();
         System.out.println("Calculated path = " + p);
 
         assertTrue(p.isValid());
-        assertTrue(p.getSource().equals(nodes[0]));
-        assertTrue(p.getDestination().equals(nodes[3]));
+        assertTrue(p.getSource().equals(myNodes[0]));
+        assertTrue(p.getDestination().equals(myNodes[3]));
         assertEquals(9f, p.totalWeight(), 0.01f);
 
     }
@@ -95,13 +95,13 @@ public class TestDijkstra {
 
     }
 
-    private static class Node implements Nodal {
+    private static class MyNode implements Nodal {
 
         private final int id;
         private final int x;
         private final int y;
 
-        protected Node(int id, int x, int y) {
+        protected MyNode(int id, int x, int y) {
             this.id = id;
             this.x = x;
             this.y = y;
@@ -127,7 +127,7 @@ public class TestDijkstra {
         }
 
         public Object getData() {
-            return null; 
+            return null;
         }
 
         public String toString() {
@@ -156,9 +156,9 @@ public class TestDijkstra {
                 return true;
             if (obj == null)
                 return false;
-            if (!(obj instanceof Node))
+            if (!(obj instanceof MyNode))
                 return false;
-            Node other = (Node) obj;
+            MyNode other = (MyNode) obj;
             if (id != other.id)
                 return false;
             if (x != other.x)

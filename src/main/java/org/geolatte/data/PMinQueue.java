@@ -1,6 +1,9 @@
 package org.geolatte.data;
 
-import java.util.Comparator;
+import org.geolatte.graph.InternalNode;
+import org.geolatte.graph.Nodal;
+import org.geolatte.graph.PredGraph;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,25 +14,25 @@ import java.util.Map;
  * @author Karel Maesen, Geovise BVBA
  * @param <V>
  */
-public class PMinQueue<V> {
+public class PMinQueue<V extends Nodal> {
 
-    private final PairingHeap<Element<V>> heap = new PairingHeap<Element<V>>(new ElementComparator<V>());
-    private final Map<V, PairNode<Element<V>>> index = new HashMap<V, PairNode<Element<V>>>();
+    private final PairingHeap<Element<V>> heap = new PairingHeap<Element<V>>();
+    private final Map<InternalNode<V>, PairNode<Element<V>>> index = new HashMap<InternalNode<V>, PairNode<Element<V>>>();
 
-    public void add(V value, float key) {
+    public void add(PredGraph<V> value, float key) {
         PairNode<Element<V>> pn = heap.insert(new Element(value, key));
-        this.index.put(value, pn);
+        this.index.put(value.getInternalNode(), pn);
     }
 
 
-    public V extractMin() {
-        V val = heap.extractMin().value;
-        this.index.remove(val);
+    public PredGraph<V> extractMin() {
+        PredGraph<V> val = heap.extractMin().value;
+        this.index.remove(val.getInternalNode());
         return val;
     }
 
 
-    public V get(V value) {
+    public PredGraph<V> get(InternalNode<V> value) {
         PairNode<Element<V>> node = this.index.get(value);
         if (node == null) {
             return null;
@@ -42,31 +45,30 @@ public class PMinQueue<V> {
         return this.heap.isEmpty();
     }
 
-    public void update(V value, float r) {
-        PairNode<Element<V>> node = this.index.get(value);
+    public void update(PredGraph<V> value, float r) {
+        PairNode<Element<V>> node = this.index.get(value.getInternalNode());
         if (node == null) {
-            throw new RuntimeException("Node not in Pairing Heap.");
+            throw new RuntimeException("MyNode not in Pairing Heap.");
         }
         Element<V> newElement = new Element(value, r);
         this.heap.decreaseKey(node, newElement);
 
     }
 
-    static class Element<V> {
+    static class Element<V extends Nodal> implements Comparable<Element<V>> {
         private final Float key;
-        private final V value;
-        Element(V value, Float key){
+        private final PredGraph<V> value;
+
+        Element(PredGraph<V> value, Float key) {
             this.key = key;
             this.value = value;
         }
-    }
 
-    static class ElementComparator<V> implements Comparator<Element<V>> {
-        public int compare(Element<V> o1, Element<V> o2) {
-            return o1.key.compareTo(o2.key);
+
+        public int compareTo(Element<V> o) {
+            return this.key.compareTo(o.key);
         }
     }
-
 
 }
 
