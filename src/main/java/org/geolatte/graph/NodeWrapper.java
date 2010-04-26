@@ -71,12 +71,6 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
         return null;
     }
 
-
-//		public Envelope getEnvelope() {
-//			return this.internalNode.getEnvelope();
-//		}
-
-
     public int getX() {
         return this.wrappedNodal.getX();
     }
@@ -91,10 +85,6 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
 
     public String toString() {
         String str = String.format("MyNode: x = %d, y = %d", this.wrappedNodal.getX(), this.wrappedNodal.getY());
-        //str += "\n connected to :" ;
-        //for (BasicNode nd : this.toNodes){
-        //	str += nd.getID() + " " ;
-        //}
         return str;
     }
 
@@ -107,38 +97,8 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
         this.fromNodes[this.fromNodes.length - 1] = fromNode;
     }
 
-    /* (non-Javadoc)
-          * @see java.lang.Object#hashCode()
-          */
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((wrappedNodal == null) ? 0 : wrappedNodal.hashCode());
-        return result;
-    }
-
-    /* (non-Javadoc)
-          * @see java.lang.Object#equals(java.lang.Object)
-          */
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (!(obj instanceof InternalNode))
-            return false;
-        NodeWrapper other = (NodeWrapper) obj;
-        if (wrappedNodal == null) {
-            if (other.wrappedNodal != null)
-                return false;
-        } else if (!wrappedNodal.equals(other.wrappedNodal))
-            return false;
-        return true;
-    }
-
+    //NodeWrapper objects should correspond one-to-one to their WrappedNodes.
+    //Equals/hashcode implementation is therefore not necessary. For
+    // performance reasons, it should not be implemented.
 
 }
