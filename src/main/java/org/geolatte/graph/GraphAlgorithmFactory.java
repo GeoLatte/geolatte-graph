@@ -84,7 +84,7 @@ public class GraphAlgorithmFactory {
             this.destination = destination;
         }
 
-        protected float update(N nd, float weight) {
+        protected float update(InternalNode<N> nd, float weight) {
             return weight + this.heuristicWeight * this.factor
                     * (getDistance(nd, this.destination));
         }

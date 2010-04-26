@@ -1,8 +1,7 @@
-package org.geolatte.data;
+package org.geolatte.graph;
 
-import org.geolatte.graph.InternalNode;
-import org.geolatte.graph.Nodal;
-import org.geolatte.graph.PredGraph;
+import org.geolatte.data.PairNode;
+import org.geolatte.data.PairingHeap;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -79,9 +79,6 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
         return this.wrappedNodal.getY();
     }
 
-    public Object getData() {
-        return this.wrappedNodal.getData();
-    }
 
     public String toString() {
         String str = String.format("MyNode: x = %d, y = %d", this.wrappedNodal.getX(), this.wrappedNodal.getY());

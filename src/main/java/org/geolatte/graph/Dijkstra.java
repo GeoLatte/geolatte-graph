@@ -1,7 +1,5 @@
 package org.geolatte.graph;
 
-import org.geolatte.data.PMinQueue;
-
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,11 +31,9 @@ public class Dijkstra<N extends Nodal, E> implements
     }
 
     public void execute() {
-
         Set<InternalNode<N>> closed = new HashSet<InternalNode<N>>();
         PredGraphImpl<N> startPG = new PredGraphImpl<N>(this.origin, 0.0f);
         minQueue.add(startPG, Float.POSITIVE_INFINITY);
-
         while (!minQueue.isEmpty()) {
             PredGraph<N> pu = minQueue.extractMin();
             closed.add(pu.getInternalNode());
@@ -51,23 +47,17 @@ public class Dijkstra<N extends Nodal, E> implements
                 if (closed.contains(v)) {
                     continue;
                 }
-
-                // search the internalNode on the minqueue
                 PredGraph<N> pv = minQueue.get(v);
                 if (pv == null) {
                     pv = new PredGraphImpl<N>(v,
                             Float.POSITIVE_INFINITY);
                     minQueue.add(pv, Float.POSITIVE_INFINITY);
                 }
-
                 if (this.relaxer.relax(pu, pv, null, outEdges.getWeight())) {
                     this.minQueue.update(pv, this.relaxer.newTotalWeight());
                 }
-
             }
-
         }
-
     }
 
     protected boolean isDone(PredGraph<N> pu) {

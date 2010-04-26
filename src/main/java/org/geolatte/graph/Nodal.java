@@ -26,18 +26,5 @@ public interface Nodal<D> {
      */
     public int getY();
 
-//    /**
-//     * Returns the
-//     * @return
-//     */
-//	public Envelope getEnvelope();
-
-    /**
-     * Returns application-specific data.
-     *
-     * @return
-     */
-    public D getData();
-
 
 }
