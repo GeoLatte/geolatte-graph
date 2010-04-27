@@ -1,6 +1,6 @@
 package org.geolatte.graph;
 
-public interface EdgeIterator<N extends Nodal, E> {
+public interface OutEdgeIterator<N extends Nodal, E> {
 
     public boolean next();
 
@@ -8,6 +8,6 @@ public interface EdgeIterator<N extends Nodal, E> {
 
     public float getWeight();
 
-    public InternalNode<N> getInternalNode();
+    public InternalNode<N> getToInternalNode();
 
 }

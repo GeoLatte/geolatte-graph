@@ -41,9 +41,9 @@ public class Dijkstra<N extends Nodal, E> implements
                 return;
             }
             InternalNode<N> u = pu.getInternalNode();
-            EdgeIterator<N, E> outEdges = graph.getOutGoingEdges(u);
+            OutEdgeIterator<N, E> outEdges = graph.getOutGoingEdges(u);
             while (outEdges.next()) {
-                InternalNode<N> v = outEdges.getInternalNode();
+                InternalNode<N> v = outEdges.getToInternalNode();
                 if (closed.contains(v)) {
                     continue;
                 }

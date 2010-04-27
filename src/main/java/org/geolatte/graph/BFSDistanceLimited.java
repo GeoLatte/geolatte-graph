@@ -32,9 +32,9 @@ public class BFSDistanceLimited<N extends Nodal, E> implements GraphAlgorithm<Ma
                 continue; //don't expand when the internalNode is beyond maximum distance.
             }
 
-            EdgeIterator<N, E> outEdges = this.graph.getOutGoingEdges(wu.internalNode);
+            OutEdgeIterator<N, E> outEdges = this.graph.getOutGoingEdges(wu.internalNode);
             while (outEdges.next()) {
-                InternalNode<N> v = outEdges.getInternalNode();
+                InternalNode<N> v = outEdges.getToInternalNode();
                 BFSState<N> wv = new BFSState<N>(v);
                 if (greyNodes.contains(wv) || blackNodes.contains(wv)) {
                     continue; // do nothing

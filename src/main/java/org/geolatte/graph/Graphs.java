@@ -97,21 +97,29 @@ public class Graphs {
         }
 
 
-        public EdgeIterator<N, E> getOutGoingEdges(InternalNode<N> node) {
-            return new EdgeIteratorImpl<N, E>(this, node);
+        public OutEdgeIterator<N, E> getOutGoingEdges(InternalNode<N> node) {
+            return new OutEdgeIteratorImpl<N, E>(this, node);
         }
 
-
+        public E getEdgeLabel(InternalNode<N> from, InternalNode<N> to) {
+            OutEdgeIterator<N, E> outEdges = getOutGoingEdges(from);
+            while (outEdges.next()) {
+                if (outEdges.getToInternalNode().equals(to)) {
+                    return outEdges.getEdgeLabel();
+                }
+            }
+            throw new IllegalArgumentException(String.format("No Edge between nodes: %s and %s", from.getWrappedNodal(), to.getWrappedNodal()));
+        }
     }
 
 
-    private static class EdgeIteratorImpl<N extends Nodal, E> implements EdgeIterator<N, E> {
+    private static class OutEdgeIteratorImpl<N extends Nodal, E> implements OutEdgeIterator<N, E> {
 
         final NodeWrapper<N> fromNw;
         final GridIndexedGraph<N, E> graph;
         int i = -1;
 
-        private EdgeIteratorImpl(GridIndexedGraph<N, E> graph, InternalNode<N> from) {
+        private OutEdgeIteratorImpl(GridIndexedGraph<N, E> graph, InternalNode<N> from) {
             this.graph = graph;
             this.fromNw = (NodeWrapper<N>) from;
         }
@@ -121,7 +129,7 @@ public class Graphs {
             return (E) fromNw.toLabels[i];
         }
 
-        public InternalNode<N> getInternalNode() {
+        public InternalNode<N> getToInternalNode() {
             return fromNw.toNodes[i];
         }
 
