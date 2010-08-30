@@ -1,5 +1,6 @@
 package org.geolatte.graph;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +31,11 @@ public class GraphAlgorithmFactory {
 
     }
 
+    public <N extends Nodal, E> GraphAlgorithm<List<InternalNode<N>>> createCoverage(Graph<N, E> graph, N origin,
+                                                                               float maxDistance){
+        return new Coverage<N, E>(graph, origin, new DefaultRelaxer<N, E>(), maxDistance);
+    }
+
     protected <N extends Nodal, E> Relaxer<N, E> createDefaultRelaxer() {
         return new DefaultRelaxer<N, E>();
     }
@@ -44,7 +50,14 @@ public class GraphAlgorithmFactory {
 
         float newWeight;
 
-
+        /**
+         * 
+         * @param u PredGraph representing current shortest path to node n_u
+         * @param v PredGraph representing current shortest path to node n_v
+         * @param edge Edge from node n_u to node n_v
+         * @param weight The weight of the edge from node n_u to node n_v
+         * @return True if the weight of PredGraph v was updated, false otherwise
+         */
         public boolean relax(PredGraph<N> u, PredGraph<N> v, E edge, float weight) {
             float r = u.getWeight() + weight;
             if (v.getWeight() > r) {

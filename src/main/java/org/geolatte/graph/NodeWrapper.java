@@ -12,6 +12,7 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
     float[] toWeights = new float[0];
     Object[] toLabels = new Object[0];
     private NodeWrapper<N>[] fromNodes = new NodeWrapper[0];
+    private float value;
 
 
     NodeWrapper(N obj) {
@@ -92,6 +93,14 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
     public void addReachableFrom(NodeWrapper<N> fromNode) {
         this.fromNodes = Arrays.copyOf(this.fromNodes, this.fromNodes.length + 1);
         this.fromNodes[this.fromNodes.length - 1] = fromNode;
+    }
+
+    public float getValue() {
+        return value;
+    }
+
+    public void setValue(float value){
+        this.value = value;
     }
 
     //NodeWrapper objects should correspond one-to-one to their WrappedNodes.

@@ -82,6 +82,10 @@ public class Dijkstra<N extends Nodal, E> implements
         return path;
     }
 
+    protected PMinQueue<N> getMinQueue() {
+        return minQueue;
+    }
+
     public Path<N> getResult() {
         return this.result;
     }
