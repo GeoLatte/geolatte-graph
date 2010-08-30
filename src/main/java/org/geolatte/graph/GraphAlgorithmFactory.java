@@ -1,7 +1,7 @@
 package org.geolatte.graph;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Karel Maesen
@@ -31,7 +31,7 @@ public class GraphAlgorithmFactory {
 
     }
 
-    public <N extends Nodal, E> GraphAlgorithm<List<InternalNode<N>>> createCoverage(Graph<N, E> graph, N origin,
+    public <N extends Nodal, E> GraphAlgorithm<Set<InternalNode<N>>> createCoverage(Graph<N, E> graph, N origin,
                                                                                float maxDistance){
         return new Coverage<N, E>(graph, origin, new DefaultRelaxer<N, E>(), maxDistance);
     }

@@ -13,6 +13,7 @@ public class Dijkstra<N extends Nodal, E> implements
     private final InternalNode<N> origin;
     private final InternalNode<N> destination;
     private final Graph<N, E> graph;
+    private Set<InternalNode<N>> closed;
     private Path<N> result;
 
     private final PMinQueue<N> minQueue;
@@ -31,7 +32,7 @@ public class Dijkstra<N extends Nodal, E> implements
     }
 
     public void execute() {
-        Set<InternalNode<N>> closed = new HashSet<InternalNode<N>>();
+        closed = new HashSet<InternalNode<N>>();
         PredGraphImpl<N> startPG = new PredGraphImpl<N>(this.origin, 0.0f);
         minQueue.add(startPG, Float.POSITIVE_INFINITY);
         while (!minQueue.isEmpty()) {
@@ -82,8 +83,8 @@ public class Dijkstra<N extends Nodal, E> implements
         return path;
     }
 
-    protected PMinQueue<N> getMinQueue() {
-        return minQueue;
+    protected Set<InternalNode<N>> getClosed() {
+        return closed;
     }
 
     public Path<N> getResult() {
