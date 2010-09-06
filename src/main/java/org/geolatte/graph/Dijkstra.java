@@ -94,11 +94,10 @@ public class Dijkstra<N extends Nodal, E> implements
     static class PredGraphImpl<N extends Nodal> implements PredGraph<N> {
         private final InternalNode<N> node;
         private PredGraph<N> predecessor = null;
-        private float weight;
 
         private PredGraphImpl(InternalNode<N> n, float weight) {
             this.node = n;
-            this.weight = weight;
+            n.setValue(weight);
         }
 
 
@@ -108,12 +107,12 @@ public class Dijkstra<N extends Nodal, E> implements
 
 
         public float getWeight() {
-            return this.weight;
+            return this.node.getValue();
         }
 
 
         public void setWeight(float w) {
-            this.weight = w;
+            this.node.setValue(w);
         }
 
 
@@ -167,7 +166,7 @@ public class Dijkstra<N extends Nodal, E> implements
 
         public String toString() {
             return String.format("MyNode: %s, weight: %.1f", this.node,
-                    this.weight);
+                    this.node.getValue());
         }
     }
 
