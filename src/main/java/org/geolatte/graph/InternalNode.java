@@ -15,8 +15,4 @@ public interface InternalNode<N extends Nodal> extends Nodal {
 
     void addReachableFrom(NodeWrapper<N> fromNode);
 
-    float getValue();
-
-    void setValue(float value);
-
 }

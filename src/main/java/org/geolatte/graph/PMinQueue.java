@@ -50,7 +50,6 @@ public class PMinQueue<V extends Nodal> {
             throw new RuntimeException("MyNode not in Pairing Heap.");
         }
         Element<V> newElement = new Element(value, r);
-        value.getInternalNode().setValue(r);
         this.heap.decreaseKey(node, newElement);
 
     }
