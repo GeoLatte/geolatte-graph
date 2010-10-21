@@ -36,6 +36,13 @@ public class Coverage<N extends Nodal, E> implements GraphAlgorithm<Set<PredSucc
 
     public void execute() {
         deepSearch(new PredSuccGraphImpl<N>(origin, 0));
+
+        // Interpolation on the shapes between each node.
+        // Wegendatabank sample code for projection:
+//        Geometry target = (Geometry) getShape();
+//        LocationIndexedLine line = new LocationIndexedLine(target);
+//        Coordinate projected = line.project(coordinate).getCoordinate(target);
+//        return new GpsLocatie(projected.x, projected.y, this);
     }
 
     public Set<PredSuccGraph<N>> getResult() {
@@ -61,6 +68,7 @@ public class Coverage<N extends Nodal, E> implements GraphAlgorithm<Set<PredSucc
                     }
                     existingPredGraph.setPredecessor(predGraph);
                     existingPredGraph.setWeight(predGraph.getWeight() + outEdges.getWeight());
+                    // ToDo: update the weight of all the successors of existingPredGraph
                 }
             } else {
                 PredSuccGraph<N> nextPredGraph =
