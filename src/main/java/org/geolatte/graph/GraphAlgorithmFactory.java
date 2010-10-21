@@ -31,10 +31,10 @@ public class GraphAlgorithmFactory {
 
     }
 
-    public <N extends Nodal, E> GraphAlgorithm<Set<InternalNode<N>>> createCoverage(Graph<N, E> graph, N origin,
-                                                                               float maxDistance){
-        return new Coverage<N, E>(graph, origin, new DefaultRelaxer<N, E>(), maxDistance);
-    }
+//    public <N extends Nodal, E> GraphAlgorithm<Set<InternalNode<N>>> createCoverage(Graph<N, E> graph, N origin,
+//                                                                               float maxDistance){
+//        return new Coverage<N, E>(graph, origin, new DefaultRelaxer<N, E>(), maxDistance);
+//    }
 
     protected <N extends Nodal, E> Relaxer<N, E> createDefaultRelaxer() {
         return new DefaultRelaxer<N, E>();

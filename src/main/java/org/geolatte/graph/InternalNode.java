@@ -13,6 +13,6 @@ public interface InternalNode<N extends Nodal> extends Nodal {
 
     int getY();
 
-    void addReachableFrom(NodeWrapper<N> fromNode);
+    void addReachableFrom(InternalNode<N> fromNode);
 
 }
