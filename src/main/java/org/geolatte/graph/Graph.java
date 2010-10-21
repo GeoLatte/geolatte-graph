@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public interface Graph<N extends Nodal, E> extends Iterable<InternalNode<N>> {
+public interface Graph<N extends Nodal, E extends EdgeLabel<M>, M> extends Iterable<InternalNode<N>> {
 
     public Iterator<InternalNode<N>> iterator();
 
@@ -14,7 +14,7 @@ public interface Graph<N extends Nodal, E> extends Iterable<InternalNode<N>> {
 
     public List<InternalNode<N>> getClosestNodes(Nodal loc, int num, int distance);
 
-    public OutEdgeIterator<N, E> getOutGoingEdges(InternalNode<N> node);
+    public OutEdgeIterator<N, E, M> getOutGoingEdges(InternalNode<N> node, M modus);
 
     public E getEdgeLabel(InternalNode<N> fromNode, InternalNode<N> toNode);
 

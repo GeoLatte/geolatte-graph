@@ -133,11 +133,6 @@ public class Graphs {
             return fromNw.toNodes[i];
         }
 
-
-        public float getWeight() {
-            return fromNw.toWeights[i];
-        }
-
         public boolean next() {
             i++;
             return i < fromNw.toNodes.length;

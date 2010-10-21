@@ -7,24 +7,27 @@ import java.util.Set;
 /**
  * @author Karel Maesen
  */
-public class Dijkstra<N extends Nodal, E> implements
+public class Dijkstra<N extends Nodal, E extends EdgeLabel<M>, M> implements
         GraphAlgorithm<Path<N>> {
 
     private final InternalNode<N> origin;
     private final InternalNode<N> destination;
-    private final Graph<N, E> graph;
+    private final Graph<N, E,M> graph;
+    private final M modus;
     private Path<N> result;
 
-    private final PMinQueue<N> minQueue;
-    private final Relaxer<N, E> relaxer;
 
-    protected Dijkstra(Graph<N, E> graph, N origin, N destination,
-                       Relaxer<N, E> relaxer) {
+    private final PMinQueue<N> minQueue;
+    private final Relaxer<N, E, M> relaxer;
+
+    protected Dijkstra(Graph<N, E, M> graph, N origin, N destination,
+                       Relaxer<N, E, M> relaxer, M modus) {
 
         this.graph = graph;
 
         this.origin = this.graph.getInternalNode(origin);
         this.destination = this.graph.getInternalNode(destination);
+        this.modus = modus;
         this.relaxer = relaxer;
         this.minQueue = new PMinQueue<N>();
 
@@ -41,7 +44,7 @@ public class Dijkstra<N extends Nodal, E> implements
                 return;
             }
             InternalNode<N> u = pu.getInternalNode();
-            OutEdgeIterator<N, E> outEdges = graph.getOutGoingEdges(u);
+            OutEdgeIterator<N, E, M> outEdges = graph.getOutGoingEdges(u, modus);
             while (outEdges.next()) {
                 InternalNode<N> v = outEdges.getToInternalNode();
                 if (closed.contains(v)) {
@@ -53,7 +56,7 @@ public class Dijkstra<N extends Nodal, E> implements
                             Float.POSITIVE_INFINITY);
                     minQueue.add(pv, Float.POSITIVE_INFINITY);
                 }
-                if (this.relaxer.relax(pu, pv, null, outEdges.getWeight())) {
+                if (this.relaxer.relax(pu, pv, outEdges.getEdgeLabel(), modus)) {
                     this.minQueue.update(pv, this.relaxer.newTotalWeight());
                 }
             }
