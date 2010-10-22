@@ -4,7 +4,13 @@ import java.util.*;
 
 public class BFSDistanceLimited<N extends Nodal, E> implements GraphAlgorithm<Map<N, Float>> {
 
+    /**
+     * Black nodes are
+     */
     final Set<BFSState<N>> blackNodes = new HashSet<BFSState<N>>();
+    /**
+     * Grey nodes are
+     */
     final Queue<BFSState<N>> greyNodes = new LinkedList<BFSState<N>>();
     final InternalNode<N> source;
     final float maxDistance;
