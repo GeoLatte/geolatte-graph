@@ -3,8 +3,14 @@ package org.geolatte.graph;
 import java.util.Iterator;
 import java.util.List;
 
-
-public interface Graph<N extends Nodal, E extends EdgeLabel<M>, M> extends Iterable<InternalNode<N>> {
+/**
+ *
+ * @param <N> User type that is modelled as nodes
+ * @param <E> User type that is modelled as edges
+ * @param <M> The type that represents the mode (connectivity is a function of mode)
+ * @param <S> The type that represents the current state of an execution of a <code>GraphAlgorithm</code>
+ */
+public interface Graph<N extends Nodal, E extends EdgeLabel<M>, M, S> extends Iterable<InternalNode<N>> {
 
     public Iterator<InternalNode<N>> iterator();
 
@@ -14,7 +20,17 @@ public interface Graph<N extends Nodal, E extends EdgeLabel<M>, M> extends Itera
 
     public List<InternalNode<N>> getClosestNodes(Nodal loc, int num, int distance);
 
-    public OutEdgeIterator<N, E, M> getOutGoingEdges(InternalNode<N> node, M modus);
+    public OutEdgeIterator<N, E, M> getOutGoingEdges(InternalNode<N> node, M modus, S state);
+
+    /**
+     * Get the Edges connected to the e
+     *
+     * @param startNode
+     * @param endNode
+     * @param Modus
+     * @return
+     */
+    public OutEdgeIterator<N,E, M> getConnectedEdges(InternalNode<N> startNode, InternalNode<N> endNode, M Modus);
 
     public E getEdgeLabel(InternalNode<N> fromNode, InternalNode<N> toNode);
 

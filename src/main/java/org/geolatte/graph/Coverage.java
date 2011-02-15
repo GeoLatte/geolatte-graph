@@ -18,15 +18,15 @@ import java.util.Set;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public class Coverage<N extends Nodal, E> implements GraphAlgorithm<Set<PredSuccGraph<N>>> {
+public class Coverage<N extends Nodal, E extends EdgeLabel<M>, M> implements GraphAlgorithm<Set<PredSuccGraph<N>>> {
 
     private final Set<PredSuccGraph<N>> result;
-    private final Graph<N, E> graph;
+    private final Graph<N, E, M> graph;
     private final InternalNode<N> origin;
     private final float maxDistance;
     private final HashMap<InternalNode<N>, PredSuccGraph<N>> nodeCache;
 
-    protected Coverage(Graph<N, E> graph, N origin, float maxDistance) {
+    protected Coverage(Graph<N, E, M> graph, N origin, float maxDistance) {
         result = new HashSet<PredSuccGraph<N>>();
         this.graph = graph;
         this.origin = this.graph.getInternalNode(origin);
