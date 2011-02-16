@@ -4,7 +4,7 @@
     <groupId>org.geolatte</groupId>
     <artifactId>graph</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1</version>
     <name>graph</name>
     <url>http://www.geolatte.org/graph</url>
 
