@@ -57,6 +57,7 @@ public class Dijkstra<N extends Nodal, E extends EdgeLabel<M>, M> implements
                     minQueue.add(pv, Float.POSITIVE_INFINITY);
                 }
                 if (this.relaxer.relax(pu, pv, outEdges.getEdgeLabel(), modus)) {
+                    PairNode<Element<V>> node = this.index.get(value.getInternalNode());
                     this.minQueue.update(pv, this.relaxer.newTotalWeight());
                 }
             }

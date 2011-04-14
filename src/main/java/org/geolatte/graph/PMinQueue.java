@@ -23,9 +23,12 @@ public class PMinQueue<V extends Nodal> {
         this.index.put(value.getInternalNode(), pn);
     }
 
-
+    /**
+     * Removes and returns the element from the queue with the smallest key.
+     * @return The element with the smallest key.
+     */
     public PredGraph<V> extractMin() {
-        PredGraph<V> val = heap.extractMin().value;
+        PredGraph<V> val = heap.deleteMin().value;
         this.index.remove(val.getInternalNode());
         return val;
     }
@@ -39,7 +42,9 @@ public class PMinQueue<V extends Nodal> {
         return node.getElement().value;
     }
 
-
+    /**
+     * @return True if the queue is empty, false otherwise.
+     */
     public boolean isEmpty() {
         return this.heap.isEmpty();
     }

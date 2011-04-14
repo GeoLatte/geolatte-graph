@@ -59,15 +59,15 @@ public class TestPairingHeap {
         assertEquals(Float.valueOf(1f), min.value);
 
         //start deleting elements in order
-        min = heap.extractMin();
+        min = heap.deleteMin();
         assertEquals(Float.valueOf(1f), min.value);
         min = heap.findMin();
         assertEquals(Float.valueOf(4.0f), min.value);
-        min = heap.extractMin();
+        min = heap.deleteMin();
         assertEquals(Float.valueOf(4.0f), min.value);
-        min = heap.extractMin();
+        min = heap.deleteMin();
         assertEquals(Float.valueOf(10.0f), min.value);
-        min = heap.extractMin();
+        min = heap.deleteMin();
         assertEquals(Float.valueOf(12.0f), min.value);
         assertTrue(heap.isEmpty());
 
@@ -81,14 +81,14 @@ public class TestPairingHeap {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int rint = random.nextInt();
-            Data d = new Data(Float.valueOf(rint));
+            Data d = new Data((float) rint);
             heap.insert(d);
         }
 
-        Data prev = heap.extractMin();
+        Data prev = heap.deleteMin();
 
         while (!heap.isEmpty()) {
-            Data min = heap.extractMin();
+            Data min = heap.deleteMin();
             assertTrue(min.value >= prev.value);
         }
 
@@ -102,7 +102,7 @@ public class TestPairingHeap {
         List<PairNode<Data>> nodelist = new ArrayList<PairNode<Data>>();
         for (int i = 0; i < size; i++) {
             int rint = random.nextInt();
-            Data d = new Data(Float.valueOf(rint));
+            Data d = new Data((float) rint);
             PairNode<Data> pn = heap.insert(d);
             nodelist.add(pn);
         }
@@ -114,9 +114,9 @@ public class TestPairingHeap {
             heap.decreaseKey(pn, data);
         }
 
-        Data prev = heap.extractMin();
+        Data prev = heap.deleteMin();
         while (!heap.isEmpty()) {
-            Data min = heap.extractMin();
+            Data min = heap.deleteMin();
             assertTrue(min.value >= prev.value);
         }
 
@@ -129,14 +129,14 @@ public class TestPairingHeap {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int rint = random.nextInt();
-            NCData d = new NCData(Float.valueOf(rint));
+            NCData d = new NCData((float) rint);
             heap.insert(d);
         }
 
-        NCData prev = heap.extractMin();
+        NCData prev = heap.deleteMin();
 
         while (!heap.isEmpty()) {
-            NCData min = heap.extractMin();
+            NCData min = heap.deleteMin();
             assertTrue(min.value >= prev.value);
         }
 
@@ -157,20 +157,20 @@ public class TestPairingHeap {
     public void test_decrease_key() {
         PairingHeap<Data> heap = new PairingHeap<Data>();
 
-        Data d1 = new Data(Float.valueOf(1.0f));
-        Data d2 = new Data(Float.valueOf(2.0f));
-        Data d3 = new Data(Float.valueOf(3.0f));
-        Data d4 = new Data(Float.valueOf(4.0f));
+        Data d1 = new Data(1.0f);
+        Data d2 = new Data(2.0f);
+        Data d3 = new Data(3.0f);
+        Data d4 = new Data(4.0f);
 
         PairNode<Data> pn2 = heap.insert(d2);
         PairNode<Data> pn4 = heap.insert(d4);
         PairNode<Data> pn1 = heap.insert(d1);
         PairNode<Data> pn3 = heap.insert(d3);
 
-        heap.decreaseKey(pn4, new Data(Float.valueOf(-1.0f)));
+        heap.decreaseKey(pn4, new Data(-1.0f));
         assertEquals(Float.valueOf(-1.0f), heap.findMin().value);
 
-        heap.decreaseKey(pn3, new Data(Float.valueOf(-2.0f)));
+        heap.decreaseKey(pn3, new Data(-2.0f));
         assertEquals(Float.valueOf(-2.0f), heap.findMin().value);
 
     }
@@ -179,30 +179,30 @@ public class TestPairingHeap {
     public void test_decrease_key_with_higher_value() {
         PairingHeap<Data> heap = new PairingHeap<Data>();
 
-        Data d1 = new Data(Float.valueOf(1.0f));
-        Data d2 = new Data(Float.valueOf(2.0f));
-        Data d3 = new Data(Float.valueOf(3.0f));
-        Data d4 = new Data(Float.valueOf(4.0f));
+        Data d1 = new Data(1.0f);
+        Data d2 = new Data(2.0f);
+        Data d3 = new Data(3.0f);
+        Data d4 = new Data(4.0f);
 
         PairNode<Data> pn2 = heap.insert(d2);
         PairNode<Data> pn4 = heap.insert(d4);
         PairNode<Data> pn1 = heap.insert(d1);
         PairNode<Data> pn3 = heap.insert(d3);
 
-        heap.decreaseKey(pn1, new Data(Float.valueOf(2.0f)));
-        heap.decreaseKey(pn2, new Data(Float.valueOf(3.0f)));
-        heap.decreaseKey(pn3, new Data(Float.valueOf(3.0f)));
+        heap.decreaseKey(pn1, new Data(2.0f));
+        heap.decreaseKey(pn2, new Data(3.0f));
+        heap.decreaseKey(pn3, new Data(3.0f));
 
-        assertEquals(Float.valueOf(1.0f), heap.extractMin().value);
-        assertEquals(Float.valueOf(2.0f), heap.extractMin().value);
-        assertEquals(Float.valueOf(3.0f), heap.extractMin().value);
+        assertEquals(Float.valueOf(1.0f), heap.deleteMin().value);
+        assertEquals(Float.valueOf(2.0f), heap.deleteMin().value);
+        assertEquals(Float.valueOf(3.0f), heap.deleteMin().value);
     }
 
     @Test
     public void test_delete_min_on_empty_throws_exception() {
         PairingHeap<Data> heap = new PairingHeap<Data>();
         try {
-            heap.extractMin();
+            heap.deleteMin();
             fail("Exception should be thrown.");
         } catch (IllegalStateException e) {
             //OK

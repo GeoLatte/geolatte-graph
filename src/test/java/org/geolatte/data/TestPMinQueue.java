@@ -41,9 +41,9 @@ package org.geolatte.data;
 //
 //    @Test
 //    public void test_min_queue_min_order() {
-//        assertEquals(Float.valueOf(10f), minQueue.extractMin());
+//        assertEquals(Float.valueOf(10f), minQueue.deleteMin());
 //        minQueue.add(Float.valueOf(1.0f), 1.0f);
-//        assertEquals(Float.valueOf(1f), minQueue.extractMin());
+//        assertEquals(Float.valueOf(1f), minQueue.deleteMin());
 //    }
 //
 //    @Test
@@ -64,7 +64,7 @@ package org.geolatte.data;
 //    public void test_update() {
 //        Float value = Float.valueOf(80f);
 //        minQueue.update(value, 0.0f);
-//        Float minValue = minQueue.extractMin();
+//        Float minValue = minQueue.deleteMin();
 //        assertEquals(value, minValue);
 //    }
 //
