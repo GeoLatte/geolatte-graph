@@ -19,63 +19,26 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
 
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-public class BasicPath<N extends Nodal> implements Path<N> {
-
-	private List<N> nodes = new LinkedList<N>();
-
-	private boolean valid = false;
-
-	private float weight;
-
-	public void insert(N nd) {
-		nodes.add(0, nd);
-	}
-
-	public void setValid(boolean v) {
-		this.valid = v;
-	}
-
-	public void setTotalWeight(float w) {
-		this.weight = w;
-	}
-
-
-	public N getDestination() {
-		return this.nodes.get(this.nodes.size() - 1);
-	}
-
-	public N getSource() {
-		return this.nodes.get(0);
-	}
-
-	public boolean isValid() {
-		return this.valid;
-	}
-
-
-	public float totalWeight() {
-
-		return this.weight;
-	}
-
-	public Iterator<N> iterator() {
-		return this.nodes.iterator();
-	}
-
-	public String toString(){
-		StringBuilder stBuf = new StringBuilder();
-		stBuf.append("Nodes: ");
-		for (N nd: this){
-			stBuf.append(nd)
-			.append("\n");
-		}
-		return stBuf.toString();
-	}
+/**
+ * Represents a category of an algorithm that operates on graphs.
+ *
+ * @author Karel Maesen
+ */
+public interface GraphAlgorithm<P> { 
 	
+	/**
+	 * Executes this graph algorithm. 
+	 */
+	public void execute();
+
+	/**
+	 * Gets the result of this graph algorithm.
+	 * 
+	 * @return the result
+	 * @throws IllegalStateException when this method is invoked before the graph has been executed.
+	 * 
+	 */
+	public P getResult();
 }

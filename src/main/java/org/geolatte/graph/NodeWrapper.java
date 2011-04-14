@@ -1,3 +1,24 @@
+/*
+ * This file is part of the GeoLatte project.
+ *
+ *     GeoLatte is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     GeoLatte is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Lesser General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Lesser General Public License
+ *     along with GeoLatte.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) 2010 - 2011 and Ownership of code is shared by:
+ * Qmino bvba - Romeinsestraat 18 - 3001 Heverlee  (http://www.qmino.com)
+ * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
+ */
+
 package org.geolatte.graph;
 
 import java.util.Arrays;
@@ -11,7 +32,7 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
     NodeWrapper<N>[] toNodes = new NodeWrapper[0];
     float[] toWeights = new float[0];
     Object[] toLabels = new Object[0];
-    private NodeWrapper<N>[] fromNodes = new NodeWrapper[0];
+    private InternalNode<N>[] fromNodes = new InternalNode[0];
     private float value;
 
 
@@ -80,7 +101,6 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
         return this.wrappedNodal.getY();
     }
 
-
     public String toString() {
         String str = String.format("MyNode: x = %d, y = %d", this.wrappedNodal.getX(), this.wrappedNodal.getY());
         return str;
@@ -90,7 +110,7 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
         return this.fromNodes;
     }
 
-    public void addReachableFrom(NodeWrapper<N> fromNode) {
+    public void addReachableFrom(InternalNode<N> fromNode) {
         this.fromNodes = Arrays.copyOf(this.fromNodes, this.fromNodes.length + 1);
         this.fromNodes[this.fromNodes.length - 1] = fromNode;
     }

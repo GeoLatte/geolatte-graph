@@ -1,6 +1,8 @@
 package org.geolatte.graph;
 
 import com.vividsolutions.jts.geom.Envelope;
+import org.geolatte.graph.algorithms.GraphAlgorithm;
+import org.geolatte.graph.algorithms.GraphAlgorithmFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -37,22 +39,22 @@ public class TestDijkstra {
     public void testExecute() throws Exception {
         Envelope env = new Envelope(0, 200, 0, 200);
 
-        GraphBuilder<MyNode, EdgeWeightImpl> builder = Graphs.createGridIndexedGraphBuilder(env, 10);
+        GraphBuilder<MyNode, EdgeWeightImpl, MyMode> builder = Graphs.<MyNode, EdgeWeightImpl, MyMode>createGridIndexedGraphBuilder(env, 10);
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 if (weights[i][j] > 0f) {
-                    builder.addEdge(copy(myNodes[i]), copy(myNodes[j]), new EdgeWeightImpl(weights[i][j]), weights[i][j]);
+                    builder.addEdge(copy(myNodes[i]), copy(myNodes[j]), new EdgeWeightImpl(weights[i][j]));
                 }
             }
         }
 
 
-        Graph<MyNode, EdgeWeightImpl> graph = builder.build();
+        Graph<MyNode, EdgeWeightImpl, MyMode> graph = builder.build();
         for (InternalNode<MyNode> nd : graph) {
             System.out.println(nd);
         }
 
-        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithmFactory.instance.createDijkstra(graph, myNodes[0], myNodes[3]);
+        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithmFactory.instance.createDijkstra(graph, myNodes[0], myNodes[3], new MyMode());
 
         algorithm.execute();
 
@@ -67,7 +69,7 @@ public class TestDijkstra {
     }
 
 
-    private static class EdgeWeightImpl {
+    private static class EdgeWeightImpl implements EdgeLabel<MyMode> {
 
         private float w;
 
@@ -88,11 +90,15 @@ public class TestDijkstra {
         }
 
 
-        public float getWeight() {
+        public float getWeight(MyMode modus) {
             return this.w;
         }
 
 
+    }
+
+    private static class MyMode {
+        
     }
 
     private static class MyNode implements Nodal {

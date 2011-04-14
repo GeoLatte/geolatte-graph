@@ -19,38 +19,46 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
 
-import java.util.Set;
+import org.geolatte.graph.EdgeLabel;
+import org.geolatte.graph.InternalNode;
+import org.geolatte.graph.Nodal;
+import org.geolatte.graph.PredGraph;
 
 /**
- * A PredGraph that also keeps track of its successors.
- * <p/>
  * <p>
- * <i>Creation-Date</i>: 9-apr-2010<br>
- * <i>Creation-Time</i>:  11:48:54<br>
+ * No comment provided yet for this class.
  * </p>
  *
- * @author Peter Rigole
+ * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface PredSuccGraph<N extends Nodal> {
+class DefaultRelaxer<N extends Nodal, E extends EdgeLabel<M>, M> implements Relaxer<N, E, M> {
 
-    PredSuccGraph<N> getPredecessor();
+        float newWeight;
 
-    void setPredecessor(PredSuccGraph<N> pred);
+        public boolean relax(PredGraph<N> u, PredGraph<N> v, E edgeLabel, M modus) {
+            
+            float r = u.getWeight() + edgeLabel.getWeight(modus);
+            if (r < v.getWeight()) {
+                v.setWeight(r);
+                v.setPredecessor(u);
+                newWeight = update(v.getInternalNode(), v.getWeight());
+                return true;
+            } else {
+                newWeight = v.getWeight();
+                return false;
+            }
+        }
 
-    float getWeight();
+        protected float update(InternalNode<N> nd, float distance) {
+            return distance;
+        }
 
-    void setWeight(float d);
+        public float newTotalWeight() {
+            return newWeight;
+        }
 
-    InternalNode<N> getInternalNode();
-
-    Set<PredSuccGraph<N>> getSuccessors();
-
-    void addSuccessor(PredSuccGraph<N> pred);
-
-    void removeSuccessor(PredSuccGraph<N> pred);
-
-}
+    }
