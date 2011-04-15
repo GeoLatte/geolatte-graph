@@ -30,7 +30,8 @@ import java.util.List;
  * An implementation of the Pairing Heap as discussed in 'The Pairing Heap: A New Form of Self-Adjusting Heap' by
  * Fredman, e.a., Algorithmica (1986) 1: 111 - 129.
  *
- * A pairing heap is an alternative to a Fibonacci heap, but is faster in practice and easier to implement.
+ * A pairing heap is an alternative to a Fibonacci heap, but is faster in practice and easier to implement. It is a
+ * semi-ordered tree, where a nodes is always smaller than its left child.
  * </p>
  * <p>
  * This implementation is based on the implementation in the GNU C++ standard library (libstdc++)
@@ -66,7 +67,7 @@ import java.util.List;
  *
  * @author karel  Maesen, Geovise BVBA
  *
- * @param <E> The type of elements stored in the heap.
+ * @param <E> The type of elements stored in the heap. These serve as the key in the tree and hence need to be comparable.
   */
 public class PairingHeap<E> {
 
@@ -147,18 +148,30 @@ public class PairingHeap<E> {
         return oldRoot.getElement();
     }
 
-
+    /**
+     * Decreases the value of the given <code>node</code> to the new value. This will remove the tree rooted at the
+     * given node and then re-insert that tree in the heap.
+     *
+     * @param node     The node to decrease to the newValue.
+     * @param newValue The new value (must be lower, otherwise, nothing happens).
+     * @throws IllegalArgumentException When the given node is null.
+     */
     public void decreaseKey(PairNode<E> node, E newValue) {
 
         if (node == null) {
-            throw new IllegalArgumentException("MyNode  cannot be NULL.");
+            throw new IllegalArgumentException("Given node cannot be null.");
         }
 
         if (compare(node.getElement(), newValue) < 0) {
             return; // newValue must be smaller.
         }
+
+        // Can always decrease value without constraint violation
         node.setElement(newValue);
-        if (!node.equals(root)) {
+
+        if (!node.equals(root)) { // If we are the root, nothing needs to be changed
+
+            // remove the subtree rooted at the node
             if (node.getNextSibling() != null) {
                 node.getNextSibling().setPrev(node.getPrev());
             }
@@ -168,8 +181,9 @@ public class PairingHeap<E> {
                 node.getPrev().setNextSibling(node.getNextSibling());
             }
             node.setNextSibling(null);
-            root = compareAndLink(root, node);
 
+            // Re-insert the node
+            root = compareAndLink(root, node);
         }
     }
 

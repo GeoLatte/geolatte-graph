@@ -69,7 +69,7 @@ public class TestDijkstra {
     }
 
 
-    private static class EdgeWeightImpl implements EdgeLabel<MyMode> {
+    private static class EdgeWeightImpl implements EdgeWeight<MyMode> {
 
         private float w;
 

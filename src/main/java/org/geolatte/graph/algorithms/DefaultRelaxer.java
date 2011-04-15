@@ -21,7 +21,7 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.EdgeLabel;
+import org.geolatte.graph.EdgeWeight;
 import org.geolatte.graph.InternalNode;
 import org.geolatte.graph.Nodal;
 import org.geolatte.graph.PredGraph;
@@ -35,7 +35,7 @@ import org.geolatte.graph.PredGraph;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class DefaultRelaxer<N extends Nodal, E extends EdgeLabel<M>, M> implements Relaxer<N, E, M> {
+class DefaultRelaxer<N extends Nodal, E extends EdgeWeight<M>, M> implements Relaxer<N, E, M> {
 
         float newWeight;
 

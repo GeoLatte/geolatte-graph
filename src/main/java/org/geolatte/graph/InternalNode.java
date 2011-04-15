@@ -22,18 +22,31 @@
 package org.geolatte.graph;
 
 /**
- * @author Karel Maesen, Geovise BVBA
- *         creation-date: Apr 25, 2010
+ * Representation of a node in a graph, which can be connected to other nodes through edges.
+ * This is a decorator {@link Nodal}.
+ *
+ * @author Karel Maesen
+ * @author Bert Vanhooff
  */
 public interface InternalNode<N extends Nodal> extends Nodal {
+
+    /**
+     * @return The decorated Nodal
+     */
     N getWrappedNodal();
 
+    /**
+     * Creates an edge from this node to a given node.
+     * @param toNode The node to connect to.
+     * @param label  An arbitrary object that will be associated to the edge.
+     * @param weight 
+     */
     void addEdge(InternalNode<N> toNode, Object label, float weight);
+
+    void addReachableFrom(InternalNode<N> fromNode);
 
     int getX();
 
     int getY();
-
-    void addReachableFrom(InternalNode<N> fromNode);
 
 }

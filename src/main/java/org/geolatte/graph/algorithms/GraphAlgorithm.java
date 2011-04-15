@@ -25,8 +25,10 @@ package org.geolatte.graph.algorithms;
  * Represents a category of an algorithm that operates on graphs.
  *
  * @author Karel Maesen
+ *
+ * @param <T> The object type of the result of the algorithm.
  */
-public interface GraphAlgorithm<P> { 
+public interface GraphAlgorithm<T> {
 	
 	/**
 	 * Executes this graph algorithm. 
@@ -40,5 +42,5 @@ public interface GraphAlgorithm<P> {
 	 * @throws IllegalStateException when this method is invoked before the graph has been executed.
 	 * 
 	 */
-	public P getResult();
+	public T getResult();
 }

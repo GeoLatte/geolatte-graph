@@ -30,7 +30,7 @@ import java.util.List;
  * @param <E> The type that represents the edges.
  * @param <M> The type that represents the mode (connectivity is a function of mode).
  */
-public interface Graph<N extends Nodal, E extends EdgeLabel<M>, M> extends Iterable<InternalNode<N>> {
+public interface Graph<N extends Nodal, E extends EdgeWeight<M>, M> extends Iterable<InternalNode<N>> {
 
     public Iterator<InternalNode<N>> iterator();
 
@@ -59,7 +59,7 @@ public interface Graph<N extends Nodal, E extends EdgeLabel<M>, M> extends Itera
      */
     // public OutEdgeIterator<N, E, M> getConnectedEdges(InternalNode<N> startNode, InternalNode<N> endNode, M Modus);
 
-    public E getEdgeLabel(InternalNode<N> fromNode, InternalNode<N> toNode);
+    public E getEdgeWeight(InternalNode<N> fromNode, InternalNode<N> toNode);
 
     public M getModus();
 

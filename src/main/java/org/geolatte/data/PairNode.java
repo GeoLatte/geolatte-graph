@@ -33,7 +33,7 @@ import java.util.Comparator;
  *              n <---> next sibling <---> ..
  *             /
  *            /
- *      l child <---> ..
+ *  left child <---> ..
  * </p>
  * <p>
  * See {@link PairingHeap<E>} for additional documentation.
@@ -41,7 +41,8 @@ import java.util.Comparator;
  *
  * creation-date: Apr 22, 2010
  *
- * @author Karel Maesen, Geovise BVBA
+ * @author Karel Maesen
+ * @author Bert Vanhooff
  */
 public class PairNode<E> implements Comparable<PairNode<E>> {
 

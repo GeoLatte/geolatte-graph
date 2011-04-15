@@ -26,34 +26,44 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * A Red-Black Tree implementation.
+ * A Red-Black Tree is a self-balancinf binary search tree.
  * <p/>
  * This implementation is based on Introduction to Algorithms, 2nd Ed, Cormed e.a., chapter 13.
  *
  * @author Karel Maesen, Geovise BVBA
- * @param <K>
- * @param <D>
+ * @param <K> Type of the key value of tree nodes.
+ * @param <D> Type of the data contained in a node.
  */
 public class RedBlackTree<K, D> {
 
     public static final byte RED = 0;
-
     public static final byte BLACK = 1;
 
-    public final TreeNode<K, D> NIL = new TreeNode<K, D>();
+    public final TreeNode<K, D> NIL = new TreeNode<K, D>(); // singleton leaf node
 
     protected final Comparator<K> comparator;
     protected TreeNode<K, D> root = NIL;
     protected NodeWriter nodeWriter = new NodeWriter();
 
-
+    /**
+     * Constructs a RedBlackTree with the given key comparator.
+     * @param comparator A comparator for the key type
+     */
     public RedBlackTree(Comparator<K> comparator) {
+
+        if (comparator == null)
+            throw new IllegalArgumentException("Must prodide a comparator.");
+
         this.comparator = comparator;
         NIL.left = NIL;
         NIL.right = NIL;
     }
 
-
+    /**
+     * Searches the tree for the data associated with the given key.
+     * @param key The key to search for.
+     * @return If found, the data associated with the given key, else, null.
+     */
     public D get(K key) {
         TreeNode<K, D> nd = iterativeSearch(getRoot(), key);
         if (isNil(nd)) {
@@ -85,6 +95,12 @@ public class RedBlackTree<K, D> {
         return isNil(pred) ? null : pred.getData();
     }
 
+    /**
+     * Inserts a new node with the given key and data value.
+     * @param key  The key value. Must be unique within a tree.
+     * @param data The data value.
+     * @throws IllegalArgumentException When a node with the given key is already present in the tree.
+     */
     public void insert(K key, D data) {
 
         TreeNode<K, D> parent = NIL;
@@ -100,7 +116,7 @@ public class RedBlackTree<K, D> {
                 pointer = pointer.right;
             } else {
                 //throw exception when duplicate key is entered
-                throw new RuntimeException("Entry is key " + key + " already present in tree.");
+                throw new IllegalArgumentException("Entry is key " + key + " already present in tree.");
             }
         }
         //create new node
@@ -124,10 +140,18 @@ public class RedBlackTree<K, D> {
         return true;
     }
 
+    /**
+     * Not implemented.
+     * @return A flat list with all data in this tree.
+     */
     public List<D> getData() {
         return null;
     }
 
+    /**
+     * Not implemented.
+     * @return A flat list with all keys in this tree.
+     */
     public List<K> getKeys() {
         return null;
     }

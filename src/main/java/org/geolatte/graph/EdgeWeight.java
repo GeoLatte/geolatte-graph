@@ -21,7 +21,13 @@
 
 package org.geolatte.graph;
 
-public interface EdgeLabel<M> {
+/**
+ * Extracts the calculation of the weight of an edge from the edge itself and allows to associate different weights with
+ * a single edge, depending on the modus.
+ *
+ * @param <M> The modus type.
+ */
+public interface EdgeWeight<M> {
 
     float getWeight(M modus);
 }

@@ -21,7 +21,7 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.EdgeLabel;
+import org.geolatte.graph.EdgeWeight;
 import org.geolatte.graph.Nodal;
 import org.geolatte.graph.PredGraph;
 
@@ -39,7 +39,7 @@ import org.geolatte.graph.PredGraph;
  * @param <E> The type of edge label
  * @param <M> The type of modus
  */
-interface Relaxer<N extends Nodal, E extends EdgeLabel<M>, M> {
+interface Relaxer<N extends Nodal, E extends EdgeWeight<M>, M> {
 
     /**
      * Relaxes the edge from node <code>u</code> to node <code>v</node>. Both are given by their predecessor graphs.
@@ -54,7 +54,7 @@ interface Relaxer<N extends Nodal, E extends EdgeLabel<M>, M> {
 
     /**
      * Returns the new total weight of the path to node v after relaxation has occured. Is only meaningful after
-     * {@link #relax(PredGraph, PredGraph, org.geolatte.graph.EdgeLabel, Object)}
+     * {@link #relax(PredGraph, PredGraph, org.geolatte.graph.EdgeWeight, Object)}
      * has been called.
      * 
      * @return The new total weight of the path to node v.

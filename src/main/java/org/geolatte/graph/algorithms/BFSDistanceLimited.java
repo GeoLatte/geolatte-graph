@@ -34,7 +34,7 @@ import java.util.*;
  * @param <E>
  * @param <M>
  */
-public class BFSDistanceLimited<N extends Nodal, E extends EdgeLabel<M>, M> implements GraphAlgorithm<Map<N, Float>> {
+public class BFSDistanceLimited<N extends Nodal, E extends EdgeWeight<M>, M> implements GraphAlgorithm<Map<N, Float>> {
 
     final Set<BFSState<N>> blackNodes = new HashSet<BFSState<N>>();
     final Queue<BFSState<N>> greyNodes = new LinkedList<BFSState<N>>();

@@ -27,13 +27,13 @@ import java.util.*;
 
 public class Graphs {
 
-    public static <N extends Nodal, E extends EdgeLabel<M>, M> GraphBuilder<N, E, M> createGridIndexedGraphBuilder(Envelope env, int resolution) {
+    public static <N extends Nodal, E extends EdgeWeight<M>, M> GraphBuilder<N, E, M> createGridIndexedGraphBuilder(Envelope env, int resolution) {
 
         return new GridIndexedGraphBuilder<N, E, M>(env, resolution);
     }
 
     // Builder implementation
-    private static class GridIndexedGraphBuilder<N extends Nodal, E extends EdgeLabel<M>, M> implements GraphBuilder<N, E, M> {
+    private static class GridIndexedGraphBuilder<N extends Nodal, E extends EdgeWeight<M>, M> implements GraphBuilder<N, E, M> {
 
         private final SpatialIndexBuilder<N> indexBuilder;
         private final Map<N, InternalNode<N>> map = new HashMap<N, InternalNode<N>>(); // map is used to quickly locate Nodes based on node equality.
@@ -85,7 +85,7 @@ public class Graphs {
     }
 
     // Graph Implementation
-    private static class GridIndexedGraph<N extends Nodal, E extends EdgeLabel<M>, M> implements Graph<N, E, M> {
+    private static class GridIndexedGraph<N extends Nodal, E extends EdgeWeight<M>, M> implements Graph<N, E, M> {
 
         private final SpatialIndex<N> index;
         private final ContextualReachability contextualReachability;
@@ -130,7 +130,7 @@ public class Graphs {
             return new OutEdgeIteratorImpl<N, E, M>(this, node, contextualReachability);
         }
 
-        public E getEdgeLabel(InternalNode<N> from, InternalNode<N> to) {
+        public E getEdgeWeight(InternalNode<N> from, InternalNode<N> to) {
             OutEdgeIterator<N, E> outEdges = getOutGoingEdges(from, modus);
             while (outEdges.next()) {
                 if (outEdges.getToInternalNode().equals(to)) {
@@ -146,7 +146,7 @@ public class Graphs {
     }
 
 
-    private static class OutEdgeIteratorImpl<N extends Nodal, E extends EdgeLabel<M>, M> implements OutEdgeIterator<N, E> {
+    private static class OutEdgeIteratorImpl<N extends Nodal, E extends EdgeWeight<M>, M> implements OutEdgeIterator<N, E> {
 
         final NodeWrapper<N> fromNw;
         final GridIndexedGraph<N, E, M> graph;

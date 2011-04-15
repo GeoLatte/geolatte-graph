@@ -32,7 +32,7 @@ package org.geolatte.graph;
  * @param <E> The type of edgelabel.
  * @param <M> The type of mode.
  */
-public interface GraphBuilder<N extends Nodal, E extends EdgeLabel<M>, M> {
+public interface GraphBuilder<N extends Nodal, E extends EdgeWeight<M>, M> {
 
     /**
      * Adds the given nodes and a directed edge with the given label between.

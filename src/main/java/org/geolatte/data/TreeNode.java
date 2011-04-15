@@ -21,6 +21,14 @@
 
 package org.geolatte.data;
 
+/**
+ * <p>
+ * The node structure used by {@link RedBlackTree}.
+ * </p>
+ * 
+ * @param <K>
+ * @param <D>
+ */
 public class TreeNode<K, D> {
 
     protected byte color = RedBlackTree.BLACK;

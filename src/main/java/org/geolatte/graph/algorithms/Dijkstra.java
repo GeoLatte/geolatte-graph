@@ -32,7 +32,7 @@ import java.util.Set;
  *
  * @author Karel Maesen
  */
-public class Dijkstra<N extends Nodal, E extends EdgeLabel<M>, M> implements GraphAlgorithm<Path<N>> {
+public class Dijkstra<N extends Nodal, E extends EdgeWeight<M>, M> implements GraphAlgorithm<Path<N>> {
 
     private final InternalNode<N> origin;
     private final InternalNode<N> destination;

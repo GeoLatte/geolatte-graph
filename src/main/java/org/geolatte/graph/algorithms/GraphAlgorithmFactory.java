@@ -34,11 +34,11 @@ public class GraphAlgorithmFactory {
 
     public static GraphAlgorithmFactory instance = new GraphAlgorithmFactory();
 
-    public <N extends Nodal, E extends EdgeLabel<M>, M> GraphAlgorithm<Map<N, Float>> createBFS(Graph<N, E, M> graph, N source, float maxDistance) {
+    public <N extends Nodal, E extends EdgeWeight<M>, M> GraphAlgorithm<Map<N, Float>> createBFS(Graph<N, E, M> graph, N source, float maxDistance) {
         return new BFSDistanceLimited<N, E, M>(graph, source, maxDistance);
     }
 
-    public <N extends Nodal, E extends EdgeLabel<M>, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N, E, M> graph, N origin,
+    public <N extends Nodal, E extends EdgeWeight<M>, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N, E, M> graph, N origin,
                                                                        N destination, M modus) {
         return new Dijkstra<N, E, M>(graph, origin, destination, new DefaultRelaxer<N, E, M>(), modus);
     }
@@ -46,7 +46,7 @@ public class GraphAlgorithmFactory {
 
     // TODO: Temporarly commented out because of compilation problems I don't get
     /*
-    public <N extends Nodal, E extends EdgeLabel<M>, M> GraphAlgorithm<Path<N>> createAStar(Graph<N, E, M> graph, N origin,
+    public <N extends Nodal, E extends EdgeWeight<M>, M> GraphAlgorithm<Path<N>> createAStar(Graph<N, E, M> graph, N origin,
                                                                     N destination, float factor, float heuristicWeight, M modus) {
 
         Relaxer<N, E, M> relaxer = this.createAStarRelaxer(heuristicWeight, factor, destination);
@@ -60,12 +60,12 @@ public class GraphAlgorithmFactory {
 //        return new Coverage<N, E>(graph, origin, new DefaultRelaxer<N, E>(), maxDistance);
 //    }
 
-    protected <N extends Nodal, E extends EdgeLabel<M>, M> Relaxer<N, E, M> createDefaultRelaxer() {
+    protected <N extends Nodal, E extends EdgeWeight<M>, M> Relaxer<N, E, M> createDefaultRelaxer() {
 
         return new DefaultRelaxer<N, E, M>();
     }
 
-    protected <N extends Nodal, E extends EdgeLabel<M>, M> Relaxer<N, E, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
+    protected <N extends Nodal, E extends EdgeWeight<M>, M> Relaxer<N, E, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
         
         return new HeuristicRelaxer<N, E, M>(heuristicWeight, factor, destination);
     }

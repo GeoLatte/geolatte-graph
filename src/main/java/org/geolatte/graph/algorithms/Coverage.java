@@ -38,7 +38,7 @@ import java.util.Set;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public class Coverage<N extends Nodal, E extends EdgeLabel<M>, M> implements GraphAlgorithm<Set<PredSuccGraph<N>>> {
+public class Coverage<N extends Nodal, E extends EdgeWeight<M>, M> implements GraphAlgorithm<Set<PredSuccGraph<N>>> {
 
     private final Set<PredSuccGraph<N>> result;
     private final Graph<N, E, M> graph;
