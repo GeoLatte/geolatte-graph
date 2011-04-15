@@ -38,20 +38,24 @@ import java.util.Set;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public class Coverage<N extends Nodal, E extends EdgeWeight<M>, M> implements GraphAlgorithm<Set<PredSuccGraph<N>>> {
+public class Coverage<N extends Nodal, M> implements GraphAlgorithm<Set<PredSuccGraph<N>>> {
 
     private final Set<PredSuccGraph<N>> result;
-    private final Graph<N, E, M> graph;
+    private final Graph<N> graph;
     private final InternalNode<N> origin;
     private final float maxDistance;
     private final HashMap<InternalNode<N>, PredSuccGraph<N>> nodeCache;
+    private final M modus;
+    private final EdgeWeightCalculator<N,M> edgeWeightCalculator;
 
-    protected Coverage(Graph<N, E, M> graph, N origin, float maxDistance) {
+    protected Coverage(Graph<N> graph, N origin, float maxDistance, M mode, EdgeWeightCalculator<N, M> edgeWeightCalculator) {
         result = new HashSet<PredSuccGraph<N>>();
         this.graph = graph;
         this.origin = this.graph.getInternalNode(origin);
         this.maxDistance = maxDistance;
         this.nodeCache = new HashMap<InternalNode<N>, PredSuccGraph<N>>();
+        this.modus = mode;
+        this.edgeWeightCalculator = edgeWeightCalculator;
     }
 
     public void execute() {
@@ -75,24 +79,24 @@ public class Coverage<N extends Nodal, E extends EdgeWeight<M>, M> implements Gr
      * @param predGraph The predecessor graph to start from.
      */
     private void deepSearch(PredSuccGraph<N> predGraph) {
-        OutEdgeIterator<N, E> outEdges = this.graph.getOutGoingEdges(predGraph.getInternalNode(), this.graph.getModus());
+        OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(predGraph.getInternalNode(), null); // TODO: contextual reachability
         while (outEdges.next()) {
             InternalNode<N> toNode = outEdges.getToInternalNode();
             if (nodeCache.containsKey(toNode)) {
                 PredSuccGraph<N> existingPredGraph = nodeCache.get(toNode);
-                if (existingPredGraph.getWeight() > predGraph.getWeight() + outEdges.getEdgeLabel().getWeight(this.graph.getModus())) {
+                if (existingPredGraph.getWeight() > predGraph.getWeight() + edgeWeightCalculator.getWeight(predGraph.getInternalNode().getWrappedNodal(), toNode.getWrappedNodal(), modus)) {
                     // We found a shorter path. Detach the longer path from the existing node and save it as a
                     // result when it no longer has any successors.
                     if (existingPredGraph.getPredecessor().getSuccessors().size() == 1) {
                         result.add(existingPredGraph.getPredecessor());
                     }
                     existingPredGraph.setPredecessor(predGraph);
-                    existingPredGraph.setWeight(predGraph.getWeight() + outEdges.getEdgeLabel().getWeight(this.graph.getModus()));
+                    existingPredGraph.setWeight(predGraph.getWeight() + edgeWeightCalculator.getWeight(predGraph.getInternalNode().getWrappedNodal(), toNode.getWrappedNodal(), modus));
                     // ToDo: update the weight of all the successors of existingPredGraph
                 }
             } else {
                 PredSuccGraph<N> nextPredGraph =
-                        new PredSuccGraphImpl<N>(toNode, predGraph.getWeight() + outEdges.getEdgeLabel().getWeight(this.graph.getModus()));
+                        new PredSuccGraphImpl<N>(toNode, predGraph.getWeight() + edgeWeightCalculator.getWeight(predGraph.getInternalNode().getWrappedNodal(), toNode.getWrappedNodal(), modus));
                 nextPredGraph.setPredecessor(predGraph);
                 nodeCache.put(toNode, nextPredGraph);
                 if (nextPredGraph.getWeight() < maxDistance) {

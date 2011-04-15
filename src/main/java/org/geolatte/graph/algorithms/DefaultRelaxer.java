@@ -21,7 +21,7 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.EdgeWeight;
+import org.geolatte.graph.EdgeWeightCalculator;
 import org.geolatte.graph.InternalNode;
 import org.geolatte.graph.Nodal;
 import org.geolatte.graph.PredGraph;
@@ -35,13 +35,13 @@ import org.geolatte.graph.PredGraph;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class DefaultRelaxer<N extends Nodal, E extends EdgeWeight<M>, M> implements Relaxer<N, E, M> {
+class DefaultRelaxer<N extends Nodal, M> implements Relaxer<N, M> {
 
         float newWeight;
 
-        public boolean relax(PredGraph<N> u, PredGraph<N> v, E edgeLabel, M modus) {
+        public boolean relax(PredGraph<N> u, PredGraph<N> v, EdgeWeightCalculator<N, M> edgeWeightCalculator, M modus) {
             
-            float r = u.getWeight() + edgeLabel.getWeight(modus);
+            float r = u.getWeight() + edgeWeightCalculator.getWeight(u.getInternalNode().getWrappedNodal(), v.getInternalNode().getWrappedNodal(), modus);
             if (r < v.getWeight()) {
                 v.setWeight(r);
                 v.setPredecessor(u);

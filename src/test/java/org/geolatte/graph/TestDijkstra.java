@@ -23,11 +23,11 @@ public class TestDijkstra {
         };
 
         weights = new float[][]{
-                {-1f, 10f, 5f, -1f, -1f},
-                {-1f, -1f, 2f, 1f, -1f},
-                {-1f, 3f, -1f, 9f, 2f},
-                {-1f, -1f, -1f, -1f, 4f},
-                {7f, -1f, -1f, 6f, -1f}
+                {-1f, 10f,  5f, -1f, -1f},
+                {-1f, -1f,  2f,  1f, -1f},
+                {-1f,  3f, -1f,  9f,  2f},
+                {-1f, -1f, -1f, -1f,  4f},
+                { 7f, -1f, -1f,  6f, -1f}
         };
     }
 
@@ -39,22 +39,23 @@ public class TestDijkstra {
     public void testExecute() throws Exception {
         Envelope env = new Envelope(0, 200, 0, 200);
 
-        GraphBuilder<MyNode, EdgeWeightImpl, MyMode> builder = Graphs.<MyNode, EdgeWeightImpl, MyMode>createGridIndexedGraphBuilder(env, 10);
+        GraphBuilder<MyNode> builder = Graphs.<MyNode>createGridIndexedGraphBuilder(env, 10);
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 if (weights[i][j] > 0f) {
-                    builder.addEdge(copy(myNodes[i]), copy(myNodes[j]), new EdgeWeightImpl(weights[i][j]));
+                    builder.addEdge(copy(myNodes[i]), copy(myNodes[j]));
                 }
             }
         }
 
 
-        Graph<MyNode, EdgeWeightImpl, MyMode> graph = builder.build();
+        Graph<MyNode> graph = builder.build();
         for (InternalNode<MyNode> nd : graph) {
             System.out.println(nd);
         }
 
-        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithmFactory.instance.createDijkstra(graph, myNodes[0], myNodes[3], new MyMode());
+        EdgeWeightCalculator<MyNode, MyMode> edgeWeightCalculator = new EdgeWeightCalculatorImpl(weights);
+        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithmFactory.instance.createDijkstra(graph, myNodes[0], myNodes[3], new MyMode(), edgeWeightCalculator);
 
         algorithm.execute();
 
@@ -69,12 +70,13 @@ public class TestDijkstra {
     }
 
 
-    private static class EdgeWeightImpl implements EdgeWeight<MyMode> {
+    private static class EdgeWeightCalculatorImpl implements EdgeWeightCalculator<MyNode, MyMode> {
 
-        private float w;
+        private float[][] weights;
 
-        private EdgeWeightImpl(float w) {
-            this.w = w;
+        private EdgeWeightCalculatorImpl(float[][] weights) {
+
+            this.weights = weights;
         }
 
 
@@ -89,12 +91,10 @@ public class TestDijkstra {
             return 0;
         }
 
+        public float getWeight(MyNode fromNode, MyNode toNode, MyMode modus) {
 
-        public float getWeight(MyMode modus) {
-            return this.w;
+            return weights[fromNode.getID()][toNode.getID()];
         }
-
-
     }
 
     private static class MyMode {

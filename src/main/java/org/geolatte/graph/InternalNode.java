@@ -39,9 +39,8 @@ public interface InternalNode<N extends Nodal> extends Nodal {
      * Creates an edge from this node to a given node.
      * @param toNode The node to connect to.
      * @param label  An arbitrary object that will be associated to the edge.
-     * @param weight 
      */
-    void addEdge(InternalNode<N> toNode, Object label, float weight);
+    void addEdge(InternalNode<N> toNode, Object label);
 
     void addReachableFrom(InternalNode<N> fromNode);
 

@@ -34,19 +34,25 @@ public class GraphAlgorithmFactory {
 
     public static GraphAlgorithmFactory instance = new GraphAlgorithmFactory();
 
-    public <N extends Nodal, E extends EdgeWeight<M>, M> GraphAlgorithm<Map<N, Float>> createBFS(Graph<N, E, M> graph, N source, float maxDistance) {
-        return new BFSDistanceLimited<N, E, M>(graph, source, maxDistance);
+    public <N extends Nodal, M> GraphAlgorithm<Map<N, Float>> createBFS(Graph<N> graph, N source, float maxDistance, EdgeWeightCalculator<N, M> edgeWeightCalculator) {
+
+        // TODO: must give a modus
+        return new BFSDistanceLimited<N, M>(graph, source, maxDistance, null, edgeWeightCalculator);
     }
 
-    public <N extends Nodal, E extends EdgeWeight<M>, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N, E, M> graph, N origin,
-                                                                       N destination, M modus) {
-        return new Dijkstra<N, E, M>(graph, origin, destination, new DefaultRelaxer<N, E, M>(), modus);
+    public <N extends Nodal, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
+                                                                       N origin,
+                                                                       N destination,
+                                                                       M modus,
+                                                                       EdgeWeightCalculator<N, M> edgeWeightCalculator) {
+
+        return new Dijkstra<N, M>(graph, origin, destination, new DefaultRelaxer<N, M>(), modus, edgeWeightCalculator);
     }
 
 
     // TODO: Temporarly commented out because of compilation problems I don't get
     /*
-    public <N extends Nodal, E extends EdgeWeight<M>, M> GraphAlgorithm<Path<N>> createAStar(Graph<N, E, M> graph, N origin,
+    public <N extends Nodal, E extends EdgeWeightCalculator<M>, M> GraphAlgorithm<Path<N>> createAStar(Graph<N, E, M> graph, N origin,
                                                                     N destination, float factor, float heuristicWeight, M modus) {
 
         Relaxer<N, E, M> relaxer = this.createAStarRelaxer(heuristicWeight, factor, destination);
@@ -60,14 +66,14 @@ public class GraphAlgorithmFactory {
 //        return new Coverage<N, E>(graph, origin, new DefaultRelaxer<N, E>(), maxDistance);
 //    }
 
-    protected <N extends Nodal, E extends EdgeWeight<M>, M> Relaxer<N, E, M> createDefaultRelaxer() {
+    protected <N extends Nodal, M> Relaxer<N, M> createDefaultRelaxer() {
 
-        return new DefaultRelaxer<N, E, M>();
+        return new DefaultRelaxer<N, M>();
     }
 
-    protected <N extends Nodal, E extends EdgeWeight<M>, M> Relaxer<N, E, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
+    protected <N extends Nodal, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
         
-        return new HeuristicRelaxer<N, E, M>(heuristicWeight, factor, destination);
+        return new HeuristicRelaxer<N, M>(heuristicWeight, factor, destination);
     }
 
 }

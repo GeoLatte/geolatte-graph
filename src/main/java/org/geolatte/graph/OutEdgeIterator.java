@@ -21,11 +21,9 @@
 
 package org.geolatte.graph;
 
-public interface OutEdgeIterator<N extends Nodal, E> {
+public interface OutEdgeIterator<N extends Nodal> {
 
     public boolean next();
-
-    public E getEdgeLabel();
 
     public InternalNode<N> getToInternalNode();
 

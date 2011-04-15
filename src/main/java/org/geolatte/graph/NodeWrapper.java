@@ -24,17 +24,16 @@ package org.geolatte.graph;
 import java.util.Arrays;
 
 /**
+ * Supports only one edge between two nodes!
+ *
  * @author Karel Maesen, Geovise BVBA
  *         creation-date: Apr 25, 2010
  */
 class NodeWrapper<N extends Nodal> implements InternalNode<N> {
     final N wrappedNodal;
     NodeWrapper<N>[] toNodes = new NodeWrapper[0];
-    float[] toWeights = new float[0];
     Object[] toLabels = new Object[0];
     private InternalNode<N>[] fromNodes = new InternalNode[0];
-    private float value;
-
 
     NodeWrapper(N obj) {
         this.wrappedNodal = obj;
@@ -44,9 +43,12 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
         return this.wrappedNodal;
     }
 
-    public void addEdge(InternalNode<N> toNode, Object label, float weight) {
+    public void addEdge(InternalNode<N> toNode, Object label) {
+
+        // TODO : do not add multiple edges between the same pair of nodes
 
         //if there is already a connection, only remember the least weighted one.
+        /*
         for (int i = 0; i < toNodes.length; i++) {
             InternalNode<N> nd = this.toNodes[i];
             if (nd.equals(toNode)) {
@@ -56,13 +58,14 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
                 return;
             }
         }
+        */
 
         //add the outgoing edge (complete information)
         toNodes = Arrays.copyOf(toNodes, toNodes.length + 1);
-        toWeights = Arrays.copyOf(toWeights, toWeights.length + 1);
+        //toWeights = Arrays.copyOf(toWeights, toWeights.length + 1);
         toLabels = Arrays.copyOf(toLabels, toLabels.length + 1);
         toNodes[toNodes.length - 1] = (NodeWrapper) toNode;
-        toWeights[toWeights.length - 1] = weight;
+        //toWeights[toWeights.length - 1] = weight;
         toLabels[toLabels.length - 1] = label;
 
         //add the incoming edge info
@@ -73,15 +76,6 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
 
     protected InternalNode<N>[] getConnected() {
         return this.toNodes;
-    }
-
-    protected float getWeightToNode(N toNode) {
-        for (int i = 0; i < this.toNodes.length; i++) {
-            if (this.toNodes[i].wrappedNodal.equals(toNode)) {
-                return this.toWeights[i];
-            }
-        }
-        return Float.NaN;
     }
 
     protected Object getLabelToNode(N toNode) {
@@ -113,14 +107,6 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
     public void addReachableFrom(InternalNode<N> fromNode) {
         this.fromNodes = Arrays.copyOf(this.fromNodes, this.fromNodes.length + 1);
         this.fromNodes[this.fromNodes.length - 1] = fromNode;
-    }
-
-    public float getValue() {
-        return value;
-    }
-
-    public void setValue(float value){
-        this.value = value;
     }
 
     //NodeWrapper objects should correspond one-to-one to their WrappedNodes.

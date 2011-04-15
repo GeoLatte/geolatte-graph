@@ -26,8 +26,9 @@ package org.geolatte.graph;
  * a single edge, depending on the modus.
  *
  * @param <M> The modus type.
+ * @param <N> The type of nodes that are connected by edges.
  */
-public interface EdgeWeight<M> {
+public interface EdgeWeightCalculator<N extends Nodal, M> {
 
-    float getWeight(M modus);
+    float getWeight(N fromNode, N toNode, M modus);
 }

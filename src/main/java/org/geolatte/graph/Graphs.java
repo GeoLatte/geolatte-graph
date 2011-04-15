@@ -27,13 +27,13 @@ import java.util.*;
 
 public class Graphs {
 
-    public static <N extends Nodal, E extends EdgeWeight<M>, M> GraphBuilder<N, E, M> createGridIndexedGraphBuilder(Envelope env, int resolution) {
+    public static <N extends Nodal> GraphBuilder<N> createGridIndexedGraphBuilder(Envelope env, int resolution) {
 
-        return new GridIndexedGraphBuilder<N, E, M>(env, resolution);
+        return new GridIndexedGraphBuilder<N>(env, resolution);
     }
 
     // Builder implementation
-    private static class GridIndexedGraphBuilder<N extends Nodal, E extends EdgeWeight<M>, M> implements GraphBuilder<N, E, M> {
+    private static class GridIndexedGraphBuilder<N extends Nodal> implements GraphBuilder<N> {
 
         private final SpatialIndexBuilder<N> indexBuilder;
         private final Map<N, InternalNode<N>> map = new HashMap<N, InternalNode<N>>(); // map is used to quickly locate Nodes based on node equality.
@@ -44,7 +44,7 @@ public class Graphs {
         }
 
 
-        public Graph<N, E, M> build() throws BuilderException {
+        public Graph<N> build() throws BuilderException {
 
             if (map.isEmpty()) {
                 throw new IllegalStateException("No nodes added since last built");
@@ -52,11 +52,10 @@ public class Graphs {
 
             map.clear(); // empty to save on memory.
             SpatialIndex<N> index = this.indexBuilder.build();
-            // TODO: 2 last arguments cannot just be null
-            return new GridIndexedGraph<N, E, M>(index, null, null);
+            return new GridIndexedGraph<N>(index);
         }
 
-        public void addEdge(N fromNode, N toNode, E label) {
+        public void addEdge(N fromNode, N toNode) {
 
             if (fromNode.equals(toNode)) {
                 return;
@@ -79,24 +78,19 @@ public class Graphs {
 
             // TODO: modus should not be null
             // Add the edge between the nodes
-            fNw.addEdge(toNw, label, label.getWeight(null));
+            fNw.addEdge(toNw, null);
         }
 
     }
 
     // Graph Implementation
-    private static class GridIndexedGraph<N extends Nodal, E extends EdgeWeight<M>, M> implements Graph<N, E, M> {
+    private static class GridIndexedGraph<N extends Nodal> implements Graph<N> {
 
         private final SpatialIndex<N> index;
-        private final ContextualReachability contextualReachability;
-        private final M modus;
 
-
-        private GridIndexedGraph(SpatialIndex<N> index, M modus, ContextualReachability contextualReachability) {
+        private GridIndexedGraph(SpatialIndex<N> index) {
 
             this.index = index;
-            this.modus = modus;
-            this.contextualReachability = contextualReachability;
         }
 
 
@@ -125,45 +119,26 @@ public class Graphs {
         }
 
 
-        public OutEdgeIterator<N, E> getOutGoingEdges(InternalNode<N> node, M Modus) {
+        public OutEdgeIterator<N> getOutGoingEdges(InternalNode<N> node, ContextualReachability contextualReachability) {
 
-            return new OutEdgeIteratorImpl<N, E, M>(this, node, contextualReachability);
-        }
-
-        public E getEdgeWeight(InternalNode<N> from, InternalNode<N> to) {
-            OutEdgeIterator<N, E> outEdges = getOutGoingEdges(from, modus);
-            while (outEdges.next()) {
-                if (outEdges.getToInternalNode().equals(to)) {
-                    return outEdges.getEdgeLabel();
-                }
-            }
-            throw new IllegalArgumentException(String.format("No Edge between nodes: %s and %s", from.getWrappedNodal(), to.getWrappedNodal()));
-        }
-
-        public M getModus() {
-            return modus;
+            return new OutEdgeIteratorImpl<N>(this, node, contextualReachability);
         }
     }
 
 
-    private static class OutEdgeIteratorImpl<N extends Nodal, E extends EdgeWeight<M>, M> implements OutEdgeIterator<N, E> {
+    private static class OutEdgeIteratorImpl<N extends Nodal> implements OutEdgeIterator<N> {
 
         final NodeWrapper<N> fromNw;
-        final GridIndexedGraph<N, E, M> graph;
+        final GridIndexedGraph<N> graph;
         int i = -1;
 
         private final ContextualReachability contextualReachability;
 
-        private OutEdgeIteratorImpl(GridIndexedGraph<N, E, M> graph, InternalNode<N> from, ContextualReachability contextualReachability) {
+        private OutEdgeIteratorImpl(GridIndexedGraph<N> graph, InternalNode<N> from, ContextualReachability contextualReachability) {
 
             this.graph = graph;
             this.fromNw = (NodeWrapper<N>) from;
             this.contextualReachability = contextualReachability;
-        }
-
-
-        public E getEdgeLabel() {
-            return (E) fromNw.toLabels[i];
         }
 
         public InternalNode<N> getToInternalNode() {

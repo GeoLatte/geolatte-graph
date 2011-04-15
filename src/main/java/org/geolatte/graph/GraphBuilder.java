@@ -29,19 +29,16 @@ package org.geolatte.graph;
  * @author Bert Vanhooff
  *
  * @param <N> The type of node.
- * @param <E> The type of edgelabel.
- * @param <M> The type of mode.
  */
-public interface GraphBuilder<N extends Nodal, E extends EdgeWeight<M>, M> {
+public interface GraphBuilder<N extends Nodal> {
 
     /**
      * Adds the given nodes and a directed edge with the given label between.
      *
      * @param fromNode The node from which the edge starts.
      * @param toNode   The destination node for the edge.
-     * @param label    The label which determines the weight of the edge.
      */
-    public void addEdge(N fromNode, N toNode, E label);
+    public void addEdge(N fromNode, N toNode);
 
     /**
      * Builds the graph.
@@ -49,6 +46,6 @@ public interface GraphBuilder<N extends Nodal, E extends EdgeWeight<M>, M> {
      * @return The graph.
      * @throws BuilderException If the graph could not be built.
      */
-    public Graph<N, E, M> build() throws BuilderException;
+    public Graph<N> build() throws BuilderException;
 
 }

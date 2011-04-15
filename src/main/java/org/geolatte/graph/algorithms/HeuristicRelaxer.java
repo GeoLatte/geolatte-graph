@@ -21,7 +21,6 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.EdgeWeight;
 import org.geolatte.graph.InternalNode;
 import org.geolatte.graph.Nodal;
 
@@ -34,7 +33,7 @@ import org.geolatte.graph.Nodal;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class HeuristicRelaxer<N extends Nodal, E extends EdgeWeight<M>, M> extends DefaultRelaxer<N, E, M> {
+class HeuristicRelaxer<N extends Nodal, M> extends DefaultRelaxer<N, M> {
 
         private final float heuristicWeight; // weight given to the heuristic
         // component

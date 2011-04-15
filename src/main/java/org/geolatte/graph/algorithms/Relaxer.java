@@ -21,7 +21,7 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.EdgeWeight;
+import org.geolatte.graph.EdgeWeightCalculator;
 import org.geolatte.graph.Nodal;
 import org.geolatte.graph.PredGraph;
 
@@ -36,25 +36,24 @@ import org.geolatte.graph.PredGraph;
  * @author Bert Vanhooff
  *
  * @param <N> The type of node.
- * @param <E> The type of edge label
  * @param <M> The type of modus
  */
-interface Relaxer<N extends Nodal, E extends EdgeWeight<M>, M> {
+interface Relaxer<N extends Nodal, M> {
 
     /**
      * Relaxes the edge from node <code>u</code> to node <code>v</node>. Both are given by their predecessor graphs.
      *
-     * @param u     Predecessor graph representing current shortest path to node u.
-     * @param v     Predecessor graph representing current shortest path to node v.
-     * @param label The edge label that determines the weight of the edge between u and v.
+     * @param u                    Predecessor graph representing current shortest path to node u.
+     * @param v                    Predecessor graph representing current shortest path to node v.
+     * @param edgeWeightCalculator The edge label that determines the weight of the edge between u and v.
      * @param modus The mode in which to execute the relaxation.
      * @return True if the weight of v was updated, false otherwise
      */
-    public boolean relax(PredGraph<N> u, PredGraph<N> v, E label, M modus);
+    public boolean relax(PredGraph<N> u, PredGraph<N> v, EdgeWeightCalculator<N, M> edgeWeightCalculator, M modus);
 
     /**
      * Returns the new total weight of the path to node v after relaxation has occured. Is only meaningful after
-     * {@link #relax(PredGraph, PredGraph, org.geolatte.graph.EdgeWeight, Object)}
+     * {@link #relax(PredGraph, PredGraph, org.geolatte.graph.EdgeWeightCalculator, Object)}
      * has been called.
      * 
      * @return The new total weight of the path to node v.

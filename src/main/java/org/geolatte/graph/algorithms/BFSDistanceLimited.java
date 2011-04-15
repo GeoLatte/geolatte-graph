@@ -31,22 +31,25 @@ import java.util.*;
  * <p>
  *
  * @param <N>
- * @param <E>
  * @param <M>
  */
-public class BFSDistanceLimited<N extends Nodal, E extends EdgeWeight<M>, M> implements GraphAlgorithm<Map<N, Float>> {
+public class BFSDistanceLimited<N extends Nodal, M> implements GraphAlgorithm<Map<N, Float>> {
 
     final Set<BFSState<N>> blackNodes = new HashSet<BFSState<N>>();
     final Queue<BFSState<N>> greyNodes = new LinkedList<BFSState<N>>();
     final InternalNode<N> source;
     final float maxDistance;
-    final Graph<N, E, M> graph;
+    private final M modus;
+    private final EdgeWeightCalculator<N, M> edgeWeightCalculator;
+    final Graph<N> graph;
     Map<N, Float> result;
 
-    protected BFSDistanceLimited(Graph<N, E, M> graph, N source, float maxDistance) {
+    protected BFSDistanceLimited(Graph<N> graph, N source, float maxDistance, M modus, EdgeWeightCalculator<N, M> edgeWeightCalculator) {
         this.graph = graph;
         this.source = graph.getInternalNode(source);
         this.maxDistance = maxDistance;
+        this.modus = modus;
+        this.edgeWeightCalculator = edgeWeightCalculator;
     }
 
 
@@ -64,14 +67,14 @@ public class BFSDistanceLimited<N extends Nodal, E extends EdgeWeight<M>, M> imp
                 continue; //don't expand when the internalNode is beyond maximum distance.
             }
 
-            OutEdgeIterator<N, E> outEdges = this.graph.getOutGoingEdges(wu.internalNode, this.graph.getModus());
+            OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(wu.internalNode, null); // TODO: context reachability
             while (outEdges.next()) {
                 InternalNode<N> v = outEdges.getToInternalNode();
                 BFSState<N> wv = new BFSState<N>(v);
                 if (greyNodes.contains(wv) || blackNodes.contains(wv)) {
                     continue; // do nothing
                 } else {
-                    wv.distance = wu.distance + outEdges.getEdgeLabel().getWeight(this.graph.getModus());
+                    wv.distance = wu.distance + edgeWeightCalculator.getWeight(wu.internalNode.getWrappedNodal(), v.getWrappedNodal(), this.modus);
                     wv.predecessor = wu.internalNode;
                     greyNodes.add(wv);
                 }

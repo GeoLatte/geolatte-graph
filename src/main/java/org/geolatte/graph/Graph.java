@@ -27,10 +27,8 @@ import java.util.List;
 /**
  *
  * @param <N> The type that represents the nodes.
- * @param <E> The type that represents the edges.
- * @param <M> The type that represents the mode (connectivity is a function of mode).
  */
-public interface Graph<N extends Nodal, E extends EdgeWeight<M>, M> extends Iterable<InternalNode<N>> {
+public interface Graph<N extends Nodal> extends Iterable<InternalNode<N>> {
 
     public Iterator<InternalNode<N>> iterator();
 
@@ -42,11 +40,12 @@ public interface Graph<N extends Nodal, E extends EdgeWeight<M>, M> extends Iter
 
     /**
      * Gets the edges that start from the given node, depending on the given modus.
+     *
      * @param node  The node.
-     * @param modus The modus.
+     * @param contextualReachability
      * @return A node iterator for the outgoing nodes.
      */
-    public OutEdgeIterator<N, E> getOutGoingEdges(InternalNode<N> node, M modus);
+    public OutEdgeIterator<N> getOutGoingEdges(InternalNode<N> node, ContextualReachability contextualReachability);
 
     /*
      * I have no clue what this method is supposed to do.
@@ -58,9 +57,4 @@ public interface Graph<N extends Nodal, E extends EdgeWeight<M>, M> extends Iter
      * @return
      */
     // public OutEdgeIterator<N, E, M> getConnectedEdges(InternalNode<N> startNode, InternalNode<N> endNode, M Modus);
-
-    public E getEdgeWeight(InternalNode<N> fromNode, InternalNode<N> toNode);
-
-    public M getModus();
-
 }
