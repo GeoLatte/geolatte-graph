@@ -54,10 +54,12 @@ class DefaultRelaxer<N extends Nodal, M> implements Relaxer<N, M> {
         }
 
         protected float update(InternalNode<N> nd, float distance) {
+
             return distance;
         }
 
         public float newTotalWeight() {
+
             return newWeight;
         }
 

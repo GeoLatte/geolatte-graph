@@ -28,7 +28,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Implements the Dijkstra shortest path algorithm.
+ * <p>
+ * Implements the basic Dijkstra shortest path algorithm. By passing in different relaxers, the algorithm can be
+ * tweaked.
+ * </p>
  *
  * @author Karel Maesen
  */

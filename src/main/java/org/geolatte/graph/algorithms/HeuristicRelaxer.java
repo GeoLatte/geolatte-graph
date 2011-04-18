@@ -26,36 +26,56 @@ import org.geolatte.graph.Nodal;
 
 /**
  * <p>
- * No comment provided yet for this class.
+ * A heuristic relaxer that takes into account:
+ * - The path cost (from source to the current node)
+ * - A heuristic estimate of the distance to the destination.
+ *
+ * The heuristic estimate in this case is the straight-line distance to the destination node.
  * </p>
  *
+ * @author Karel Measen
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
 class HeuristicRelaxer<N extends Nodal, M> extends DefaultRelaxer<N, M> {
 
-        private final float heuristicWeight; // weight given to the heuristic
-        // component
-        private final float factor; // factor for distance
-        private final N destination;
+    private final float heuristicWeight; // weight given to the heuristic component
+    private final float factor; // factor for distance
+    private final N destination;
 
-        protected HeuristicRelaxer(float heuristicWeight, float factor,
-                                 N destination) {
-            this.heuristicWeight = heuristicWeight;
-            this.factor = factor;
-            this.destination = destination;
-        }
+    /**
+     * Constructs a heuristic relaxer
+     *
+     * @param heuristicWeight The weight for the heuristic component.
+     * @param factor          The factor for the distance.
+     * @param destination     The final destination node.
+     */
+    protected HeuristicRelaxer(float heuristicWeight, float factor, N destination) {
 
-        protected float update(InternalNode<N> nd, float weight) {
-            return weight + this.heuristicWeight * this.factor
-                    * (getDistance(nd, this.destination));
-        }
-
-        protected float getDistance(Nodal f, Nodal t) {
-            double dx = (double) (f.getX() - t.getX());
-            double dy = (double) (f.getY() - t.getY());
-            return (float) Math.sqrt(dx * dx + dy * dy);
-        }
-
+        this.heuristicWeight = heuristicWeight;
+        this.factor = factor;
+        this.destination = destination;
     }
+
+    protected float update(InternalNode<N> nd, float weight) {
+
+        return weight + this.heuristicWeight * this.factor * (getDistance(nd, this.destination));
+    }
+
+    /**
+     * Gets the straight-line distance between two nodes.
+     *
+     * @param n1 The first node.
+     * @param n2 The second node.
+     *
+     * @return The straight line distance between the nodes.
+     */
+    protected float getDistance(Nodal n1, Nodal n2) {
+
+        double dx = (double) (n1.getX() - n2.getX());
+        double dy = (double) (n1.getY() - n2.getY());
+        return (float) Math.sqrt(dx * dx + dy * dy);
+    }
+
+}

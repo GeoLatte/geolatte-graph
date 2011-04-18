@@ -40,13 +40,27 @@ public class GraphAlgorithmFactory {
         return new BFSDistanceLimited<N, M>(graph, source, maxDistance, null, edgeWeightCalculator);
     }
 
+    /**
+     * Constructs a default Dijkstra shortest-path algorithm instance.
+     * 
+     * @param graph                The graph on which to run the Dijkstra algorithm.
+     * @param origin               The node from which to start routing.
+     * @param destination          The destination node to which to find a shortest path.
+     * @param mode                 The mode used to determine edge weight.
+     * @param edgeWeightCalculator The object that is used to calculate the edge weight.
+     *
+     * @param <N> Type of nodes in the graph.
+     * @param <M> Type of mode object.
+     *
+     * @return A default Dijkstra algorithm.
+     */
     public <N extends Nodal, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
                                                                        N origin,
                                                                        N destination,
-                                                                       M modus,
+                                                                       M mode,
                                                                        EdgeWeightCalculator<N, M> edgeWeightCalculator) {
 
-        return new Dijkstra<N, M>(graph, origin, destination, new DefaultRelaxer<N, M>(), modus, edgeWeightCalculator);
+        return new Dijkstra<N, M>(graph, origin, destination, new DefaultRelaxer<N, M>(), mode, edgeWeightCalculator);
     }
 
 
@@ -66,13 +80,31 @@ public class GraphAlgorithmFactory {
 //        return new Coverage<N, E>(graph, origin, new DefaultRelaxer<N, E>(), maxDistance);
 //    }
 
+    /**
+     * Constructs a default relaxer.
+     *
+     * @param <N> The node type.
+     * @param <M> The mode type.
+     *
+     * @return A default relaxer.
+     */
     protected <N extends Nodal, M> Relaxer<N, M> createDefaultRelaxer() {
 
         return new DefaultRelaxer<N, M>();
     }
 
+    /**
+     * Constructs a heuristic relaxer as used in the A* algorithm.
+     *
+     * @param heuristicWeight
+     * @param factor
+     * @param destination
+     * @param <N>
+     * @param <M>
+     * @return
+     */
     protected <N extends Nodal, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
-        
+
         return new HeuristicRelaxer<N, M>(heuristicWeight, factor, destination);
     }
 
