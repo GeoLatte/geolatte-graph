@@ -141,13 +141,29 @@ public class Graphs {
             this.contextualReachability = contextualReachability;
         }
 
-        public InternalNode<N> getToInternalNode() {
-            return fromNw.toNodes[i];
+        public boolean hasNext() {
+            return i < fromNw.toNodes.length;
         }
 
-        public boolean next() {
-            i++;
-            return i < fromNw.toNodes.length;
+        public N next() {
+
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return fromNw.toNodes[++i].getWrappedNodal();
+        }
+
+        public InternalNode<N> nextInternalNode() {
+
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return fromNw.toNodes[++i];
+        }
+
+        public void remove() {
+
+            throw new UnsupportedOperationException();
         }
 
     }

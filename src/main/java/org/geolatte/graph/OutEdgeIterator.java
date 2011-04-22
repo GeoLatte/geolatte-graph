@@ -21,10 +21,14 @@
 
 package org.geolatte.graph;
 
-public interface OutEdgeIterator<N extends Nodal> {
+import java.util.Iterator;
 
-    public boolean next();
+public interface OutEdgeIterator<N extends Nodal> extends Iterator<N> {
 
-    public InternalNode<N> getToInternalNode();
-
+    /**
+     * Same as {@link #next()}, but returns the wrapping internal node
+     *
+     * @return
+     */
+    public InternalNode<N> nextInternalNode();
 }

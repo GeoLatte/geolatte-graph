@@ -26,13 +26,36 @@ import com.vividsolutions.jts.geom.Envelope;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * A spatial indexes is used to optimize spatial queries.
+ *
+ * @param <N>
+ */
 public interface SpatialIndex<N extends Nodal> {
 
-    public boolean contains(InternalNode<N> obj);
+    /**
+     * Checks whether the given node is contained in the index.
+     *
+     * @param node The node to search for.
+     * @return True if the given node is contained in the index, false otherwise.
+     */
+    public boolean contains(InternalNode<N> node);
 
-    public List<InternalNode<N>> query(Envelope env);
+    /**
+     * @param envelope The bounds within which to search for nodes.
+     * @return A list of all nodes within the given envelope
+     */
+    public List<InternalNode<N>> query(Envelope envelope);
 
-    public List<InternalNode<N>> getNClosest(Nodal loc, int num, int maxDistance);
+    /**
+     * Searches the given number of node closest to the given node, within a maximum distance.
+     * 
+     * @param nodal       The center node.
+     * @param num         The number of closest nodes to find.
+     * @param maxDistance The maximum distance to search in.
+     * @return A list of closest nodes.
+     */
+    public List<InternalNode<N>> getNClosest(Nodal nodal, int num, int maxDistance);
 
     public Iterator<InternalNode<N>> getObjects();
 

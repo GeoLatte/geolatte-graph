@@ -68,8 +68,8 @@ public class BFSDistanceLimited<N extends Nodal, M> implements GraphAlgorithm<Ma
             }
 
             OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(wu.internalNode, null); // TODO: context reachability
-            while (outEdges.next()) {
-                InternalNode<N> v = outEdges.getToInternalNode();
+            while (outEdges.hasNext()) {
+                InternalNode<N> v = outEdges.nextInternalNode();
                 BFSState<N> wv = new BFSState<N>(v);
                 if (greyNodes.contains(wv) || blackNodes.contains(wv)) {
                     continue; // do nothing

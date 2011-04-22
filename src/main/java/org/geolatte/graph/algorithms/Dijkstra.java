@@ -73,8 +73,8 @@ public class Dijkstra<N extends Nodal, M> implements GraphAlgorithm<Path<N>> {
             }
             InternalNode<N> u = pu.getInternalNode();
             OutEdgeIterator<N> outEdges = graph.getOutGoingEdges(u, null); // TODO: context reachability
-            while (outEdges.next()) {
-                InternalNode<N> v = outEdges.getToInternalNode();
+            while (outEdges.hasNext()) {
+                InternalNode<N> v = outEdges.nextInternalNode();
                 if (closed.contains(v)) {
                     continue;
                 }

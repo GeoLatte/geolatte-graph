@@ -23,7 +23,7 @@ package org.geolatte.graph;
 
 /**
  * Representation of a node in a graph, which can be connected to other nodes through edges.
- * This is a decorator {@link Nodal}.
+ * This is a decorator for {@link Nodal}.
  *
  * @author Karel Maesen
  * @author Bert Vanhooff

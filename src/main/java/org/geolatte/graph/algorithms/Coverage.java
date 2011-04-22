@@ -80,8 +80,8 @@ public class Coverage<N extends Nodal, M> implements GraphAlgorithm<Set<PredSucc
      */
     private void deepSearch(PredSuccGraph<N> predGraph) {
         OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(predGraph.getInternalNode(), null); // TODO: contextual reachability
-        while (outEdges.next()) {
-            InternalNode<N> toNode = outEdges.getToInternalNode();
+        while (outEdges.hasNext()) {
+            InternalNode<N> toNode = outEdges.nextInternalNode();
             if (nodeCache.containsKey(toNode)) {
                 PredSuccGraph<N> existingPredGraph = nodeCache.get(toNode);
                 if (existingPredGraph.getWeight() > predGraph.getWeight() + edgeWeightCalculator.getWeight(predGraph.getInternalNode().getWrappedNodal(), toNode.getWrappedNodal(), modus)) {
