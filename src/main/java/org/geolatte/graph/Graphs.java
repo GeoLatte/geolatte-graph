@@ -142,7 +142,7 @@ public class Graphs {
         }
 
         public boolean hasNext() {
-            return i < fromNw.toNodes.length;
+            return i < fromNw.toNodes.length-1;
         }
 
         public N next() {
