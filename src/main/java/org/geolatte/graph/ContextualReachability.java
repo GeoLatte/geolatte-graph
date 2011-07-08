@@ -35,7 +35,11 @@ package org.geolatte.graph;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface ContextualReachability {
+public interface ContextualReachability<N> {
 
-    boolean isReachable(Locatable locatable);
+    boolean isReachable(InternalNode<N> node);
+
+    void setContext(PredGraph<N> pu);
+
+    void setOriginDestination(InternalNode<N> origin, InternalNode<N> destination);
 }

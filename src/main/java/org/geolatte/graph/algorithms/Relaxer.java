@@ -21,7 +21,6 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.Locatable;
 import org.geolatte.graph.PredGraph;
 
 /**
@@ -37,13 +36,13 @@ import org.geolatte.graph.PredGraph;
  * @param <N> The type of internalNode.
  * @param <M> The type of modus
  */
-interface Relaxer<N extends Locatable, M> {
+interface Relaxer<N, M> {
 
     /**
      * Relaxes the edge from internalNode <code>u</code> to internalNode <code>v</internalNode>. Both are given by their predecessor graphs.
      *
-     * @param u                    Predecessor graph representing current shortest path to internalNode u.
-     * @param v                    Predecessor graph representing current shortest path to internalNode v.
+     * @param u     Predecessor graph representing current shortest path to internalNode u.
+     * @param v     Predecessor graph representing current shortest path to internalNode v.
      * @param modus The mode in which to execute the relaxation.
      * @return True if the weight of v was updated, false otherwise
      */

@@ -21,14 +21,27 @@
 
 package org.geolatte.graph;
 
-import java.util.Iterator;
+/**
+ * <p>
+ * No comment provided yet for this class.
+ * </p>
+ *
+ * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
+ */
+public class EmptyContextualReachability<N> implements ContextualReachability<N> {
 
-public interface OutEdgeIterator<N extends Locatable> extends Iterator<N> {
+    public boolean isReachable(InternalNode<N> nInternalNode) {
+        return true;
+    }
 
-    /**
-     * Same as {@link #next()}, but returns the wrapping internal node
-     *
-     * @return
-     */
-    public InternalNode<N> nextInternalNode();
+
+    public void setContext(PredGraph<N> pu) {
+        // Do nothing
+    }
+
+    public void setOriginDestination(InternalNode<N> origin, InternalNode<N> destination) {
+        // Do nothing
+    }
 }

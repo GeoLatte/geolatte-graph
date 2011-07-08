@@ -82,90 +82,80 @@ public class Graphs {
             fNw.addEdge(toNw, null, edgeWeight);
         }
 
-    }
+        // Graph Implementation
+        private static class GridIndexedGraph<N extends Locatable> implements Graph<N> {
 
-    // Graph Implementation
-    private static class GridIndexedGraph<N extends Locatable> implements Graph<N> {
+            private final SpatialIndex<N> index;
 
-        private final SpatialIndex<N> index;
+            private GridIndexedGraph(SpatialIndex<N> index) {
 
-        private GridIndexedGraph(SpatialIndex<N> index) {
-
-            this.index = index;
-        }
+                this.index = index;
+            }
 
 
-        public List<InternalNode<N>> getNodesAt(Locatable loc) {
-            return Collections.unmodifiableList(this.index.getObjectAt(loc));
-        }
+            public List<InternalNode<N>> getNodesAt(Locatable loc) {
+                return Collections.unmodifiableList(this.index.getObjectAt(loc));
+            }
 
 
-        public Iterator<InternalNode<N>> iterator() {
-            return this.index.getObjects();
-        }
+            public Iterator<InternalNode<N>> iterator() {
+                return this.index.getObjects();
+            }
 
 
-        public List<InternalNode<N>> getClosestNodes(Locatable loc, int num, int distance) {
-            return Collections.unmodifiableList(this.index.getNClosest(loc, num, distance));
-        }
+            public List<InternalNode<N>> getClosestNodes(Locatable loc, int num, int distance) {
+                return Collections.unmodifiableList(this.index.getNClosest(loc, num, distance));
+            }
 
 
-        public InternalNode<N> getInternalNode(N node) {
-            for (InternalNode<N> nw : this.index.getObjectAt(node)) {
-                if (nw.getWrappedNodal().equals(node)) {
-                    return nw;
+            public InternalNode<N> getInternalNode(N node) {
+                for (InternalNode<N> nw : this.index.getObjectAt(node)) {
+                    if (nw.getWrappedNodal().equals(node)) {
+                        return nw;
+                    }
                 }
-            }
-            return null;
-        }
-
-
-        public OutEdgeIterator<N> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability contextualReachability) {
-
-            return new OutEdgeIteratorImpl<N>(this, internalNode, contextualReachability);
-        }
-    }
-
-
-    private static class OutEdgeIteratorImpl<N extends Locatable> implements OutEdgeIterator<N> {
-
-        final InternalNodeWrapper<N> fromNw;
-        final Graph<N> graph;
-        int i = -1;
-
-        private final ContextualReachability contextualReachability;
-
-        private OutEdgeIteratorImpl(Graph<N> graph, InternalNode<N> from, ContextualReachability contextualReachability) {
-
-            this.graph = graph;
-            this.fromNw = (InternalNodeWrapper<N>) from;
-            this.contextualReachability = contextualReachability;
-        }
-
-        public boolean hasNext() {
-            return i < fromNw.toNodes.length-1;
-        }
-
-        public N next() {
-
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            return fromNw.toNodes[++i].getWrappedNodal();
-        }
-
-        public InternalNode<N> nextInternalNode() {
-
-            if (!hasNext()) {
-                throw new NoSuchElementException();
+                return null;
             }
 
-            return fromNw.toNodes[++i];
+
+            public Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability contextualReachability) {
+                
+                return new OutEdgeIteratorImpl<N>((InternalNodeWrapper<N>) internalNode, contextualReachability);
+            }
         }
 
-        public void remove() {
 
-            throw new UnsupportedOperationException();
+        private static class OutEdgeIteratorImpl<N extends Locatable> implements Iterator<InternalNode<N>> {
+
+            int i = -1;
+            Iterator<InternalNode<N>> reachableNodesIt;
+
+            private OutEdgeIteratorImpl(InternalNodeWrapper<N> from, ContextualReachability<N> contextualReachability) {
+
+
+                List<InternalNode<N>> reachableNodes = new ArrayList<InternalNode<N>>();
+                for (InternalNode<N> node : from.toNodes) {
+                    if (contextualReachability.isReachable(node)) {
+                        reachableNodes.add(node);
+                    }
+                }
+                reachableNodesIt = reachableNodes.iterator();
+            }
+
+            public boolean hasNext() {
+                return reachableNodesIt.hasNext();
+            }
+
+            public InternalNode<N> next() {
+
+                return reachableNodesIt.next();
+            }
+
+            public void remove() {
+
+                throw new UnsupportedOperationException();
+            }
+
         }
 
     }

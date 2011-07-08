@@ -21,21 +21,37 @@
 
 package org.geolatte.graph;
 
+import java.util.Iterator;
 
 /**
- * Captures minimal requirements for an object that has a location.
+ * No comment provided yet for this class.
+ * <p/>
+ * <p>
+ * <i>Creation-Date</i>: 08/07/11<br>
+ * <i>Creation-Time</i>:  10:35<br>
+ * </p>
  *
- * @author Karel Maesen, Geovise BVBA
+ * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Located {
+public interface InternalNode<N> {
 
     /**
-     * @return The X-coordinate
+     * @return The decorated Locatable
      */
-    public int getX();
+    N getWrappedNodal();
 
     /**
-     * @return The Y-coordinate
+     * Creates an edge from this node to a given node.
+     * @param toNode The node to connect to.
+     * @param label  An arbitrary object that will be associated to the edge.
      */
-    public int getY();
+    void addEdge(InternalNode<N> toNode, Object label, EdgeWeight edgeWeight);
+
+    void addReachableFrom(InternalNode<N> fromNode);
+
+    float getWeightTo(InternalNode<N> toNode, int weightKind);
+
+    Iterator<InternalNode<N>> outgoingEdgeIterator();
 }

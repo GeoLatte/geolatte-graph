@@ -25,6 +25,7 @@ import org.geolatte.graph.*;
 
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -46,6 +47,20 @@ public class Dijkstra<N extends Locatable, M> implements GraphAlgorithm<Path<N>>
 
     private final PMinQueue<N> minQueue;
     private final Relaxer<N, M> relaxer;
+    private ContextualReachability<N> reachability;
+
+    protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N, M> relaxer, M modus, ContextualReachability<N> reachability) {
+
+        this.graph = graph;
+
+        this.origin = this.graph.getInternalNode(origin);
+        this.destination = this.graph.getInternalNode(destination);
+        this.modus = modus;
+        this.relaxer = relaxer;
+        this.minQueue = new PMinQueue<N>();
+        this.reachability = reachability;
+        this.reachability.setOriginDestination(this.origin, this.destination);
+    }
 
     protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N, M> relaxer, M modus) {
 
@@ -56,7 +71,7 @@ public class Dijkstra<N extends Locatable, M> implements GraphAlgorithm<Path<N>>
         this.modus = modus;
         this.relaxer = relaxer;
         this.minQueue = new PMinQueue<N>();
-
+        this.reachability = new EmptyContextualReachability<N>();
     }
 
     public void execute() {
@@ -70,9 +85,10 @@ public class Dijkstra<N extends Locatable, M> implements GraphAlgorithm<Path<N>>
                 return;
             }
             InternalNode<N> u = pu.getInternalNode();
-            OutEdgeIterator<N> outEdges = graph.getOutGoingEdges(u, null); // TODO: context reachability
+            reachability.setContext(pu);
+            Iterator<InternalNode<N>> outEdges = graph.getOutGoingEdges(u, reachability);
             while (outEdges.hasNext()) {
-                InternalNode<N> v = outEdges.nextInternalNode();
+                InternalNode<N> v = outEdges.next();
                 if (closed.contains(v)) {
                     continue;
                 }

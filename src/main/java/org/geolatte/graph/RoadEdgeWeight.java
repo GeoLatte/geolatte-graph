@@ -37,9 +37,9 @@ public class RoadEdgeWeight implements EdgeWeight {
     public static int TIME_TRUCK = 3;
     public static int TIME_FOOT = 4;
 
-    private int[] weights = new int[4];
+    private float[] weights = new float[4];
 
-    public RoadEdgeWeight(int[] weights, int defaultWeight) {
+    public RoadEdgeWeight(float[] weights, int defaultWeight) {
 
         weights[DISTANCE] = defaultWeight;
         weights[TIME_CAR] = defaultWeight;
@@ -52,7 +52,7 @@ public class RoadEdgeWeight implements EdgeWeight {
         return weights[weightKind];
     }
 
-    public void setWeight(int weightKind, int weight) {
+    public void setWeight(int weightKind, float weight) {
 
         if (weightKind < 0 || weightKind > 3) {
             return;

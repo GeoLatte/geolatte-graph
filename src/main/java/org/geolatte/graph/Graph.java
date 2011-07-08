@@ -28,7 +28,7 @@ import java.util.List;
  *
  * @param <N> The type that represents the nodes.
  */
-public interface Graph<N extends Locatable> extends Iterable<InternalNode<N>> {
+public interface Graph<N> extends Iterable<InternalNode<N>> {
 
     public Iterator<InternalNode<N>> iterator();
 
@@ -45,16 +45,5 @@ public interface Graph<N extends Locatable> extends Iterable<InternalNode<N>> {
      * @param contextualReachability
      * @return A internalNode iterator for the outgoing nodes.
      */
-    public OutEdgeIterator<N> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability contextualReachability);
-
-    /*
-     * I have no clue what this method is supposed to do.
-     * Get the Edges connected to the e
-     *
-     * @param startNode
-     * @param endNode
-     * @param Modus
-     * @return
-     */
-    // public OutEdgeIterator<N, E, M> getConnectedEdges(InternalNode<N> startNode, InternalNode<N> endNode, M Modus);
+    public Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability contextualReachability);
 }

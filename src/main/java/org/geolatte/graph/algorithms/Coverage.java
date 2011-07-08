@@ -21,12 +21,12 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.*;
+import org.geolatte.graph.Graph;
+import org.geolatte.graph.InternalNode;
+import org.geolatte.graph.Locatable;
+import org.geolatte.graph.PredSuccGraph;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>
@@ -77,9 +77,9 @@ public class Coverage<N extends Locatable, M> implements GraphAlgorithm<Set<Pred
      * @param predGraph The predecessor graph to start from.
      */
     private void deepSearch(PredSuccGraph<N> predGraph) {
-        OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(predGraph.getInternalNode(), null); // TODO: contextual reachability
+        Iterator<InternalNode<N>> outEdges = this.graph.getOutGoingEdges(predGraph.getInternalNode(), null); // TODO: contextual reachability
         while (outEdges.hasNext()) {
-            InternalNode<N> toInternalNode = outEdges.nextInternalNode();
+            InternalNode<N> toInternalNode = outEdges.next();
             // TODO: correct doorgeven van weightKind
             float weightToLocatedNode = predGraph.getInternalNode().getWeightTo(toInternalNode, 0);
             if (nodeCache.containsKey(toInternalNode)) {

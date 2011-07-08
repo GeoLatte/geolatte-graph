@@ -65,9 +65,9 @@ public class BFSDistanceLimited<N extends Locatable, M> implements GraphAlgorith
                 continue; //don't expand when the internalNode is beyond maximum distance.
             }
 
-            OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(wu.internalNode, null); // TODO: context reachability
+            Iterator<InternalNode<N>> outEdges = this.graph.getOutGoingEdges(wu.internalNode, null); // TODO: context reachability
             while (outEdges.hasNext()) {
-                InternalNode<N> v = outEdges.nextInternalNode();
+                InternalNode<N> v = outEdges.next();
                 BFSState<N> wv = new BFSState<N>(v);
                 if (greyNodes.contains(wv) || blackNodes.contains(wv)) {
                     continue; // do nothing

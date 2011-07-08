@@ -30,19 +30,19 @@ import java.util.Iterator;
  * @author Karel Maesen, Geovise BVBA
  *         creation-date: Apr 25, 2010
  */
-class LocatedNodeWrapper<N extends Located> implements LocatedNode<N> {
+class InternalNodeWrapper<N> implements InternalNode<N> {
 
-//LocatedNodeWrapper objects should correspond one-to-one to their WrappedNodes.
+//InternalNodeWrapper objects should correspond one-to-one to their WrappedNodes.
     //Equals/hashcode implementation is therefore not necessary. For
     // performance reasons, it should not be implemented.
 
     final N wrappedNodal;
-    LocatedNodeWrapper<N>[] toNodes = new LocatedNodeWrapper[0];
+    InternalNodeWrapper<N>[] toNodes = new InternalNodeWrapper[0];
     EdgeWeight[] toWeights = new EdgeWeight[0];
     Object[] toLabels = new Object[0];
-    private Node<N>[] fromLocatedNodes = new LocatedNode[0];
+    private InternalNode<N>[] fromInternalNodes = new InternalNode[0];
 
-    LocatedNodeWrapper(N obj) {
+    InternalNodeWrapper(N obj) {
         this.wrappedNodal = obj;
     }
 
@@ -50,7 +50,7 @@ class LocatedNodeWrapper<N extends Located> implements LocatedNode<N> {
         return this.wrappedNodal;
     }
 
-    public void addEdge(Node<N> toLocatedNode, Object label, EdgeWeight edgeWeight) {
+    public void addEdge(InternalNode<N> toInternalNode, Object label, EdgeWeight edgeWeight) {
 
         // TODO : do not add multiple edges between the same pair of nodes
         // We only remember the last weight added
@@ -59,17 +59,17 @@ class LocatedNodeWrapper<N extends Located> implements LocatedNode<N> {
         toNodes = Arrays.copyOf(toNodes, toNodes.length + 1);
         toWeights = Arrays.copyOf(toWeights, toWeights.length + 1);
         toLabels = Arrays.copyOf(toLabels, toLabels.length + 1);
-        toNodes[toNodes.length - 1] = (LocatedNodeWrapper) toLocatedNode;
+        toNodes[toNodes.length - 1] = (InternalNodeWrapper) toInternalNode;
         toWeights[toWeights.length - 1] = edgeWeight;
         toLabels[toLabels.length - 1] = label;
 
         //add the incoming edge info
-        toLocatedNode.addReachableFrom(this);
+        toInternalNode.addReachableFrom(this);
 
     }
 
 
-    protected LocatedNode<? extends N>[] getConnected() {
+    protected InternalNode<? extends N>[] getConnected() {
         return this.toNodes;
     }
 
@@ -82,39 +82,32 @@ class LocatedNodeWrapper<N extends Located> implements LocatedNode<N> {
         return null;
     }
 
-    public int getX() {
-        return this.wrappedNodal.getX();
-    }
-
-    public int getY() {
-        return this.wrappedNodal.getY();
-    }
 
     public String toString() {
-        String str = String.format("MyNode: x = %d, y = %d", this.wrappedNodal.getX(), this.wrappedNodal.getY());
-        return str;
+        //String str = String.format("MyNode: x = %d, y = %d", this.wrappedNodal.getX(), this.wrappedNodal.getY());
+        return "";
     }
 
-    protected Node<? extends N>[] getReachableFrom() {
-        return this.fromLocatedNodes;
+    protected InternalNode<? extends N>[] getReachableFrom() {
+        return this.fromInternalNodes;
     }
 
-    public void addReachableFrom(Node<N> fromLocatedNode) {
-        this.fromLocatedNodes = Arrays.copyOf(this.fromLocatedNodes, this.fromLocatedNodes.length + 1);
-        this.fromLocatedNodes[this.fromLocatedNodes.length - 1] = fromLocatedNode;
+    public void addReachableFrom(InternalNode<N> fromInternalNode) {
+        this.fromInternalNodes = Arrays.copyOf(this.fromInternalNodes, this.fromInternalNodes.length + 1);
+        this.fromInternalNodes[this.fromInternalNodes.length - 1] = fromInternalNode;
     }
 
-    public float getWeightTo(Node<N> toLocatedNode, int weightKind) {
+    public float getWeightTo(InternalNode<N> toInternalNode, int weightKind) {
 
         for (int i = 0; i < this.toNodes.length; i++) {
-            if (this.toNodes[i].wrappedNodal.equals(toLocatedNode.getWrappedNodal())) {
+            if (this.toNodes[i].wrappedNodal.equals(toInternalNode.getWrappedNodal())) {
                 return this.toWeights[i].getValue(weightKind);
             }
         }
         return Float.MAX_VALUE;
     }
 
-    public Iterator<Node<N>> outgoingEdgeIterator() {
+    public Iterator<InternalNode<N>> outgoingEdgeIterator() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
