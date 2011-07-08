@@ -21,10 +21,17 @@
 
 package org.geolatte.graph;
 
-public interface SpatialIndexBuilder<T extends Located> {
+/**
+ * Representation of a node in a graph, which can be connected to other nodes through edges.
+ *
+ * @author Karel Maesen
+ * @author Bert Vanhooff
+ */
+public interface LocatedNode<N extends Located> extends Node<N>, Located {
 
-    public void insert(LocatedNode<T> obj);
 
-    public SpatialIndex<T> build() throws BuilderException;
+    int getX();
+
+    int getY();
 
 }

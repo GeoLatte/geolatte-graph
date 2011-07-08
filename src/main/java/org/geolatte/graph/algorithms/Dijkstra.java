@@ -37,32 +37,30 @@ import java.util.Set;
  */
 public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
 
-    private final Node<N> origin;
-    private final Node<N> destination;
+    private final LocatedNode<N> origin;
+    private final LocatedNode<N> destination;
     private final Graph<N> graph;
     private final M modus;
-    private final EdgeWeightCalculator<N, M> edgeWeightCalculator;
     private Path<N> result;
 
 
     private final PMinQueue<N> minQueue;
     private final Relaxer<N, M> relaxer;
 
-    protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N, M> relaxer, M modus, EdgeWeightCalculator<N,M> edgeWeightCalculator) {
+    protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N, M> relaxer, M modus) {
 
         this.graph = graph;
 
         this.origin = this.graph.getInternalNode(origin);
         this.destination = this.graph.getInternalNode(destination);
         this.modus = modus;
-        this.edgeWeightCalculator = edgeWeightCalculator;
         this.relaxer = relaxer;
         this.minQueue = new PMinQueue<N>();
 
     }
 
     public void execute() {
-        Set<Node<N>> closed = new HashSet<Node<N>>();
+        Set<LocatedNode<N>> closed = new HashSet<LocatedNode<N>>();
         PredGraphImpl<N> startPG = new PredGraphImpl<N>(this.origin, 0.0f);
         minQueue.add(startPG, Float.POSITIVE_INFINITY);
         while (!minQueue.isEmpty()) {
@@ -71,10 +69,10 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
             if (isDone(pu)) {
                 return;
             }
-            Node<N> u = pu.getInternalNode();
+            LocatedNode<N> u = pu.getInternalNode();
             OutEdgeIterator<N> outEdges = graph.getOutGoingEdges(u, null); // TODO: context reachability
             while (outEdges.hasNext()) {
-                Node<N> v = outEdges.nextInternalNode();
+                LocatedNode<N> v = outEdges.nextInternalNode();
                 if (closed.contains(v)) {
                     continue;
                 }
@@ -84,7 +82,7 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
                             Float.POSITIVE_INFINITY);
                     minQueue.add(pv, Float.POSITIVE_INFINITY);
                 }
-                if (this.relaxer.relax(pu, pv, edgeWeightCalculator, modus)) {
+                if (this.relaxer.relax(pu, pv, modus)) {
                     this.minQueue.update(pv, this.relaxer.newTotalWeight());
                 }
             }
@@ -118,12 +116,12 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
     }
 
     static class PredGraphImpl<N extends Located> implements PredGraph<N> {
-            private final Node<N> node;
+            private final LocatedNode<N> locatedNode;
             private PredGraph<N> predecessor = null;
             private float weight;
 
-            private PredGraphImpl(Node<N> n, float weight) {
-                this.node = n;
+            private PredGraphImpl(LocatedNode<N> n, float weight) {
+                this.locatedNode = n;
                 this.weight = weight;
             }
 
@@ -139,8 +137,8 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
                 this.weight = w;
             }
 
-            public Node<N> getInternalNode() {
-                return this.node;
+            public LocatedNode<N> getInternalNode() {
+                return this.locatedNode;
             }
 
             public static class PGComparator<N extends Located> implements Comparator<PredGraph<N>> {
@@ -149,7 +147,7 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
                     if (o1 instanceof PredGraphImpl && o2 instanceof PredGraphImpl) {
                         PredGraphImpl<N> pg1 = (PredGraphImpl<N>) o1;
                         PredGraphImpl<N> pg2 = (PredGraphImpl<N>) o2;
-                        if (pg1.node.equals(pg2.node)) {
+                        if (pg1.locatedNode.equals(pg2.locatedNode)) {
                             return 0;
                         }
                         return Float.compare(pg1.getWeight(), pg2.getWeight());
@@ -166,7 +164,7 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
             public int hashCode() {
                 final int prime = 31;
                 int result = 1;
-                result = prime * result + ((node == null) ? 0 : node.hashCode());
+                result = prime * result + ((locatedNode == null) ? 0 : locatedNode.hashCode());
                 return result;
             }
 
@@ -179,16 +177,16 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
                 if (getClass() != obj.getClass())
                     return false;
                 PredGraphImpl<N> other = (PredGraphImpl<N>) obj;
-                if (node == null) {
-                    if (other.node != null)
+                if (locatedNode == null) {
+                    if (other.locatedNode != null)
                         return false;
-                } else if (!node.equals(other.node))
+                } else if (!locatedNode.equals(other.locatedNode))
                     return false;
                 return true;
             }
 
             public String toString() {
-                return String.format("MyNode: %s, weight: %.1f", this.node,
+                return String.format("MyNode: %s, weight: %.1f", this.locatedNode,
                         this.weight);
             }
         }    

@@ -30,5 +30,5 @@ public interface OutEdgeIterator<N extends Located> extends Iterator<N> {
      *
      * @return
      */
-    public Node<N> nextInternalNode();
+    public LocatedNode<N> nextInternalNode();
 }

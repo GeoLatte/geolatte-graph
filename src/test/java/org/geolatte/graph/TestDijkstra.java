@@ -47,7 +47,8 @@ public class TestDijkstra {
                     final int finalJ = j;
                     builder.addEdge(copy(myNodes[i]), copy(myNodes[j]), new EdgeWeight() {
                         public float getValue(int weightKind) {
-                            return weights[finalI][finalJ];
+                            float weight = weights[finalI][finalJ];
+                            return weight;
                         }
                     });
                 }
@@ -56,12 +57,11 @@ public class TestDijkstra {
 
 
         Graph<MyNode> graph = builder.build();
-        for (Node<MyNode> nd : graph) {
+        for (LocatedNode<MyNode> nd : graph) {
             System.out.println(nd);
         }
 
-        EdgeWeightCalculator<MyNode, MyMode> edgeWeightCalculator = new EdgeWeightCalculatorImpl(weights);
-        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithmFactory.instance.createDijkstra(graph, myNodes[0], myNodes[3], new MyMode(), edgeWeightCalculator);
+        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithmFactory.instance.createDijkstra(graph, myNodes[0], myNodes[3], new MyMode());
 
         algorithm.execute();
 
@@ -73,34 +73,6 @@ public class TestDijkstra {
         assertTrue(p.getDestination().equals(myNodes[3]));
         assertEquals(9f, p.totalWeight(), 0.01f);
 
-    }
-
-
-    private static class EdgeWeightCalculatorImpl implements EdgeWeightCalculator<MyNode, MyMode> {
-
-        private float[][] weights;
-
-        private EdgeWeightCalculatorImpl(float[][] weights) {
-
-            this.weights = weights;
-        }
-
-
-        public float getMaxConstraint() {
-            // TODO Auto-generated method stub
-            return 0;
-        }
-
-
-        public float getMinConstraint() {
-            // TODO Auto-generated method stub
-            return 0;
-        }
-
-        public float getWeight(MyNode fromNode, MyNode toNode, MyMode modus) {
-
-            return weights[fromNode.getID()][toNode.getID()];
-        }
     }
 
     private static class MyMode {

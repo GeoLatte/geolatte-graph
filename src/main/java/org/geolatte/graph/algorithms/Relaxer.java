@@ -21,7 +21,6 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.EdgeWeightCalculator;
 import org.geolatte.graph.Located;
 import org.geolatte.graph.PredGraph;
 
@@ -30,33 +29,32 @@ import org.geolatte.graph.PredGraph;
  * <p/>
  * From "Introduction to Algorithms 3rd edition":
  * The process of relaxing an edge (u, v) consists of testing whether we can improve the shortest path to v found so far
- * by going through u and, if so, updating (decreasing) the new total weight of v and its predecessor node
+ * by going through u and, if so, updating (decreasing) the new total weight of v and its predecessor locatedNode
  *
  * @author Karel Maesen
  * @author Bert Vanhooff
  *
- * @param <N> The type of node.
+ * @param <N> The type of locatedNode.
  * @param <M> The type of modus
  */
 interface Relaxer<N extends Located, M> {
 
     /**
-     * Relaxes the edge from node <code>u</code> to node <code>v</node>. Both are given by their predecessor graphs.
+     * Relaxes the edge from locatedNode <code>u</code> to locatedNode <code>v</locatedNode>. Both are given by their predecessor graphs.
      *
-     * @param u                    Predecessor graph representing current shortest path to node u.
-     * @param v                    Predecessor graph representing current shortest path to node v.
-     * @param edgeWeightCalculator The edge label that determines the weight of the edge between u and v.
+     * @param u                    Predecessor graph representing current shortest path to locatedNode u.
+     * @param v                    Predecessor graph representing current shortest path to locatedNode v.
      * @param modus The mode in which to execute the relaxation.
      * @return True if the weight of v was updated, false otherwise
      */
-    public boolean relax(PredGraph<N> u, PredGraph<N> v, EdgeWeightCalculator<N, M> edgeWeightCalculator, M modus);
+    public boolean relax(PredGraph<N> u, PredGraph<N> v, M modus);
 
     /**
-     * Returns the new total weight of the path to node v after relaxation has occured. Is only meaningful after
-     * {@link #relax(PredGraph, PredGraph, org.geolatte.graph.EdgeWeightCalculator, Object)}
+     * Returns the new total weight of the path to locatedNode v after relaxation has occured. Is only meaningful after
+     * {@link #relax(PredGraph, PredGraph, Object)}
      * has been called.
      * 
-     * @return The new total weight of the path to node v.
+     * @return The new total weight of the path to locatedNode v.
      */
     public float newTotalWeight();
 

@@ -22,12 +22,18 @@
 package org.geolatte.graph;
 
 /**
- * Representation of a node in a graph, which can be connected to other nodes through edges.
+ * No comment provided yet for this class.
+ * <p/>
+ * <p>
+ * <i>Creation-Date</i>: 08/07/11<br>
+ * <i>Creation-Time</i>:  10:35<br>
+ * </p>
  *
- * @author Karel Maesen
  * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Node<N extends Located> extends Located {
+public interface Node<N> {
 
     /**
      * @return The decorated Located
@@ -43,10 +49,5 @@ public interface Node<N extends Located> extends Located {
 
     void addReachableFrom(Node<N> fromNode);
 
-    void getWeightTo(Node<N> toNode, int weightKind);
-
-    int getX();
-
-    int getY();
-
+    float getWeightTo(Node<N> toNode, int weightKind);
 }

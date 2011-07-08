@@ -29,15 +29,19 @@ import java.util.Arrays;
  * @author Karel Maesen, Geovise BVBA
  *         creation-date: Apr 25, 2010
  */
-class NodeWrapper<N extends Located> implements Node<N> {
+class LocatedNodeWrapper<N extends Located> implements LocatedNode<N> {
+
+//LocatedNodeWrapper objects should correspond one-to-one to their WrappedNodes.
+    //Equals/hashcode implementation is therefore not necessary. For
+    // performance reasons, it should not be implemented.
 
     final N wrappedNodal;
-    NodeWrapper<N>[] toNodes = new NodeWrapper[0];
+    LocatedNodeWrapper<N>[] toNodes = new LocatedNodeWrapper[0];
     EdgeWeight[] toWeights = new EdgeWeight[0];
     Object[] toLabels = new Object[0];
-    private Node<N>[] fromNodes = new Node[0];
+    private Node<N>[] fromLocatedNodes = new LocatedNode[0];
 
-    NodeWrapper(N obj) {
+    LocatedNodeWrapper(N obj) {
         this.wrappedNodal = obj;
     }
 
@@ -45,7 +49,7 @@ class NodeWrapper<N extends Located> implements Node<N> {
         return this.wrappedNodal;
     }
 
-    public void addEdge(Node<N> toNode, Object label, EdgeWeight edgeWeight) {
+    public void addEdge(Node<N> toLocatedNode, Object label, EdgeWeight edgeWeight) {
 
         // TODO : do not add multiple edges between the same pair of nodes
         // We only remember the last weight added
@@ -54,17 +58,17 @@ class NodeWrapper<N extends Located> implements Node<N> {
         toNodes = Arrays.copyOf(toNodes, toNodes.length + 1);
         toWeights = Arrays.copyOf(toWeights, toWeights.length + 1);
         toLabels = Arrays.copyOf(toLabels, toLabels.length + 1);
-        toNodes[toNodes.length - 1] = (NodeWrapper) toNode;
+        toNodes[toNodes.length - 1] = (LocatedNodeWrapper) toLocatedNode;
         toWeights[toWeights.length - 1] = edgeWeight;
         toLabels[toLabels.length - 1] = label;
 
         //add the incoming edge info
-        toNode.addReachableFrom(this);
+        toLocatedNode.addReachableFrom(this);
 
     }
 
 
-    protected Node<N>[] getConnected() {
+    protected LocatedNode<? extends N>[] getConnected() {
         return this.toNodes;
     }
 
@@ -90,21 +94,22 @@ class NodeWrapper<N extends Located> implements Node<N> {
         return str;
     }
 
-    protected Node<N>[] getReachableFrom() {
-        return this.fromNodes;
+    protected Node<? extends N>[] getReachableFrom() {
+        return this.fromLocatedNodes;
     }
 
-    public void addReachableFrom(Node<N> fromNode) {
-        this.fromNodes = Arrays.copyOf(this.fromNodes, this.fromNodes.length + 1);
-        this.fromNodes[this.fromNodes.length - 1] = fromNode;
+    public void addReachableFrom(Node<N> fromLocatedNode) {
+        this.fromLocatedNodes = Arrays.copyOf(this.fromLocatedNodes, this.fromLocatedNodes.length + 1);
+        this.fromLocatedNodes[this.fromLocatedNodes.length - 1] = fromLocatedNode;
     }
 
-    public void getWeightTo(Node<N> toNode, int weightKind) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public float getWeightTo(Node<N> toLocatedNode, int weightKind) {
+
+        for (int i = 0; i < this.toNodes.length; i++) {
+            if (this.toNodes[i].wrappedNodal.equals(toLocatedNode.getWrappedNodal())) {
+                return this.toWeights[i].getValue(weightKind);
+            }
+        }
+        return Float.MAX_VALUE;
     }
-
-    //NodeWrapper objects should correspond one-to-one to their WrappedNodes.
-    //Equals/hashcode implementation is therefore not necessary. For
-    // performance reasons, it should not be implemented.
-
 }

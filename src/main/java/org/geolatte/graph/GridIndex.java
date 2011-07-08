@@ -62,17 +62,17 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public boolean contains(Node<T> node) {
-        if (node == null) {
+    public boolean contains(LocatedNode<T> locatedNode) {
+        if (locatedNode == null) {
             return false;
         }
-        Object[] cell = getCellContaining(node);
+        Object[] cell = getCellContaining(locatedNode);
         if (cell == null) {
             return false;
         }
         for (Object o : cell) {
             T c = (T) o;
-            if (c.equals(node)) {
+            if (c.equals(locatedNode)) {
                 return true;
             }
         }
@@ -80,10 +80,10 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Node<T>> getNClosest(Located located, int num, int maxDistance) {
+    public List<LocatedNode<T>> getNClosest(Located located, int num, int maxDistance) {
 
         if (located == null) {
-            return new ArrayList<Node<T>>();
+            return new ArrayList<LocatedNode<T>>();
         }
         int maxX = (int) Math.min(located.getX() + maxDistance, this.env.getMaxX());
         int minX = (int) Math.max(located.getX() - maxDistance, this.env.getMinX());
@@ -129,21 +129,21 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
         }
 
         Collections.sort(candidates);
-        List<Node<T>> result = new ArrayList<Node<T>>();
+        List<LocatedNode<T>> result = new ArrayList<LocatedNode<T>>();
         for (int i = 0; i < Math.min(num, candidates.size()); i++) {
-            result.add((Node<T>) candidates.get(i).obj);
+            result.add((LocatedNode<T>) candidates.get(i).obj);
         }
 
         return result;
     }
 
-    public List<Node<T>> query(Envelope envelope) {
+    public List<LocatedNode<T>> query(Envelope envelope) {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    public Iterator<Node<T>> getObjects() {
+    public Iterator<LocatedNode<T>> getObjects() {
 
-        return new Iterator<Node<T>>() {
+        return new Iterator<LocatedNode<T>>() {
 
             int ix = 0;
             int iy = 0;
@@ -162,10 +162,10 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
                 return ix < grid.length;
             }
 
-            public Node<T> next() {
+            public LocatedNode<T> next() {
 
                 if (hasNext()) {
-                    Node<T> retVal = (Node<T>) grid[ix][iy][i];
+                    LocatedNode<T> retVal = (LocatedNode<T>) grid[ix][iy][i];
                     incrementPointers();
                     return retVal;
 
@@ -197,8 +197,8 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
         };
     }
 
-    public List<Node<T>> getObjectAt(Located loc) {
-        List<Node<T>> res = new ArrayList<Node<T>>();
+    public List<LocatedNode<T>> getObjectAt(Located loc) {
+        List<LocatedNode<T>> res = new ArrayList<LocatedNode<T>>();
         if (loc == null) {
             return res;
         }
@@ -208,7 +208,7 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
         }
 
         for (Object o : cell) {
-            Node<T> c = (Node<T>) o;
+            LocatedNode<T> c = (LocatedNode<T>) o;
             if (c.getX() == loc.getX()
                     && c.getY() == loc.getY()) {
                 res.add(c);

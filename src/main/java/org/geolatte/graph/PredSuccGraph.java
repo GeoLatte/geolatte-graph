@@ -45,7 +45,7 @@ public interface PredSuccGraph<N extends Located> {
 
     void setWeight(float d);
 
-    Node<N> getInternalNode();
+    LocatedNode<N> getInternalNode();
 
     Set<PredSuccGraph<N>> getSuccessors();
 

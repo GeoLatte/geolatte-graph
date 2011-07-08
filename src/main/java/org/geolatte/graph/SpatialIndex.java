@@ -34,18 +34,18 @@ import java.util.List;
 public interface SpatialIndex<N extends Located> {
 
     /**
-     * Checks whether the given node is contained in the index.
+     * Checks whether the given locatedNode is contained in the index.
      *
-     * @param node The node to search for.
-     * @return True if the given node is contained in the index, false otherwise.
+     * @param locatedNode The locatedNode to search for.
+     * @return True if the given locatedNode is contained in the index, false otherwise.
      */
-    public boolean contains(Node<N> node);
+    public boolean contains(LocatedNode<N> locatedNode);
 
     /**
      * @param envelope The bounds within which to search for nodes.
      * @return A list of all nodes within the given envelope
      */
-    public List<Node<N>> query(Envelope envelope);
+    public List<LocatedNode<N>> query(Envelope envelope);
 
     /**
      * Searches the given number of node closest to the given node, within a maximum distance.
@@ -55,10 +55,10 @@ public interface SpatialIndex<N extends Located> {
      * @param maxDistance The maximum distance to search in.
      * @return A list of closest nodes.
      */
-    public List<Node<N>> getNClosest(Located located, int num, int maxDistance);
+    public List<LocatedNode<N>> getNClosest(Located located, int num, int maxDistance);
 
-    public Iterator<Node<N>> getObjects();
+    public Iterator<LocatedNode<N>> getObjects();
 
-    public List<Node<N>> getObjectAt(Located loc);
+    public List<LocatedNode<N>> getObjectAt(Located loc);
 
 }

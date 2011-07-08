@@ -21,9 +21,8 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.EdgeWeightCalculator;
-import org.geolatte.graph.Node;
 import org.geolatte.graph.Located;
+import org.geolatte.graph.LocatedNode;
 import org.geolatte.graph.PredGraph;
 
 /**
@@ -39,9 +38,10 @@ class DefaultRelaxer<N extends Located, M> implements Relaxer<N, M> {
 
         float newWeight;
 
-        public boolean relax(PredGraph<N> u, PredGraph<N> v, EdgeWeightCalculator<N, M> edgeWeightCalculator, M modus) {
-            
-            float r = u.getWeight() + edgeWeightCalculator.getWeight(u.getInternalNode().getWrappedNodal(), v.getInternalNode().getWrappedNodal(), modus);
+        public boolean relax(PredGraph<N> u, PredGraph<N> v, M modus) {
+
+            // TODO: correct doorgeven van weightKind
+            float r = u.getWeight() + u.getInternalNode().getWeightTo(v.getInternalNode(), 0);
             if (r < v.getWeight()) {
                 v.setWeight(r);
                 v.setPredecessor(u);
@@ -53,7 +53,7 @@ class DefaultRelaxer<N extends Located, M> implements Relaxer<N, M> {
             }
         }
 
-        protected float update(Node<N> nd, float distance) {
+        protected float update(LocatedNode<N> nd, float distance) {
 
             return distance;
         }

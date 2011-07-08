@@ -58,6 +58,6 @@ public interface PredGraph<N extends Located> {
     /**
      * @return The node that is decorated by this predecessor graph.
      */
-    Node<N> getInternalNode();
+    LocatedNode<N> getInternalNode();
 
 }

@@ -21,16 +21,16 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.Node;
+import org.geolatte.graph.LocatedNode;
 import org.geolatte.graph.Located;
 
 /**
  * <p>
  * A heuristic relaxer that takes into account:
- * - The path cost (from source to the current node),
+ * - The path cost (from source to the current locatedNode),
  * - A heuristic calculated by a given strategy.
  *
- * For example, the {@link DistanceHeuristicStrategy} can be used to take the straight-line distance to the target node
+ * For example, the {@link DistanceHeuristicStrategy} can be used to take the straight-line distance to the target locatedNode
  * as heuristic value.
  * </p>
  *
@@ -49,7 +49,7 @@ class HeuristicRelaxer<N extends Located, M> extends DefaultRelaxer<N, M> {
      * Constructs a heuristic relaxer
      *
      * @param heuristicWeight   The weight for the heuristic component.
-     * @param destination       The final destination node.
+     * @param destination       The final destination locatedNode.
      * @param heuristicStrategy The strategy used to calculate the heuristic.
      */
     protected HeuristicRelaxer(float heuristicWeight, N destination, HeuristicStrategy<N> heuristicStrategy) {
@@ -59,7 +59,7 @@ class HeuristicRelaxer<N extends Located, M> extends DefaultRelaxer<N, M> {
         this.heuristicStrategy = heuristicStrategy;
     }
 
-    protected float update(Node<N> nd, float weight) {
+    protected float update(LocatedNode<N> nd, float weight) {
 
         return weight + this.heuristicWeight * (heuristicStrategy.getValue(nd.getWrappedNodal(), destination));
     }

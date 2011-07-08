@@ -42,7 +42,7 @@ public class SpatialIndexes {
 
         //the resolution values satisfy the property:
         // value / resolution provides the cell number
-        private final List<Node<T>>[][] grid;
+        private final List<LocatedNode<T>>[][] grid;
         private final int xNumCells, yNumCells;
 
         @SuppressWarnings("unchecked")
@@ -61,7 +61,7 @@ public class SpatialIndexes {
 
         }
 
-        public boolean isWithinBounds(Node<T> obj) {
+        public boolean isWithinBounds(LocatedNode<T> obj) {
             if (obj.getX() < this.env.getMinX() || obj.getX() > this.env.getMaxX()) {
                 return false;
             }
@@ -71,7 +71,7 @@ public class SpatialIndexes {
             return true;
         }
 
-        public void insert(Node<T> obj) {
+        public void insert(LocatedNode<T> obj) {
             if (!isWithinBounds(obj)) {
                 throw new RuntimeException("Tried insert object that lies out of bounds: " + obj);
             }
@@ -79,9 +79,9 @@ public class SpatialIndexes {
             int xCellIdx = (int) (obj.getX() - this.env.getMinX()) / this.resolution;
             int yCellIdx = (int) (obj.getY() - this.env.getMinY()) / this.resolution;
 
-            List<Node<T>> cell = (List<Node<T>>) this.grid[xCellIdx][yCellIdx];
+            List<LocatedNode<T>> cell = (List<LocatedNode<T>>) this.grid[xCellIdx][yCellIdx];
             if (cell == null) {
-                cell = new ArrayList<Node<T>>();
+                cell = new ArrayList<LocatedNode<T>>();
                 this.grid[xCellIdx][yCellIdx] = cell;
 
             }
@@ -95,12 +95,12 @@ public class SpatialIndexes {
             return index;
         }
 
-        private Object[][][] toCompressedArray(List<Node<T>>[][] grid) {
+        private Object[][][] toCompressedArray(List<LocatedNode<T>>[][] grid) {
             Object[][][] newGrid = new Object[this.xNumCells][this.yNumCells][];
             for (int xi = 0; xi < grid.length; xi++) {
-                List<Node<T>>[] xar = grid[xi];
+                List<LocatedNode<T>>[] xar = grid[xi];
                 for (int yi = 0; yi < xar.length; yi++) {
-                    List<Node<T>> cell = xar[yi];
+                    List<LocatedNode<T>> cell = xar[yi];
                     if (cell != null) {
                         newGrid[xi][yi] = (Object[]) cell.toArray();
                     }

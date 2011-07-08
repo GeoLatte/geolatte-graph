@@ -37,19 +37,17 @@ public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<
 
     final Set<BFSState<N>> blackNodes = new HashSet<BFSState<N>>();
     final Queue<BFSState<N>> greyNodes = new LinkedList<BFSState<N>>();
-    final Node<N> source;
+    final LocatedNode<N> source;
     final float maxDistance;
     private final M modus;
-    private final EdgeWeightCalculator<N, M> edgeWeightCalculator;
     final Graph<N> graph;
     Map<N, Float> result;
 
-    protected BFSDistanceLimited(Graph<N> graph, N source, float maxDistance, M modus, EdgeWeightCalculator<N, M> edgeWeightCalculator) {
+    protected BFSDistanceLimited(Graph<N> graph, N source, float maxDistance, M modus) {
         this.graph = graph;
         this.source = graph.getInternalNode(source);
         this.maxDistance = maxDistance;
         this.modus = modus;
-        this.edgeWeightCalculator = edgeWeightCalculator;
     }
 
 
@@ -64,18 +62,19 @@ public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<
             BFSState<N> wu = this.greyNodes.remove();
 
             if (wu.distance > maxDistance) {
-                continue; //don't expand when the node is beyond maximum distance.
+                continue; //don't expand when the locatedNode is beyond maximum distance.
             }
 
-            OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(wu.node, null); // TODO: context reachability
+            OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(wu.locatedNode, null); // TODO: context reachability
             while (outEdges.hasNext()) {
-                Node<N> v = outEdges.nextInternalNode();
+                LocatedNode<N> v = outEdges.nextInternalNode();
                 BFSState<N> wv = new BFSState<N>(v);
                 if (greyNodes.contains(wv) || blackNodes.contains(wv)) {
                     continue; // do nothing
                 } else {
-                    wv.distance = wu.distance + edgeWeightCalculator.getWeight(wu.node.getWrappedNodal(), v.getWrappedNodal(), this.modus);
-                    wv.predecessor = wu.node;
+                    // TODO: correct doorgeven van wieghtKind
+                    wv.distance = wu.distance + wu.locatedNode.getWeightTo(v, 0);
+                    wv.predecessor = wu.locatedNode;
                     greyNodes.add(wv);
                 }
             }
@@ -94,7 +93,7 @@ public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<
     protected Map<N, Float> toMap(Set<BFSState<N>> nodes) {
         Map<N, Float> map = new HashMap<N, Float>(nodes.size());
         for (BFSState<N> wu : nodes) {
-            map.put(wu.node.getWrappedNodal(), wu.distance);
+            map.put(wu.locatedNode.getWrappedNodal(), wu.distance);
         }
         return map;
 
@@ -102,12 +101,12 @@ public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<
 
     private static class BFSState<N extends Located> {
 
-        final Node<N> node;
+        final LocatedNode<N> locatedNode;
         float distance = Float.POSITIVE_INFINITY;
-        Node<N> predecessor;
+        LocatedNode<N> predecessor;
 
-        private BFSState(Node<N> node) {
-            this.node = node;
+        private BFSState(LocatedNode<N> locatedNode) {
+            this.locatedNode = locatedNode;
         }
 
         /* (non-Javadoc)
@@ -117,7 +116,7 @@ public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((node == null) ? 0 : node.hashCode());
+            result = prime * result + ((locatedNode == null) ? 0 : locatedNode.hashCode());
             return result;
         }
 
@@ -133,10 +132,10 @@ public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<
             if (!(obj instanceof BFSState))
                 return false;
             BFSState other = (BFSState) obj;
-            if (node == null) {
-                if (other.node != null)
+            if (locatedNode == null) {
+                if (other.locatedNode != null)
                     return false;
-            } else if (!node.equals(other.node))
+            } else if (!locatedNode.equals(other.locatedNode))
                 return false;
             return true;
         }

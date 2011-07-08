@@ -37,7 +37,7 @@ public class Graphs {
     private static class GridIndexedGraphBuilder<N extends Located> implements GraphBuilder<N> {
 
         private final SpatialIndexBuilder<N> indexBuilder;
-        private final Map<N, Node<N>> map = new HashMap<N, Node<N>>(); // map is used to quickly locate Nodes based on node equality.
+        private final Map<N, LocatedNode<N>> map = new HashMap<N, LocatedNode<N>>(); // map is used to quickly locate Nodes based on node equality.
 
         private GridIndexedGraphBuilder(Envelope env, int resolution) {
 
@@ -64,15 +64,15 @@ public class Graphs {
             }
 
             // Lookup nodes or create them if new
-            Node<N> fNw = this.map.get(fromNode);
-            Node<N> toNw = this.map.get(toNode);
+            LocatedNode<N> fNw = this.map.get(fromNode);
+            LocatedNode<N> toNw = this.map.get(toNode);
             if (fNw == null) {
-                fNw = new NodeWrapper<N>(fromNode);
+                fNw = new LocatedNodeWrapper<N>(fromNode);
                 this.indexBuilder.insert(fNw);
                 this.map.put(fromNode, fNw);
             }
             if (toNw == null) {
-                toNw = new NodeWrapper<N>(toNode);
+                toNw = new LocatedNodeWrapper<N>(toNode);
                 this.indexBuilder.insert(toNw);
                 this.map.put(toNode, toNw);
             }
@@ -95,23 +95,23 @@ public class Graphs {
         }
 
 
-        public List<Node<N>> getNodesAt(Located loc) {
+        public List<LocatedNode<N>> getNodesAt(Located loc) {
             return Collections.unmodifiableList(this.index.getObjectAt(loc));
         }
 
 
-        public Iterator<Node<N>> iterator() {
+        public Iterator<LocatedNode<N>> iterator() {
             return this.index.getObjects();
         }
 
 
-        public List<Node<N>> getClosestNodes(Located loc, int num, int distance) {
+        public List<LocatedNode<N>> getClosestNodes(Located loc, int num, int distance) {
             return Collections.unmodifiableList(this.index.getNClosest(loc, num, distance));
         }
 
 
-        public Node<N> getInternalNode(N node) {
-            for (Node<N> nw : this.index.getObjectAt(node)) {
+        public LocatedNode<N> getInternalNode(N node) {
+            for (LocatedNode<N> nw : this.index.getObjectAt(node)) {
                 if (nw.getWrappedNodal().equals(node)) {
                     return nw;
                 }
@@ -120,25 +120,25 @@ public class Graphs {
         }
 
 
-        public OutEdgeIterator<N> getOutGoingEdges(Node<N> node, ContextualReachability contextualReachability) {
+        public OutEdgeIterator<N> getOutGoingEdges(LocatedNode<N> locatedNode, ContextualReachability contextualReachability) {
 
-            return new OutEdgeIteratorImpl<N>(this, node, contextualReachability);
+            return new OutEdgeIteratorImpl<N>(this, locatedNode, contextualReachability);
         }
     }
 
 
     private static class OutEdgeIteratorImpl<N extends Located> implements OutEdgeIterator<N> {
 
-        final NodeWrapper<N> fromNw;
+        final LocatedNodeWrapper<N> fromNw;
         final Graph<N> graph;
         int i = -1;
 
         private final ContextualReachability contextualReachability;
 
-        private OutEdgeIteratorImpl(Graph<N> graph, Node<N> from, ContextualReachability contextualReachability) {
+        private OutEdgeIteratorImpl(Graph<N> graph, LocatedNode<N> from, ContextualReachability contextualReachability) {
 
             this.graph = graph;
-            this.fromNw = (NodeWrapper<N>) from;
+            this.fromNw = (LocatedNodeWrapper<N>) from;
             this.contextualReachability = contextualReachability;
         }
 
@@ -154,7 +154,7 @@ public class Graphs {
             return fromNw.toNodes[++i].getWrappedNodal();
         }
 
-        public Node<N> nextInternalNode() {
+        public LocatedNode<N> nextInternalNode() {
 
             if (!hasNext()) {
                 throw new NoSuchElementException();
