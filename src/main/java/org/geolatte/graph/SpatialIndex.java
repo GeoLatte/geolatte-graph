@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @param <N>
  */
-public interface SpatialIndex<N extends Nodal> {
+public interface SpatialIndex<N extends Located> {
 
     /**
      * Checks whether the given node is contained in the index.
@@ -39,26 +39,26 @@ public interface SpatialIndex<N extends Nodal> {
      * @param node The node to search for.
      * @return True if the given node is contained in the index, false otherwise.
      */
-    public boolean contains(InternalNode<N> node);
+    public boolean contains(Node<N> node);
 
     /**
      * @param envelope The bounds within which to search for nodes.
      * @return A list of all nodes within the given envelope
      */
-    public List<InternalNode<N>> query(Envelope envelope);
+    public List<Node<N>> query(Envelope envelope);
 
     /**
      * Searches the given number of node closest to the given node, within a maximum distance.
      * 
-     * @param nodal       The center node.
+     * @param located       The center node.
      * @param num         The number of closest nodes to find.
      * @param maxDistance The maximum distance to search in.
      * @return A list of closest nodes.
      */
-    public List<InternalNode<N>> getNClosest(Nodal nodal, int num, int maxDistance);
+    public List<Node<N>> getNClosest(Located located, int num, int maxDistance);
 
-    public Iterator<InternalNode<N>> getObjects();
+    public Iterator<Node<N>> getObjects();
 
-    public List<InternalNode<N>> getObjectAt(Nodal loc);
+    public List<Node<N>> getObjectAt(Located loc);
 
 }

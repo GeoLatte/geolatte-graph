@@ -37,5 +37,5 @@ package org.geolatte.graph;
  */
 public interface ContextualReachability {
 
-    boolean isReachable(Nodal nodal);
+    boolean isReachable(Located located);
 }

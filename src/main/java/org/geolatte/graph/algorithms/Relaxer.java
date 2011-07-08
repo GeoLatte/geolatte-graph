@@ -22,7 +22,7 @@
 package org.geolatte.graph.algorithms;
 
 import org.geolatte.graph.EdgeWeightCalculator;
-import org.geolatte.graph.Nodal;
+import org.geolatte.graph.Located;
 import org.geolatte.graph.PredGraph;
 
 /**
@@ -38,7 +38,7 @@ import org.geolatte.graph.PredGraph;
  * @param <N> The type of node.
  * @param <M> The type of modus
  */
-interface Relaxer<N extends Nodal, M> {
+interface Relaxer<N extends Located, M> {
 
     /**
      * Relaxes the edge from node <code>u</code> to node <code>v</node>. Both are given by their predecessor graphs.

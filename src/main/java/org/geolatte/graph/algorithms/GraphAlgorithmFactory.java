@@ -34,7 +34,7 @@ public class GraphAlgorithmFactory {
 
     public static GraphAlgorithmFactory instance = new GraphAlgorithmFactory();
 
-    public <N extends Nodal, M> GraphAlgorithm<Map<N, Float>> createBFS(Graph<N> graph, N source, float maxDistance, EdgeWeightCalculator<N, M> edgeWeightCalculator) {
+    public <N extends Located, M> GraphAlgorithm<Map<N, Float>> createBFS(Graph<N> graph, N source, float maxDistance, EdgeWeightCalculator<N, M> edgeWeightCalculator) {
 
         // TODO: must give a modus
         return new BFSDistanceLimited<N, M>(graph, source, maxDistance, null, edgeWeightCalculator);
@@ -54,7 +54,7 @@ public class GraphAlgorithmFactory {
      *
      * @return A default Dijkstra algorithm.
      */
-    public <N extends Nodal, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
+    public <N extends Located, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
                                                                        N origin,
                                                                        N destination,
                                                                        M mode,
@@ -66,7 +66,7 @@ public class GraphAlgorithmFactory {
 
     // TODO: Temporarly commented out because of compilation problems I don't get
     /*
-    public <N extends Nodal, E extends EdgeWeightCalculator<M>, M> GraphAlgorithm<Path<N>> createAStar(Graph<N, E, M> graph, N origin,
+    public <N extends Located, E extends EdgeWeightCalculator<M>, M> GraphAlgorithm<Path<N>> createAStar(Graph<N, E, M> graph, N origin,
                                                                     N destination, float factor, float heuristicWeight, M modus) {
 
         Relaxer<N, E, M> relaxer = this.createAStarRelaxer(heuristicWeight, factor, destination);
@@ -75,7 +75,7 @@ public class GraphAlgorithmFactory {
     }
     */
 
-//    public <N extends Nodal, E> GraphAlgorithm<Set<InternalNode<N>>> createCoverage(Graph<N, E> graph, N origin,
+//    public <N extends Located, E> GraphAlgorithm<Set<Node<N>>> createCoverage(Graph<N, E> graph, N origin,
 //                                                                               float maxDistance){
 //        return new Coverage<N, E>(graph, origin, new DefaultRelaxer<N, E>(), maxDistance);
 //    }
@@ -88,7 +88,7 @@ public class GraphAlgorithmFactory {
      *
      * @return A default relaxer.
      */
-    protected <N extends Nodal, M> Relaxer<N, M> createDefaultRelaxer() {
+    protected <N extends Located, M> Relaxer<N, M> createDefaultRelaxer() {
 
         return new DefaultRelaxer<N, M>();
     }
@@ -103,7 +103,7 @@ public class GraphAlgorithmFactory {
      * @param <M>
      * @return
      */
-    protected <N extends Nodal, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
+    protected <N extends Located, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
 
         return new HeuristicRelaxer<N, M>(heuristicWeight, factor, destination);
     }

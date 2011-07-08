@@ -35,10 +35,10 @@ import java.util.Set;
  *
  * @author Karel Maesen
  */
-public class Dijkstra<N extends Nodal, M> implements GraphAlgorithm<Path<N>> {
+public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
 
-    private final InternalNode<N> origin;
-    private final InternalNode<N> destination;
+    private final Node<N> origin;
+    private final Node<N> destination;
     private final Graph<N> graph;
     private final M modus;
     private final EdgeWeightCalculator<N, M> edgeWeightCalculator;
@@ -62,7 +62,7 @@ public class Dijkstra<N extends Nodal, M> implements GraphAlgorithm<Path<N>> {
     }
 
     public void execute() {
-        Set<InternalNode<N>> closed = new HashSet<InternalNode<N>>();
+        Set<Node<N>> closed = new HashSet<Node<N>>();
         PredGraphImpl<N> startPG = new PredGraphImpl<N>(this.origin, 0.0f);
         minQueue.add(startPG, Float.POSITIVE_INFINITY);
         while (!minQueue.isEmpty()) {
@@ -71,10 +71,10 @@ public class Dijkstra<N extends Nodal, M> implements GraphAlgorithm<Path<N>> {
             if (isDone(pu)) {
                 return;
             }
-            InternalNode<N> u = pu.getInternalNode();
+            Node<N> u = pu.getInternalNode();
             OutEdgeIterator<N> outEdges = graph.getOutGoingEdges(u, null); // TODO: context reachability
             while (outEdges.hasNext()) {
-                InternalNode<N> v = outEdges.nextInternalNode();
+                Node<N> v = outEdges.nextInternalNode();
                 if (closed.contains(v)) {
                     continue;
                 }
@@ -117,12 +117,12 @@ public class Dijkstra<N extends Nodal, M> implements GraphAlgorithm<Path<N>> {
         return this.result;
     }
 
-    static class PredGraphImpl<N extends Nodal> implements PredGraph<N> {
-            private final InternalNode<N> node;
+    static class PredGraphImpl<N extends Located> implements PredGraph<N> {
+            private final Node<N> node;
             private PredGraph<N> predecessor = null;
             private float weight;
 
-            private PredGraphImpl(InternalNode<N> n, float weight) {
+            private PredGraphImpl(Node<N> n, float weight) {
                 this.node = n;
                 this.weight = weight;
             }
@@ -139,11 +139,11 @@ public class Dijkstra<N extends Nodal, M> implements GraphAlgorithm<Path<N>> {
                 this.weight = w;
             }
 
-            public InternalNode<N> getInternalNode() {
+            public Node<N> getInternalNode() {
                 return this.node;
             }
 
-            public static class PGComparator<N extends Nodal> implements Comparator<PredGraph<N>> {
+            public static class PGComparator<N extends Located> implements Comparator<PredGraph<N>> {
 
                 public int compare(PredGraph<N> o1, PredGraph<N> o2) {
                     if (o1 instanceof PredGraphImpl && o2 instanceof PredGraphImpl) {

@@ -23,8 +23,8 @@ package org.geolatte.graph.algorithms;
 
 import org.geolatte.data.PairNode;
 import org.geolatte.data.PairingHeap;
-import org.geolatte.graph.InternalNode;
-import org.geolatte.graph.Nodal;
+import org.geolatte.graph.Node;
+import org.geolatte.graph.Located;
 import org.geolatte.graph.PredGraph;
 
 import java.util.HashMap;
@@ -37,10 +37,10 @@ import java.util.Map;
  * @author Karel Maesen, Geovise BVBA
  * @param <V>
  */
-public class PMinQueue<V extends Nodal> {
+public class PMinQueue<V extends Located> {
 
     private final PairingHeap<Element<V>> heap = new PairingHeap<Element<V>>();
-    private final Map<InternalNode<V>, PairNode<Element<V>>> index = new HashMap<InternalNode<V>, PairNode<Element<V>>>();
+    private final Map<Node<V>, PairNode<Element<V>>> index = new HashMap<Node<V>, PairNode<Element<V>>>();
 
     public void add(PredGraph<V> value, float key) {
         PairNode<Element<V>> pn = heap.insert(new Element(value, key));
@@ -58,7 +58,7 @@ public class PMinQueue<V extends Nodal> {
     }
 
 
-    public PredGraph<V> get(InternalNode<V> value) {
+    public PredGraph<V> get(Node<V> value) {
         PairNode<Element<V>> node = this.index.get(value);
         if (node == null) {
             return null;
@@ -83,7 +83,7 @@ public class PMinQueue<V extends Nodal> {
 
     }
 
-    static class Element<V extends Nodal> implements Comparable<Element<V>> {
+    static class Element<V extends Located> implements Comparable<Element<V>> {
         private final Float key;
         private final PredGraph<V> value;
 

@@ -35,7 +35,7 @@ import java.util.Set;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface PredSuccGraph<N extends Nodal> {
+public interface PredSuccGraph<N extends Located> {
 
     PredSuccGraph<N> getPredecessor();
 
@@ -45,7 +45,7 @@ public interface PredSuccGraph<N extends Nodal> {
 
     void setWeight(float d);
 
-    InternalNode<N> getInternalNode();
+    Node<N> getInternalNode();
 
     Set<PredSuccGraph<N>> getSuccessors();
 

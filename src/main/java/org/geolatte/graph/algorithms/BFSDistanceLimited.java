@@ -33,11 +33,11 @@ import java.util.*;
  * @param <N>
  * @param <M>
  */
-public class BFSDistanceLimited<N extends Nodal, M> implements GraphAlgorithm<Map<N, Float>> {
+public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<Map<N, Float>> {
 
     final Set<BFSState<N>> blackNodes = new HashSet<BFSState<N>>();
     final Queue<BFSState<N>> greyNodes = new LinkedList<BFSState<N>>();
-    final InternalNode<N> source;
+    final Node<N> source;
     final float maxDistance;
     private final M modus;
     private final EdgeWeightCalculator<N, M> edgeWeightCalculator;
@@ -64,18 +64,18 @@ public class BFSDistanceLimited<N extends Nodal, M> implements GraphAlgorithm<Ma
             BFSState<N> wu = this.greyNodes.remove();
 
             if (wu.distance > maxDistance) {
-                continue; //don't expand when the internalNode is beyond maximum distance.
+                continue; //don't expand when the node is beyond maximum distance.
             }
 
-            OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(wu.internalNode, null); // TODO: context reachability
+            OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(wu.node, null); // TODO: context reachability
             while (outEdges.hasNext()) {
-                InternalNode<N> v = outEdges.nextInternalNode();
+                Node<N> v = outEdges.nextInternalNode();
                 BFSState<N> wv = new BFSState<N>(v);
                 if (greyNodes.contains(wv) || blackNodes.contains(wv)) {
                     continue; // do nothing
                 } else {
-                    wv.distance = wu.distance + edgeWeightCalculator.getWeight(wu.internalNode.getWrappedNodal(), v.getWrappedNodal(), this.modus);
-                    wv.predecessor = wu.internalNode;
+                    wv.distance = wu.distance + edgeWeightCalculator.getWeight(wu.node.getWrappedNodal(), v.getWrappedNodal(), this.modus);
+                    wv.predecessor = wu.node;
                     greyNodes.add(wv);
                 }
             }
@@ -94,20 +94,20 @@ public class BFSDistanceLimited<N extends Nodal, M> implements GraphAlgorithm<Ma
     protected Map<N, Float> toMap(Set<BFSState<N>> nodes) {
         Map<N, Float> map = new HashMap<N, Float>(nodes.size());
         for (BFSState<N> wu : nodes) {
-            map.put(wu.internalNode.getWrappedNodal(), wu.distance);
+            map.put(wu.node.getWrappedNodal(), wu.distance);
         }
         return map;
 
     }
 
-    private static class BFSState<N extends Nodal> {
+    private static class BFSState<N extends Located> {
 
-        final InternalNode<N> internalNode;
+        final Node<N> node;
         float distance = Float.POSITIVE_INFINITY;
-        InternalNode<N> predecessor;
+        Node<N> predecessor;
 
-        private BFSState(InternalNode<N> internalNode) {
-            this.internalNode = internalNode;
+        private BFSState(Node<N> node) {
+            this.node = node;
         }
 
         /* (non-Javadoc)
@@ -117,7 +117,7 @@ public class BFSDistanceLimited<N extends Nodal, M> implements GraphAlgorithm<Ma
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((internalNode == null) ? 0 : internalNode.hashCode());
+            result = prime * result + ((node == null) ? 0 : node.hashCode());
             return result;
         }
 
@@ -133,10 +133,10 @@ public class BFSDistanceLimited<N extends Nodal, M> implements GraphAlgorithm<Ma
             if (!(obj instanceof BFSState))
                 return false;
             BFSState other = (BFSState) obj;
-            if (internalNode == null) {
-                if (other.internalNode != null)
+            if (node == null) {
+                if (other.node != null)
                     return false;
-            } else if (!internalNode.equals(other.internalNode))
+            } else if (!node.equals(other.node))
                 return false;
             return true;
         }

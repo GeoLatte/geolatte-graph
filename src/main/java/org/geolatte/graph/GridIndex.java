@@ -37,7 +37,7 @@ import java.util.List;
  * @author Bert Vanhooff
  * @since SDK1.5
  */
-class GridIndex<T extends Nodal> implements SpatialIndex<T> {
+class GridIndex<T extends Located> implements SpatialIndex<T> {
 
     private final Envelope env;
     private final int resolution;
@@ -52,7 +52,7 @@ class GridIndex<T extends Nodal> implements SpatialIndex<T> {
         this.grid = grid;
     }
 
-    private Object[] getCellContaining(Nodal obj) {
+    private Object[] getCellContaining(Located obj) {
         if (obj == null) {
             throw null;
         }
@@ -62,7 +62,7 @@ class GridIndex<T extends Nodal> implements SpatialIndex<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public boolean contains(InternalNode<T> node) {
+    public boolean contains(Node<T> node) {
         if (node == null) {
             return false;
         }
@@ -80,15 +80,15 @@ class GridIndex<T extends Nodal> implements SpatialIndex<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<InternalNode<T>> getNClosest(Nodal nodal, int num, int maxDistance) {
+    public List<Node<T>> getNClosest(Located located, int num, int maxDistance) {
 
-        if (nodal == null) {
-            return new ArrayList<InternalNode<T>>();
+        if (located == null) {
+            return new ArrayList<Node<T>>();
         }
-        int maxX = (int) Math.min(nodal.getX() + maxDistance, this.env.getMaxX());
-        int minX = (int) Math.max(nodal.getX() - maxDistance, this.env.getMinX());
-        int maxY = (int) Math.min(nodal.getY() + maxDistance, this.env.getMaxY());
-        int minY = (int) Math.max(nodal.getY() - maxDistance, this.env.getMinY());
+        int maxX = (int) Math.min(located.getX() + maxDistance, this.env.getMaxX());
+        int minX = (int) Math.max(located.getX() - maxDistance, this.env.getMinX());
+        int maxY = (int) Math.min(located.getY() + maxDistance, this.env.getMaxY());
+        int minY = (int) Math.max(located.getY() - maxDistance, this.env.getMinY());
 
         int minIdxX = (int) (minX - this.env.getMinX()) / this.resolution;
         int maxIdxX = (int) (maxX - this.env.getMinX()) / this.resolution;
@@ -118,8 +118,8 @@ class GridIndex<T extends Nodal> implements SpatialIndex<T> {
                 if (cell == null) continue;
                 for (Object o : cell) {
                     T t = (T) o;
-                    double dx = (double) (t.getX() - nodal.getX());
-                    double dy = (double) (t.getY() - nodal.getY());
+                    double dx = (double) (t.getX() - located.getX());
+                    double dy = (double) (t.getY() - located.getY());
                     long distance = Math.round(Math.sqrt(dx * dx + dy * dy));
                     if (distance <= maxDistance) {
                         candidates.add(new Label(t, distance));
@@ -129,21 +129,21 @@ class GridIndex<T extends Nodal> implements SpatialIndex<T> {
         }
 
         Collections.sort(candidates);
-        List<InternalNode<T>> result = new ArrayList<InternalNode<T>>();
+        List<Node<T>> result = new ArrayList<Node<T>>();
         for (int i = 0; i < Math.min(num, candidates.size()); i++) {
-            result.add((InternalNode<T>) candidates.get(i).obj);
+            result.add((Node<T>) candidates.get(i).obj);
         }
 
         return result;
     }
 
-    public List<InternalNode<T>> query(Envelope envelope) {
+    public List<Node<T>> query(Envelope envelope) {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    public Iterator<InternalNode<T>> getObjects() {
+    public Iterator<Node<T>> getObjects() {
 
-        return new Iterator<InternalNode<T>>() {
+        return new Iterator<Node<T>>() {
 
             int ix = 0;
             int iy = 0;
@@ -162,10 +162,10 @@ class GridIndex<T extends Nodal> implements SpatialIndex<T> {
                 return ix < grid.length;
             }
 
-            public InternalNode<T> next() {
+            public Node<T> next() {
 
                 if (hasNext()) {
-                    InternalNode<T> retVal = (InternalNode<T>) grid[ix][iy][i];
+                    Node<T> retVal = (Node<T>) grid[ix][iy][i];
                     incrementPointers();
                     return retVal;
 
@@ -197,8 +197,8 @@ class GridIndex<T extends Nodal> implements SpatialIndex<T> {
         };
     }
 
-    public List<InternalNode<T>> getObjectAt(Nodal loc) {
-        List<InternalNode<T>> res = new ArrayList<InternalNode<T>>();
+    public List<Node<T>> getObjectAt(Located loc) {
+        List<Node<T>> res = new ArrayList<Node<T>>();
         if (loc == null) {
             return res;
         }
@@ -208,7 +208,7 @@ class GridIndex<T extends Nodal> implements SpatialIndex<T> {
         }
 
         for (Object o : cell) {
-            InternalNode<T> c = (InternalNode<T>) o;
+            Node<T> c = (Node<T>) o;
             if (c.getX() == loc.getX()
                     && c.getY() == loc.getY()) {
                 res.add(c);

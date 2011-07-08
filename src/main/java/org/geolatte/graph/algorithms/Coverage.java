@@ -38,13 +38,13 @@ import java.util.Set;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public class Coverage<N extends Nodal, M> implements GraphAlgorithm<Set<PredSuccGraph<N>>> {
+public class Coverage<N extends Located, M> implements GraphAlgorithm<Set<PredSuccGraph<N>>> {
 
     private final Set<PredSuccGraph<N>> result;
     private final Graph<N> graph;
-    private final InternalNode<N> origin;
+    private final Node<N> origin;
     private final float maxDistance;
-    private final HashMap<InternalNode<N>, PredSuccGraph<N>> nodeCache;
+    private final HashMap<Node<N>, PredSuccGraph<N>> nodeCache;
     private final M modus;
     private final EdgeWeightCalculator<N,M> edgeWeightCalculator;
 
@@ -53,7 +53,7 @@ public class Coverage<N extends Nodal, M> implements GraphAlgorithm<Set<PredSucc
         this.graph = graph;
         this.origin = this.graph.getInternalNode(origin);
         this.maxDistance = maxDistance;
-        this.nodeCache = new HashMap<InternalNode<N>, PredSuccGraph<N>>();
+        this.nodeCache = new HashMap<Node<N>, PredSuccGraph<N>>();
         this.modus = mode;
         this.edgeWeightCalculator = edgeWeightCalculator;
     }
@@ -81,7 +81,7 @@ public class Coverage<N extends Nodal, M> implements GraphAlgorithm<Set<PredSucc
     private void deepSearch(PredSuccGraph<N> predGraph) {
         OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(predGraph.getInternalNode(), null); // TODO: contextual reachability
         while (outEdges.hasNext()) {
-            InternalNode<N> toNode = outEdges.nextInternalNode();
+            Node<N> toNode = outEdges.nextInternalNode();
             if (nodeCache.containsKey(toNode)) {
                 PredSuccGraph<N> existingPredGraph = nodeCache.get(toNode);
                 if (existingPredGraph.getWeight() > predGraph.getWeight() + edgeWeightCalculator.getWeight(predGraph.getInternalNode().getWrappedNodal(), toNode.getWrappedNodal(), modus)) {
@@ -111,13 +111,13 @@ public class Coverage<N extends Nodal, M> implements GraphAlgorithm<Set<PredSucc
         }
     }
 
-    static class PredSuccGraphImpl<N extends Nodal> implements PredSuccGraph<N> {
-        private final InternalNode<N> node;
+    static class PredSuccGraphImpl<N extends Located> implements PredSuccGraph<N> {
+        private final Node<N> node;
         private PredSuccGraph<N> predecessor = null;
         private final Set<PredSuccGraph<N>> successors = new HashSet<PredSuccGraph<N>>();
         private float weight;
 
-        private PredSuccGraphImpl(InternalNode<N> n, float weight) {
+        private PredSuccGraphImpl(Node<N> n, float weight) {
             this.node = n;
             this.weight = weight;
         }
@@ -138,7 +138,7 @@ public class Coverage<N extends Nodal, M> implements GraphAlgorithm<Set<PredSucc
         }
 
 
-        public InternalNode<N> getInternalNode() {
+        public Node<N> getInternalNode() {
             return this.node;
         }
 
@@ -146,7 +146,7 @@ public class Coverage<N extends Nodal, M> implements GraphAlgorithm<Set<PredSucc
             return successors;
         }
 
-        public static class PGComparator<N extends Nodal> implements Comparator<PredSuccGraph<N>> {
+        public static class PGComparator<N extends Located> implements Comparator<PredSuccGraph<N>> {
 
             public int compare(PredSuccGraph<N> o1, PredSuccGraph<N> o2) {
                 if (o1 instanceof PredSuccGraphImpl && o2 instanceof PredSuccGraphImpl) {

@@ -29,11 +29,13 @@ import java.util.Arrays;
  * @author Karel Maesen, Geovise BVBA
  *         creation-date: Apr 25, 2010
  */
-class NodeWrapper<N extends Nodal> implements InternalNode<N> {
+class NodeWrapper<N extends Located> implements Node<N> {
+
     final N wrappedNodal;
     NodeWrapper<N>[] toNodes = new NodeWrapper[0];
+    EdgeWeight[] toWeights = new EdgeWeight[0];
     Object[] toLabels = new Object[0];
-    private InternalNode<N>[] fromNodes = new InternalNode[0];
+    private Node<N>[] fromNodes = new Node[0];
 
     NodeWrapper(N obj) {
         this.wrappedNodal = obj;
@@ -43,29 +45,17 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
         return this.wrappedNodal;
     }
 
-    public void addEdge(InternalNode<N> toNode, Object label) {
+    public void addEdge(Node<N> toNode, Object label, EdgeWeight edgeWeight) {
 
         // TODO : do not add multiple edges between the same pair of nodes
-
-        //if there is already a connection, only remember the least weighted one.
-        /*
-        for (int i = 0; i < toNodes.length; i++) {
-            InternalNode<N> nd = this.toNodes[i];
-            if (nd.equals(toNode)) {
-                if (weight < this.toWeights[i]) {
-                    this.toWeights[i] = weight;
-                }
-                return;
-            }
-        }
-        */
+        // We only remember the last weight added
 
         //add the outgoing edge (complete information)
         toNodes = Arrays.copyOf(toNodes, toNodes.length + 1);
-        //toWeights = Arrays.copyOf(toWeights, toWeights.length + 1);
+        toWeights = Arrays.copyOf(toWeights, toWeights.length + 1);
         toLabels = Arrays.copyOf(toLabels, toLabels.length + 1);
         toNodes[toNodes.length - 1] = (NodeWrapper) toNode;
-        //toWeights[toWeights.length - 1] = weight;
+        toWeights[toWeights.length - 1] = edgeWeight;
         toLabels[toLabels.length - 1] = label;
 
         //add the incoming edge info
@@ -74,7 +64,7 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
     }
 
 
-    protected InternalNode<N>[] getConnected() {
+    protected Node<N>[] getConnected() {
         return this.toNodes;
     }
 
@@ -100,13 +90,17 @@ class NodeWrapper<N extends Nodal> implements InternalNode<N> {
         return str;
     }
 
-    protected InternalNode<N>[] getReachableFrom() {
+    protected Node<N>[] getReachableFrom() {
         return this.fromNodes;
     }
 
-    public void addReachableFrom(InternalNode<N> fromNode) {
+    public void addReachableFrom(Node<N> fromNode) {
         this.fromNodes = Arrays.copyOf(this.fromNodes, this.fromNodes.length + 1);
         this.fromNodes[this.fromNodes.length - 1] = fromNode;
+    }
+
+    public void getWeightTo(Node<N> toNode, int weightKind) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     //NodeWrapper objects should correspond one-to-one to their WrappedNodes.

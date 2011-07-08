@@ -30,7 +30,7 @@ package org.geolatte.graph;
  *
  * @param <N> The type of node.
  */
-public interface GraphBuilder<N extends Nodal> {
+public interface GraphBuilder<N extends Located> {
 
     /**
      * Adds the given nodes and a directed edge with the given label between.
@@ -38,7 +38,7 @@ public interface GraphBuilder<N extends Nodal> {
      * @param fromNode The node from which the edge starts.
      * @param toNode   The destination node for the edge.
      */
-    public void addEdge(N fromNode, N toNode);
+    public void addEdge(N fromNode, N toNode, EdgeWeight edgeWeight);
 
     /**
      * Builds the graph.

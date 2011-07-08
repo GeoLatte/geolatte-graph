@@ -21,31 +21,43 @@
 
 package org.geolatte.graph;
 
-
 /**
- * <code>Nodal</code> captures minimum requirements on the myNodes
- * in a <code>Graph</code>.
- * <p/>
- * <p><em>Implementations should be thread-safe</em>. The <code>getData()</code>-method
- * is intended to be used concurrently by threads executing some graph algorithm.</p>
+ * <p>
+ * Base implementation of the {@link EdgeWeight} interface, providing for the most common weights.
+ * </p>
  *
- * @author Karel Maesen, Geovise BVBA
+ * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Nodal<D> {
+public class BaseEdgeWeight implements EdgeWeight {
 
-    /**
-     * Returns The X-coordinate of the internalNode
-     *
-     * @return X-coordinate
-     */
-    public int getX();
+    public static int DISTANCE = 1;
+    public static int TIME_CAR = 2;
+    public static int TIME_TRUCK = 3;
+    public static int TIME_FOOT = 4;
 
-    /**
-     * Returns the Y-coordinate of the internalNode
-     *
-     * @return Y-coordinate
-     */
-    public int getY();
+    private int[] weights = new int[4];
 
+    public BaseEdgeWeight(int[] weights, int defaultWeight) {
 
+        weights[DISTANCE] = defaultWeight;
+        weights[TIME_CAR] = defaultWeight;
+        weights[TIME_TRUCK] = defaultWeight;
+        weights[TIME_FOOT] = defaultWeight;
+    }
+
+    public float getValue(int weightKind) {
+
+        return weights[weightKind];
+    }
+
+    public void setWeight(int weightKind, int weight) {
+
+        if (weightKind < 0 || weightKind > 3) {
+            return;
+        }
+
+        weights[weightKind] = weight;
+    }
 }

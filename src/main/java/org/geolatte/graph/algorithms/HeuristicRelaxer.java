@@ -21,8 +21,8 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.InternalNode;
-import org.geolatte.graph.Nodal;
+import org.geolatte.graph.Node;
+import org.geolatte.graph.Located;
 
 /**
  * <p>
@@ -38,7 +38,7 @@ import org.geolatte.graph.Nodal;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class HeuristicRelaxer<N extends Nodal, M> extends DefaultRelaxer<N, M> {
+class HeuristicRelaxer<N extends Located, M> extends DefaultRelaxer<N, M> {
 
     private final float heuristicWeight; // weight given to the heuristic component
     private final float factor; // factor for distance
@@ -58,7 +58,7 @@ class HeuristicRelaxer<N extends Nodal, M> extends DefaultRelaxer<N, M> {
         this.destination = destination;
     }
 
-    protected float update(InternalNode<N> nd, float weight) {
+    protected float update(Node<N> nd, float weight) {
 
         return weight + this.heuristicWeight * this.factor * (getDistance(nd, this.destination));
     }
@@ -71,7 +71,7 @@ class HeuristicRelaxer<N extends Nodal, M> extends DefaultRelaxer<N, M> {
      *
      * @return The straight line distance between the nodes.
      */
-    protected float getDistance(Nodal n1, Nodal n2) {
+    protected float getDistance(Located n1, Located n2) {
 
         double dx = (double) (n1.getX() - n2.getX());
         double dy = (double) (n1.getY() - n2.getY());

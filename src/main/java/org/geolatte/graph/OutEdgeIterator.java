@@ -23,12 +23,12 @@ package org.geolatte.graph;
 
 import java.util.Iterator;
 
-public interface OutEdgeIterator<N extends Nodal> extends Iterator<N> {
+public interface OutEdgeIterator<N extends Located> extends Iterator<N> {
 
     /**
      * Same as {@link #next()}, but returns the wrapping internal node
      *
      * @return
      */
-    public InternalNode<N> nextInternalNode();
+    public Node<N> nextInternalNode();
 }

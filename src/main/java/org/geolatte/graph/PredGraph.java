@@ -30,7 +30,7 @@ package org.geolatte.graph;
  *
  * @param <N> The type of node.
  */
-public interface PredGraph<N extends Nodal> {
+public interface PredGraph<N extends Located> {
 
     /**
      * Sets the predecessor of the this node.
@@ -58,6 +58,6 @@ public interface PredGraph<N extends Nodal> {
     /**
      * @return The node that is decorated by this predecessor graph.
      */
-    InternalNode<N> getInternalNode();
+    Node<N> getInternalNode();
 
 }

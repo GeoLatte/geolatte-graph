@@ -29,20 +29,20 @@ import java.util.List;
 public class SpatialIndexes {
 
     //Factory methods.
-    public static <E extends Nodal> SpatialIndexBuilder<E> createGridIndexBuilder(Envelope env, int resolution) {
+    public static <E extends Located> SpatialIndexBuilder<E> createGridIndexBuilder(Envelope env, int resolution) {
         return new GridIndexBuilder<E>(env, resolution);
     }
 
 
     // Implementation Spatial Index Builders
-    private static class GridIndexBuilder<T extends Nodal> implements SpatialIndexBuilder<T> {
+    private static class GridIndexBuilder<T extends Located> implements SpatialIndexBuilder<T> {
 
         private final int resolution;
         private final Envelope env;
 
         //the resolution values satisfy the property:
         // value / resolution provides the cell number
-        private final List<InternalNode<T>>[][] grid;
+        private final List<Node<T>>[][] grid;
         private final int xNumCells, yNumCells;
 
         @SuppressWarnings("unchecked")
@@ -61,7 +61,7 @@ public class SpatialIndexes {
 
         }
 
-        public boolean isWithinBounds(InternalNode<T> obj) {
+        public boolean isWithinBounds(Node<T> obj) {
             if (obj.getX() < this.env.getMinX() || obj.getX() > this.env.getMaxX()) {
                 return false;
             }
@@ -71,7 +71,7 @@ public class SpatialIndexes {
             return true;
         }
 
-        public void insert(InternalNode<T> obj) {
+        public void insert(Node<T> obj) {
             if (!isWithinBounds(obj)) {
                 throw new RuntimeException("Tried insert object that lies out of bounds: " + obj);
             }
@@ -79,9 +79,9 @@ public class SpatialIndexes {
             int xCellIdx = (int) (obj.getX() - this.env.getMinX()) / this.resolution;
             int yCellIdx = (int) (obj.getY() - this.env.getMinY()) / this.resolution;
 
-            List<InternalNode<T>> cell = (List<InternalNode<T>>) this.grid[xCellIdx][yCellIdx];
+            List<Node<T>> cell = (List<Node<T>>) this.grid[xCellIdx][yCellIdx];
             if (cell == null) {
-                cell = new ArrayList<InternalNode<T>>();
+                cell = new ArrayList<Node<T>>();
                 this.grid[xCellIdx][yCellIdx] = cell;
 
             }
@@ -95,12 +95,12 @@ public class SpatialIndexes {
             return index;
         }
 
-        private Object[][][] toCompressedArray(List<InternalNode<T>>[][] grid) {
+        private Object[][][] toCompressedArray(List<Node<T>>[][] grid) {
             Object[][][] newGrid = new Object[this.xNumCells][this.yNumCells][];
             for (int xi = 0; xi < grid.length; xi++) {
-                List<InternalNode<T>>[] xar = grid[xi];
+                List<Node<T>>[] xar = grid[xi];
                 for (int yi = 0; yi < xar.length; yi++) {
-                    List<InternalNode<T>> cell = xar[yi];
+                    List<Node<T>> cell = xar[yi];
                     if (cell != null) {
                         newGrid[xi][yi] = (Object[]) cell.toArray();
                     }

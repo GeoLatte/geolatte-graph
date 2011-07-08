@@ -43,14 +43,20 @@ public class TestDijkstra {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 if (weights[i][j] > 0f) {
-                    builder.addEdge(copy(myNodes[i]), copy(myNodes[j]));
+                    final int finalI = i;
+                    final int finalJ = j;
+                    builder.addEdge(copy(myNodes[i]), copy(myNodes[j]), new EdgeWeight() {
+                        public float getValue(int weightKind) {
+                            return weights[finalI][finalJ];
+                        }
+                    });
                 }
             }
         }
 
 
         Graph<MyNode> graph = builder.build();
-        for (InternalNode<MyNode> nd : graph) {
+        for (Node<MyNode> nd : graph) {
             System.out.println(nd);
         }
 
@@ -101,7 +107,7 @@ public class TestDijkstra {
         
     }
 
-    private static class MyNode implements Nodal {
+    private static class MyNode implements Located {
 
         private final int id;
         private final int x;
