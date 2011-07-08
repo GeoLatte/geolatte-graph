@@ -28,24 +28,24 @@ import java.util.List;
  *
  * @param <N> The type that represents the nodes.
  */
-public interface Graph<N extends Located> extends Iterable<LocatedNode<N>> {
+public interface Graph<N extends Locatable> extends Iterable<InternalNode<N>> {
 
-    public Iterator<LocatedNode<N>> iterator();
+    public Iterator<InternalNode<N>> iterator();
 
-    public LocatedNode<N> getInternalNode(N node);
+    public InternalNode<N> getInternalNode(N node);
 
-    public List<LocatedNode<N>> getNodesAt(Located loc);
+    public List<InternalNode<N>> getNodesAt(Locatable loc);
 
-    public List<LocatedNode<N>> getClosestNodes(Located loc, int num, int distance);
+    public List<InternalNode<N>> getClosestNodes(Locatable loc, int num, int distance);
 
     /**
-     * Gets the edges that start from the given locatedNode, depending on the given modus.
+     * Gets the edges that start from the given internalNode, depending on the given modus.
      *
-     * @param locatedNode  The locatedNode.
+     * @param internalNode  The internalNode.
      * @param contextualReachability
-     * @return A locatedNode iterator for the outgoing nodes.
+     * @return A internalNode iterator for the outgoing nodes.
      */
-    public OutEdgeIterator<N> getOutGoingEdges(LocatedNode<N> locatedNode, ContextualReachability contextualReachability);
+    public OutEdgeIterator<N> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability contextualReachability);
 
     /*
      * I have no clue what this method is supposed to do.
@@ -56,5 +56,5 @@ public interface Graph<N extends Located> extends Iterable<LocatedNode<N>> {
      * @param Modus
      * @return
      */
-    // public OutEdgeIterator<N, E, M> getConnectedEdges(LocatedNode<N> startNode, LocatedNode<N> endNode, M Modus);
+    // public OutEdgeIterator<N, E, M> getConnectedEdges(InternalNode<N> startNode, InternalNode<N> endNode, M Modus);
 }

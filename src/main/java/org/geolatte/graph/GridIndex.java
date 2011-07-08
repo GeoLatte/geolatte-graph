@@ -37,7 +37,7 @@ import java.util.List;
  * @author Bert Vanhooff
  * @since SDK1.5
  */
-class GridIndex<T extends Located> implements SpatialIndex<T> {
+class GridIndex<T extends Locatable> implements SpatialIndex<T> {
 
     private final Envelope env;
     private final int resolution;
@@ -52,7 +52,7 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
         this.grid = grid;
     }
 
-    private Object[] getCellContaining(Located obj) {
+    private Object[] getCellContaining(Locatable obj) {
         if (obj == null) {
             throw null;
         }
@@ -62,17 +62,17 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public boolean contains(LocatedNode<T> locatedNode) {
-        if (locatedNode == null) {
+    public boolean contains(InternalNode<T> internalNode) {
+        if (internalNode == null) {
             return false;
         }
-        Object[] cell = getCellContaining(locatedNode);
+        Object[] cell = getCellContaining(internalNode.getWrappedNodal());
         if (cell == null) {
             return false;
         }
         for (Object o : cell) {
             T c = (T) o;
-            if (c.equals(locatedNode)) {
+            if (c.equals(internalNode)) {
                 return true;
             }
         }
@@ -80,15 +80,15 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<LocatedNode<T>> getNClosest(Located located, int num, int maxDistance) {
+    public List<InternalNode<T>> getNClosest(Locatable locatable, int num, int maxDistance) {
 
-        if (located == null) {
-            return new ArrayList<LocatedNode<T>>();
+        if (locatable == null) {
+            return new ArrayList<InternalNode<T>>();
         }
-        int maxX = (int) Math.min(located.getX() + maxDistance, this.env.getMaxX());
-        int minX = (int) Math.max(located.getX() - maxDistance, this.env.getMinX());
-        int maxY = (int) Math.min(located.getY() + maxDistance, this.env.getMaxY());
-        int minY = (int) Math.max(located.getY() - maxDistance, this.env.getMinY());
+        int maxX = (int) Math.min(locatable.getX() + maxDistance, this.env.getMaxX());
+        int minX = (int) Math.max(locatable.getX() - maxDistance, this.env.getMinX());
+        int maxY = (int) Math.min(locatable.getY() + maxDistance, this.env.getMaxY());
+        int minY = (int) Math.max(locatable.getY() - maxDistance, this.env.getMinY());
 
         int minIdxX = (int) (minX - this.env.getMinX()) / this.resolution;
         int maxIdxX = (int) (maxX - this.env.getMinX()) / this.resolution;
@@ -118,8 +118,8 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
                 if (cell == null) continue;
                 for (Object o : cell) {
                     T t = (T) o;
-                    double dx = (double) (t.getX() - located.getX());
-                    double dy = (double) (t.getY() - located.getY());
+                    double dx = (double) (t.getX() - locatable.getX());
+                    double dy = (double) (t.getY() - locatable.getY());
                     long distance = Math.round(Math.sqrt(dx * dx + dy * dy));
                     if (distance <= maxDistance) {
                         candidates.add(new Label(t, distance));
@@ -129,21 +129,21 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
         }
 
         Collections.sort(candidates);
-        List<LocatedNode<T>> result = new ArrayList<LocatedNode<T>>();
+        List<InternalNode<T>> result = new ArrayList<InternalNode<T>>();
         for (int i = 0; i < Math.min(num, candidates.size()); i++) {
-            result.add((LocatedNode<T>) candidates.get(i).obj);
+            result.add((InternalNode<T>) candidates.get(i).obj);
         }
 
         return result;
     }
 
-    public List<LocatedNode<T>> query(Envelope envelope) {
+    public List<InternalNode<T>> query(Envelope envelope) {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    public Iterator<LocatedNode<T>> getObjects() {
+    public Iterator<InternalNode<T>> getObjects() {
 
-        return new Iterator<LocatedNode<T>>() {
+        return new Iterator<InternalNode<T>>() {
 
             int ix = 0;
             int iy = 0;
@@ -162,10 +162,10 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
                 return ix < grid.length;
             }
 
-            public LocatedNode<T> next() {
+            public InternalNode<T> next() {
 
                 if (hasNext()) {
-                    LocatedNode<T> retVal = (LocatedNode<T>) grid[ix][iy][i];
+                    InternalNode<T> retVal = (InternalNode<T>) grid[ix][iy][i];
                     incrementPointers();
                     return retVal;
 
@@ -197,8 +197,8 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
         };
     }
 
-    public List<LocatedNode<T>> getObjectAt(Located loc) {
-        List<LocatedNode<T>> res = new ArrayList<LocatedNode<T>>();
+    public List<InternalNode<T>> getObjectAt(Locatable loc) {
+        List<InternalNode<T>> res = new ArrayList<InternalNode<T>>();
         if (loc == null) {
             return res;
         }
@@ -208,10 +208,11 @@ class GridIndex<T extends Located> implements SpatialIndex<T> {
         }
 
         for (Object o : cell) {
-            LocatedNode<T> c = (LocatedNode<T>) o;
+            InternalNode<T> nd = (InternalNode<T>) o;
+            Locatable c = nd.getWrappedNodal();
             if (c.getX() == loc.getX()
                     && c.getY() == loc.getY()) {
-                res.add(c);
+                res.add(nd);
             }
         }
         return res;

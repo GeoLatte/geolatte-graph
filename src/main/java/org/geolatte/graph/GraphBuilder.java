@@ -30,7 +30,7 @@ package org.geolatte.graph;
  *
  * @param <N> The type of node.
  */
-public interface GraphBuilder<N extends Located> {
+public interface GraphBuilder<N extends Locatable> {
 
     /**
      * Adds the given nodes and a directed edge with the given label between.

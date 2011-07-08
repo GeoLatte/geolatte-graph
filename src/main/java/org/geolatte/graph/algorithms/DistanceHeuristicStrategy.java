@@ -21,7 +21,7 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.Located;
+import org.geolatte.graph.Locatable;
 
 /**
  * <p>
@@ -32,7 +32,7 @@ import org.geolatte.graph.Located;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public class DistanceHeuristicStrategy<T extends Located> implements HeuristicStrategy<T> {
+public class DistanceHeuristicStrategy<T extends Locatable> implements HeuristicStrategy<T> {
 
     private float factor;
 

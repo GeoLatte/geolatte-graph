@@ -21,7 +21,7 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.Located;
+import org.geolatte.graph.Locatable;
 import org.geolatte.graph.PredGraph;
 
 /**
@@ -29,32 +29,32 @@ import org.geolatte.graph.PredGraph;
  * <p/>
  * From "Introduction to Algorithms 3rd edition":
  * The process of relaxing an edge (u, v) consists of testing whether we can improve the shortest path to v found so far
- * by going through u and, if so, updating (decreasing) the new total weight of v and its predecessor locatedNode
+ * by going through u and, if so, updating (decreasing) the new total weight of v and its predecessor internalNode
  *
  * @author Karel Maesen
  * @author Bert Vanhooff
  *
- * @param <N> The type of locatedNode.
+ * @param <N> The type of internalNode.
  * @param <M> The type of modus
  */
-interface Relaxer<N extends Located, M> {
+interface Relaxer<N extends Locatable, M> {
 
     /**
-     * Relaxes the edge from locatedNode <code>u</code> to locatedNode <code>v</locatedNode>. Both are given by their predecessor graphs.
+     * Relaxes the edge from internalNode <code>u</code> to internalNode <code>v</internalNode>. Both are given by their predecessor graphs.
      *
-     * @param u                    Predecessor graph representing current shortest path to locatedNode u.
-     * @param v                    Predecessor graph representing current shortest path to locatedNode v.
+     * @param u                    Predecessor graph representing current shortest path to internalNode u.
+     * @param v                    Predecessor graph representing current shortest path to internalNode v.
      * @param modus The mode in which to execute the relaxation.
      * @return True if the weight of v was updated, false otherwise
      */
     public boolean relax(PredGraph<N> u, PredGraph<N> v, M modus);
 
     /**
-     * Returns the new total weight of the path to locatedNode v after relaxation has occured. Is only meaningful after
+     * Returns the new total weight of the path to internalNode v after relaxation has occured. Is only meaningful after
      * {@link #relax(PredGraph, PredGraph, Object)}
      * has been called.
      * 
-     * @return The new total weight of the path to locatedNode v.
+     * @return The new total weight of the path to internalNode v.
      */
     public float newTotalWeight();
 

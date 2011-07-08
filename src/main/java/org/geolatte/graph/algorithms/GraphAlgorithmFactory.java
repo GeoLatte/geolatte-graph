@@ -34,7 +34,7 @@ public class GraphAlgorithmFactory {
 
     public static GraphAlgorithmFactory instance = new GraphAlgorithmFactory();
 
-    public <N extends Located, M> GraphAlgorithm<Map<N, Float>> createBFS(Graph<N> graph, N source, float maxDistance) {
+    public <N extends Locatable, M> GraphAlgorithm<Map<N, Float>> createBFS(Graph<N> graph, N source, float maxDistance) {
 
         // TODO: must give a modus
         return new BFSDistanceLimited<N, M>(graph, source, maxDistance, null);
@@ -44,8 +44,8 @@ public class GraphAlgorithmFactory {
      * Constructs a default Dijkstra shortest-path algorithm instance.
      * 
      * @param graph                The graph on which to run the Dijkstra algorithm.
-     * @param origin               The locatedNode from which to start routing.
-     * @param destination          The destination locatedNode to which to find a shortest path.
+     * @param origin               The internalNode from which to start routing.
+     * @param destination          The destination internalNode to which to find a shortest path.
      * @param mode                 The mode used to determine edge weight.
      *
      * @param <N> Type of nodes in the graph.
@@ -53,7 +53,7 @@ public class GraphAlgorithmFactory {
      *
      * @return A default Dijkstra algorithm.
      */
-    public <N extends Located, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
+    public <N extends Locatable, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
                                                                          N origin,
                                                                          N destination,
                                                                          M mode) {
@@ -65,8 +65,8 @@ public class GraphAlgorithmFactory {
      * Constructs an A* shortest path algorithm with a straight-line distance heuristic.
      *
      * @param graph                The graph on which to run the Dijkstra algorithm.
-     * @param origin               The locatedNode from which to start routing.
-     * @param destination          The destination locatedNode to which to find a shortest path.
+     * @param origin               The internalNode from which to start routing.
+     * @param destination          The destination internalNode to which to find a shortest path.
      * @param mode                 The mode used to determine edge weight.
      * @param heuristicWeight      The importance of the heuristic factor.
      * @param factor               Factor to convert distance to edge weights units.
@@ -76,7 +76,7 @@ public class GraphAlgorithmFactory {
      *
      * @return An A* algorithm.
      */
-    public <N extends Located, M> GraphAlgorithm<Path<N>> createAStar(Graph<N> graph,
+    public <N extends Locatable, M> GraphAlgorithm<Path<N>> createAStar(Graph<N> graph,
                                                                       N origin,
                                                                       N destination,
                                                                       M mode,
@@ -88,7 +88,7 @@ public class GraphAlgorithmFactory {
 
     }
 
-//    public <N extends Located, E> GraphAlgorithm<Set<LocatedNode<N>>> createCoverage(Graph<N, E> graph, N origin,
+//    public <N extends Locatable, E> GraphAlgorithm<Set<InternalNode<N>>> createCoverage(Graph<N, E> graph, N origin,
 //                                                                               float maxDistance){
 //        return new Coverage<N, E>(graph, origin, new DefaultRelaxer<N, E>(), maxDistance);
 //    }
@@ -96,12 +96,12 @@ public class GraphAlgorithmFactory {
     /**
      * Constructs a default relaxer.
      *
-     * @param <N> The locatedNode type.
+     * @param <N> The internalNode type.
      * @param <M> The mode type.
      *
      * @return A default relaxer.
      */
-    protected <N extends Located, M> Relaxer<N, M> createDefaultRelaxer() {
+    protected <N extends Locatable, M> Relaxer<N, M> createDefaultRelaxer() {
 
         return new DefaultRelaxer<N, M>();
     }
@@ -115,7 +115,7 @@ public class GraphAlgorithmFactory {
      * @param <M>
      * @return
      */
-    protected <N extends Located, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
+    protected <N extends Locatable, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
 
         return new HeuristicRelaxer<N, M>(heuristicWeight, destination, new DistanceHeuristicStrategy<N>(factor));
     }

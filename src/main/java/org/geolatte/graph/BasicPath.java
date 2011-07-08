@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BasicPath<N extends Located> implements Path<N> {
+public class BasicPath<N extends Locatable> implements Path<N> {
 
 	private List<N> nodes = new LinkedList<N>();
 

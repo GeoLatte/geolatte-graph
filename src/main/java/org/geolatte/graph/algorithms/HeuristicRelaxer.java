@@ -21,16 +21,16 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.LocatedNode;
-import org.geolatte.graph.Located;
+import org.geolatte.graph.InternalNode;
+import org.geolatte.graph.Locatable;
 
 /**
  * <p>
  * A heuristic relaxer that takes into account:
- * - The path cost (from source to the current locatedNode),
+ * - The path cost (from source to the current internalNode),
  * - A heuristic calculated by a given strategy.
  *
- * For example, the {@link DistanceHeuristicStrategy} can be used to take the straight-line distance to the target locatedNode
+ * For example, the {@link DistanceHeuristicStrategy} can be used to take the straight-line distance to the target internalNode
  * as heuristic value.
  * </p>
  *
@@ -39,7 +39,7 @@ import org.geolatte.graph.Located;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class HeuristicRelaxer<N extends Located, M> extends DefaultRelaxer<N, M> {
+class HeuristicRelaxer<N extends Locatable, M> extends DefaultRelaxer<N, M> {
 
     private final float heuristicWeight; // weight given to the heuristic component
     private final N destination;
@@ -49,7 +49,7 @@ class HeuristicRelaxer<N extends Located, M> extends DefaultRelaxer<N, M> {
      * Constructs a heuristic relaxer
      *
      * @param heuristicWeight   The weight for the heuristic component.
-     * @param destination       The final destination locatedNode.
+     * @param destination       The final destination internalNode.
      * @param heuristicStrategy The strategy used to calculate the heuristic.
      */
     protected HeuristicRelaxer(float heuristicWeight, N destination, HeuristicStrategy<N> heuristicStrategy) {
@@ -59,7 +59,7 @@ class HeuristicRelaxer<N extends Located, M> extends DefaultRelaxer<N, M> {
         this.heuristicStrategy = heuristicStrategy;
     }
 
-    protected float update(LocatedNode<N> nd, float weight) {
+    protected float update(InternalNode<N> nd, float weight) {
 
         return weight + this.heuristicWeight * (heuristicStrategy.getValue(nd.getWrappedNodal(), destination));
     }

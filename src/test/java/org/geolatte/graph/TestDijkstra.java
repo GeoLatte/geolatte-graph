@@ -56,7 +56,7 @@ public class TestDijkstra {
 
 
         Graph<MyNode> graph = builder.build();
-        for (LocatedNode<MyNode> nd : graph) {
+        for (InternalNode<MyNode> nd : graph) {
             System.out.println(nd);
         }
 
@@ -78,7 +78,7 @@ public class TestDijkstra {
         
     }
 
-    private static class MyNode implements Located {
+    private static class MyNode implements Locatable {
 
         private final int id;
         private final int x;

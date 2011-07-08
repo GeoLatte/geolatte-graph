@@ -31,34 +31,34 @@ import java.util.List;
  *
  * @param <N>
  */
-public interface SpatialIndex<N extends Located> {
+public interface SpatialIndex<N extends Locatable> {
 
     /**
-     * Checks whether the given locatedNode is contained in the index.
+     * Checks whether the given internalNode is contained in the index.
      *
-     * @param locatedNode The locatedNode to search for.
-     * @return True if the given locatedNode is contained in the index, false otherwise.
+     * @param internalNode The internalNode to search for.
+     * @return True if the given internalNode is contained in the index, false otherwise.
      */
-    public boolean contains(LocatedNode<N> locatedNode);
+    public boolean contains(InternalNode<N> internalNode);
 
     /**
      * @param envelope The bounds within which to search for nodes.
      * @return A list of all nodes within the given envelope
      */
-    public List<LocatedNode<N>> query(Envelope envelope);
+    public List<InternalNode<N>> query(Envelope envelope);
 
     /**
      * Searches the given number of node closest to the given node, within a maximum distance.
      * 
-     * @param located       The center node.
+     * @param locatable       The center node.
      * @param num         The number of closest nodes to find.
      * @param maxDistance The maximum distance to search in.
      * @return A list of closest nodes.
      */
-    public List<LocatedNode<N>> getNClosest(Located located, int num, int maxDistance);
+    public List<InternalNode<N>> getNClosest(Locatable locatable, int num, int maxDistance);
 
-    public Iterator<LocatedNode<N>> getObjects();
+    public Iterator<InternalNode<N>> getObjects();
 
-    public List<LocatedNode<N>> getObjectAt(Located loc);
+    public List<InternalNode<N>> getObjectAt(Locatable loc);
 
 }

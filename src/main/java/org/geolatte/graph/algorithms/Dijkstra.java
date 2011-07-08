@@ -35,10 +35,10 @@ import java.util.Set;
  *
  * @author Karel Maesen
  */
-public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
+public class Dijkstra<N extends Locatable, M> implements GraphAlgorithm<Path<N>> {
 
-    private final LocatedNode<N> origin;
-    private final LocatedNode<N> destination;
+    private final InternalNode<N> origin;
+    private final InternalNode<N> destination;
     private final Graph<N> graph;
     private final M modus;
     private Path<N> result;
@@ -60,7 +60,7 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
     }
 
     public void execute() {
-        Set<LocatedNode<N>> closed = new HashSet<LocatedNode<N>>();
+        Set<InternalNode<N>> closed = new HashSet<InternalNode<N>>();
         PredGraphImpl<N> startPG = new PredGraphImpl<N>(this.origin, 0.0f);
         minQueue.add(startPG, Float.POSITIVE_INFINITY);
         while (!minQueue.isEmpty()) {
@@ -69,10 +69,10 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
             if (isDone(pu)) {
                 return;
             }
-            LocatedNode<N> u = pu.getInternalNode();
+            InternalNode<N> u = pu.getInternalNode();
             OutEdgeIterator<N> outEdges = graph.getOutGoingEdges(u, null); // TODO: context reachability
             while (outEdges.hasNext()) {
-                LocatedNode<N> v = outEdges.nextInternalNode();
+                InternalNode<N> v = outEdges.nextInternalNode();
                 if (closed.contains(v)) {
                     continue;
                 }
@@ -115,13 +115,13 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
         return this.result;
     }
 
-    static class PredGraphImpl<N extends Located> implements PredGraph<N> {
-            private final LocatedNode<N> locatedNode;
+    static class PredGraphImpl<N extends Locatable> implements PredGraph<N> {
+            private final InternalNode<N> internalNode;
             private PredGraph<N> predecessor = null;
             private float weight;
 
-            private PredGraphImpl(LocatedNode<N> n, float weight) {
-                this.locatedNode = n;
+            private PredGraphImpl(InternalNode<N> n, float weight) {
+                this.internalNode = n;
                 this.weight = weight;
             }
 
@@ -137,17 +137,17 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
                 this.weight = w;
             }
 
-            public LocatedNode<N> getInternalNode() {
-                return this.locatedNode;
+            public InternalNode<N> getInternalNode() {
+                return this.internalNode;
             }
 
-            public static class PGComparator<N extends Located> implements Comparator<PredGraph<N>> {
+            public static class PGComparator<N extends Locatable> implements Comparator<PredGraph<N>> {
 
                 public int compare(PredGraph<N> o1, PredGraph<N> o2) {
                     if (o1 instanceof PredGraphImpl && o2 instanceof PredGraphImpl) {
                         PredGraphImpl<N> pg1 = (PredGraphImpl<N>) o1;
                         PredGraphImpl<N> pg2 = (PredGraphImpl<N>) o2;
-                        if (pg1.locatedNode.equals(pg2.locatedNode)) {
+                        if (pg1.internalNode.equals(pg2.internalNode)) {
                             return 0;
                         }
                         return Float.compare(pg1.getWeight(), pg2.getWeight());
@@ -164,7 +164,7 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
             public int hashCode() {
                 final int prime = 31;
                 int result = 1;
-                result = prime * result + ((locatedNode == null) ? 0 : locatedNode.hashCode());
+                result = prime * result + ((internalNode == null) ? 0 : internalNode.hashCode());
                 return result;
             }
 
@@ -177,16 +177,16 @@ public class Dijkstra<N extends Located, M> implements GraphAlgorithm<Path<N>> {
                 if (getClass() != obj.getClass())
                     return false;
                 PredGraphImpl<N> other = (PredGraphImpl<N>) obj;
-                if (locatedNode == null) {
-                    if (other.locatedNode != null)
+                if (internalNode == null) {
+                    if (other.internalNode != null)
                         return false;
-                } else if (!locatedNode.equals(other.locatedNode))
+                } else if (!internalNode.equals(other.internalNode))
                     return false;
                 return true;
             }
 
             public String toString() {
-                return String.format("MyNode: %s, weight: %.1f", this.locatedNode,
+                return String.format("MyNode: %s, weight: %.1f", this.internalNode,
                         this.weight);
             }
         }    

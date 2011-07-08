@@ -21,8 +21,8 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.Located;
-import org.geolatte.graph.LocatedNode;
+import org.geolatte.graph.Locatable;
+import org.geolatte.graph.InternalNode;
 import org.geolatte.graph.PredGraph;
 
 /**
@@ -34,7 +34,7 @@ import org.geolatte.graph.PredGraph;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class DefaultRelaxer<N extends Located, M> implements Relaxer<N, M> {
+class DefaultRelaxer<N extends Locatable, M> implements Relaxer<N, M> {
 
         float newWeight;
 
@@ -53,7 +53,7 @@ class DefaultRelaxer<N extends Located, M> implements Relaxer<N, M> {
             }
         }
 
-        protected float update(LocatedNode<N> nd, float distance) {
+        protected float update(InternalNode<N> nd, float distance) {
 
             return distance;
         }

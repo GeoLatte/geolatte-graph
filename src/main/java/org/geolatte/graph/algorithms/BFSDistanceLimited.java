@@ -33,11 +33,11 @@ import java.util.*;
  * @param <N>
  * @param <M>
  */
-public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<Map<N, Float>> {
+public class BFSDistanceLimited<N extends Locatable, M> implements GraphAlgorithm<Map<N, Float>> {
 
     final Set<BFSState<N>> blackNodes = new HashSet<BFSState<N>>();
     final Queue<BFSState<N>> greyNodes = new LinkedList<BFSState<N>>();
-    final LocatedNode<N> source;
+    final InternalNode<N> source;
     final float maxDistance;
     private final M modus;
     final Graph<N> graph;
@@ -62,19 +62,19 @@ public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<
             BFSState<N> wu = this.greyNodes.remove();
 
             if (wu.distance > maxDistance) {
-                continue; //don't expand when the locatedNode is beyond maximum distance.
+                continue; //don't expand when the internalNode is beyond maximum distance.
             }
 
-            OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(wu.locatedNode, null); // TODO: context reachability
+            OutEdgeIterator<N> outEdges = this.graph.getOutGoingEdges(wu.internalNode, null); // TODO: context reachability
             while (outEdges.hasNext()) {
-                LocatedNode<N> v = outEdges.nextInternalNode();
+                InternalNode<N> v = outEdges.nextInternalNode();
                 BFSState<N> wv = new BFSState<N>(v);
                 if (greyNodes.contains(wv) || blackNodes.contains(wv)) {
                     continue; // do nothing
                 } else {
                     // TODO: correct doorgeven van wieghtKind
-                    wv.distance = wu.distance + wu.locatedNode.getWeightTo(v, 0);
-                    wv.predecessor = wu.locatedNode;
+                    wv.distance = wu.distance + wu.internalNode.getWeightTo(v, 0);
+                    wv.predecessor = wu.internalNode;
                     greyNodes.add(wv);
                 }
             }
@@ -93,20 +93,20 @@ public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<
     protected Map<N, Float> toMap(Set<BFSState<N>> nodes) {
         Map<N, Float> map = new HashMap<N, Float>(nodes.size());
         for (BFSState<N> wu : nodes) {
-            map.put(wu.locatedNode.getWrappedNodal(), wu.distance);
+            map.put(wu.internalNode.getWrappedNodal(), wu.distance);
         }
         return map;
 
     }
 
-    private static class BFSState<N extends Located> {
+    private static class BFSState<N extends Locatable> {
 
-        final LocatedNode<N> locatedNode;
+        final InternalNode<N> internalNode;
         float distance = Float.POSITIVE_INFINITY;
-        LocatedNode<N> predecessor;
+        InternalNode<N> predecessor;
 
-        private BFSState(LocatedNode<N> locatedNode) {
-            this.locatedNode = locatedNode;
+        private BFSState(InternalNode<N> internalNode) {
+            this.internalNode = internalNode;
         }
 
         /* (non-Javadoc)
@@ -116,7 +116,7 @@ public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<
         public int hashCode() {
             final int prime = 31;
             int result = 1;
-            result = prime * result + ((locatedNode == null) ? 0 : locatedNode.hashCode());
+            result = prime * result + ((internalNode == null) ? 0 : internalNode.hashCode());
             return result;
         }
 
@@ -132,10 +132,10 @@ public class BFSDistanceLimited<N extends Located, M> implements GraphAlgorithm<
             if (!(obj instanceof BFSState))
                 return false;
             BFSState other = (BFSState) obj;
-            if (locatedNode == null) {
-                if (other.locatedNode != null)
+            if (internalNode == null) {
+                if (other.internalNode != null)
                     return false;
-            } else if (!locatedNode.equals(other.locatedNode))
+            } else if (!internalNode.equals(other.internalNode))
                 return false;
             return true;
         }

@@ -21,9 +21,9 @@
 
 package org.geolatte.graph;
 
-public interface SpatialIndexBuilder<T extends Located> {
+public interface SpatialIndexBuilder<T extends Locatable> {
 
-    public void insert(LocatedNode<T> obj);
+    public void insert(InternalNode<T> obj);
 
     public SpatialIndex<T> build() throws BuilderException;
 
