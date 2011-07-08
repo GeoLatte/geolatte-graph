@@ -55,25 +55,40 @@ public class GraphAlgorithmFactory {
      * @return A default Dijkstra algorithm.
      */
     public <N extends Located, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
-                                                                       N origin,
-                                                                       N destination,
-                                                                       M mode,
-                                                                       EdgeWeightCalculator<N, M> edgeWeightCalculator) {
+                                                                         N origin,
+                                                                         N destination,
+                                                                         M mode,
+                                                                         EdgeWeightCalculator<N, M> edgeWeightCalculator) {
 
         return new Dijkstra<N, M>(graph, origin, destination, new DefaultRelaxer<N, M>(), mode, edgeWeightCalculator);
     }
 
+    /**
+     * Constructs an A* shortest path algorithm with a straight-line distance heuristic.
+     *
+     * @param graph                The graph on which to run the Dijkstra algorithm.
+     * @param origin               The node from which to start routing.
+     * @param destination          The destination node to which to find a shortest path.
+     * @param mode                 The mode used to determine edge weight.
+     * @param edgeWeightCalculator The object that is used to calculate the edge weight.
+     * @param heuristicWeight      The importance of the heuristic factor.
+     *
+     *  @param <N> Type of nodes in the graph.
+     * @param <M> Type of mode object.
+     *
+     * @return An A* algorithm.
+     */
+    public <N extends Located, M> GraphAlgorithm<Path<N>> createAStar(Graph<N> graph,
+                                                                      N origin,
+                                                                      N destination,
+                                                                      M mode,
+                                                                      EdgeWeightCalculator<N, M> edgeWeightCalculator,
+                                                                      float heuristicWeight) {
 
-    // TODO: Temporarly commented out because of compilation problems I don't get
-    /*
-    public <N extends Located, E extends EdgeWeightCalculator<M>, M> GraphAlgorithm<Path<N>> createAStar(Graph<N, E, M> graph, N origin,
-                                                                    N destination, float factor, float heuristicWeight, M modus) {
-
-        Relaxer<N, E, M> relaxer = this.createAStarRelaxer(heuristicWeight, factor, destination);
-        return new Dijkstra<N, E, M>(graph, origin, destination, relaxer, modus);
+        Relaxer<N, M> relaxer = this.createAStarRelaxer(heuristicWeight, destination);
+        return new Dijkstra<N, M>(graph, origin, destination, relaxer, mode, edgeWeightCalculator);
 
     }
-    */
 
 //    public <N extends Located, E> GraphAlgorithm<Set<Node<N>>> createCoverage(Graph<N, E> graph, N origin,
 //                                                                               float maxDistance){
@@ -97,15 +112,14 @@ public class GraphAlgorithmFactory {
      * Constructs a heuristic relaxer as used in the A* algorithm.
      *
      * @param heuristicWeight
-     * @param factor
      * @param destination
      * @param <N>
      * @param <M>
      * @return
      */
-    protected <N extends Located, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
+    protected <N extends Located, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, N destination) {
 
-        return new HeuristicRelaxer<N, M>(heuristicWeight, factor, destination);
+        return new HeuristicRelaxer<N, M>(heuristicWeight, destination, new DistanceHeuristicStrategy<N>());
     }
 
 }

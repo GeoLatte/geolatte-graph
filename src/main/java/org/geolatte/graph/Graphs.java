@@ -25,6 +25,7 @@ import com.vividsolutions.jts.geom.Envelope;
 
 import java.util.*;
 
+
 public class Graphs {
 
     public static <N extends Located> GraphBuilder<N> createGridIndexedGraphBuilder(Envelope env, int resolution) {

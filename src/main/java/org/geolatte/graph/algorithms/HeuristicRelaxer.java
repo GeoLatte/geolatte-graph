@@ -27,10 +27,11 @@ import org.geolatte.graph.Located;
 /**
  * <p>
  * A heuristic relaxer that takes into account:
- * - The path cost (from source to the current node)
- * - A heuristic estimate of the distance to the destination.
+ * - The path cost (from source to the current node),
+ * - A heuristic calculated by a given strategy.
  *
- * The heuristic estimate in this case is the straight-line distance to the destination node.
+ * For example, the {@link DistanceHeuristicStrategy} can be used to take the straight-line distance to the target node
+ * as heuristic value.
  * </p>
  *
  * @author Karel Measen
@@ -41,41 +42,28 @@ import org.geolatte.graph.Located;
 class HeuristicRelaxer<N extends Located, M> extends DefaultRelaxer<N, M> {
 
     private final float heuristicWeight; // weight given to the heuristic component
-    private final float factor; // factor for distance
     private final N destination;
+    private HeuristicStrategy<N> heuristicStrategy;
 
     /**
      * Constructs a heuristic relaxer
      *
-     * @param heuristicWeight The weight for the heuristic component.
-     * @param factor          The factor for the distance.
-     * @param destination     The final destination node.
+     * @param heuristicWeight   The weight for the heuristic component.
+     * @param destination       The final destination node.
+     * @param heuristicStrategy The strategy used to calculate the heuristic.
      */
-    protected HeuristicRelaxer(float heuristicWeight, float factor, N destination) {
+    protected HeuristicRelaxer(float heuristicWeight, N destination, HeuristicStrategy<N> heuristicStrategy) {
 
         this.heuristicWeight = heuristicWeight;
-        this.factor = factor;
         this.destination = destination;
+        this.heuristicStrategy = heuristicStrategy;
     }
 
     protected float update(Node<N> nd, float weight) {
 
-        return weight + this.heuristicWeight * this.factor * (getDistance(nd, this.destination));
+        return weight + this.heuristicWeight * (heuristicStrategy.getValue(nd.getWrappedNodal(), destination));
     }
 
-    /**
-     * Gets the straight-line distance between two nodes.
-     *
-     * @param n1 The first node.
-     * @param n2 The second node.
-     *
-     * @return The straight line distance between the nodes.
-     */
-    protected float getDistance(Located n1, Located n2) {
 
-        double dx = (double) (n1.getX() - n2.getX());
-        double dy = (double) (n1.getY() - n2.getY());
-        return (float) Math.sqrt(dx * dx + dy * dy);
-    }
 
 }
