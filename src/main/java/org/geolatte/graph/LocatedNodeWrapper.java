@@ -22,6 +22,7 @@
 package org.geolatte.graph;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Supports only one edge between two nodes!
@@ -111,5 +112,9 @@ class LocatedNodeWrapper<N extends Located> implements LocatedNode<N> {
             }
         }
         return Float.MAX_VALUE;
+    }
+
+    public Iterator<Node<N>> outgoingEdgeIterator() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

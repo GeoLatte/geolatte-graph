@@ -30,7 +30,7 @@ package org.geolatte.graph;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public class BaseEdgeWeight implements EdgeWeight {
+public class RoadEdgeWeight implements EdgeWeight {
 
     public static int DISTANCE = 1;
     public static int TIME_CAR = 2;
@@ -39,7 +39,7 @@ public class BaseEdgeWeight implements EdgeWeight {
 
     private int[] weights = new int[4];
 
-    public BaseEdgeWeight(int[] weights, int defaultWeight) {
+    public RoadEdgeWeight(int[] weights, int defaultWeight) {
 
         weights[DISTANCE] = defaultWeight;
         weights[TIME_CAR] = defaultWeight;

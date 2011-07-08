@@ -69,6 +69,7 @@ public class GraphAlgorithmFactory {
      * @param destination          The destination locatedNode to which to find a shortest path.
      * @param mode                 The mode used to determine edge weight.
      * @param heuristicWeight      The importance of the heuristic factor.
+     * @param factor               Factor to convert distance to edge weights units.
      *
      *  @param <N> Type of nodes in the graph.
      * @param <M> Type of mode object.
@@ -79,9 +80,10 @@ public class GraphAlgorithmFactory {
                                                                       N origin,
                                                                       N destination,
                                                                       M mode,
-                                                                      float heuristicWeight) {
+                                                                      float heuristicWeight,
+                                                                      float factor) {
 
-        Relaxer<N, M> relaxer = this.createAStarRelaxer(heuristicWeight, destination);
+        Relaxer<N, M> relaxer = this.createAStarRelaxer(heuristicWeight, factor, destination);
         return new Dijkstra<N, M>(graph, origin, destination, relaxer, mode);
 
     }
@@ -113,9 +115,9 @@ public class GraphAlgorithmFactory {
      * @param <M>
      * @return
      */
-    protected <N extends Located, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, N destination) {
+    protected <N extends Located, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
 
-        return new HeuristicRelaxer<N, M>(heuristicWeight, destination, new DistanceHeuristicStrategy<N>());
+        return new HeuristicRelaxer<N, M>(heuristicWeight, destination, new DistanceHeuristicStrategy<N>(factor));
     }
 
 }

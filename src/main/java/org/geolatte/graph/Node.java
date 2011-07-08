@@ -21,6 +21,8 @@
 
 package org.geolatte.graph;
 
+import java.util.Iterator;
+
 /**
  * No comment provided yet for this class.
  * <p/>
@@ -50,4 +52,6 @@ public interface Node<N> {
     void addReachableFrom(Node<N> fromNode);
 
     float getWeightTo(Node<N> toNode, int weightKind);
+
+    Iterator<Node<N>> outgoingEdgeIterator();
 }

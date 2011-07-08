@@ -47,8 +47,7 @@ public class TestDijkstra {
                     final int finalJ = j;
                     builder.addEdge(copy(myNodes[i]), copy(myNodes[j]), new EdgeWeight() {
                         public float getValue(int weightKind) {
-                            float weight = weights[finalI][finalJ];
-                            return weight;
+                            return weights[finalI][finalJ];
                         }
                     });
                 }

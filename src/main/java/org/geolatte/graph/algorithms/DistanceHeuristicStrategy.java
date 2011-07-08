@@ -34,10 +34,16 @@ import org.geolatte.graph.Located;
  */
 public class DistanceHeuristicStrategy<T extends Located> implements HeuristicStrategy<T> {
 
+    private float factor;
+
+    public DistanceHeuristicStrategy(float factor) {
+        this.factor = factor;
+    }
+
     public float getValue(T from, T to) {
 
         double dx = (double) (from.getX() - to.getX());
         double dy = (double) (from.getY() - to.getY());
-        return (float) Math.sqrt(dx * dx + dy * dy);
+        return (float)(factor * Math.sqrt(dx * dx + dy * dy));
     }
 }

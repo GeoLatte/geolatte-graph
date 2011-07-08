@@ -135,7 +135,7 @@ public class Graphs {
 
         private final ContextualReachability contextualReachability;
 
-        private OutEdgeIteratorImpl(Graph<N> graph, LocatedNode<N> from, ContextualReachability contextualReachability) {
+        private OutEdgeIteratorImpl(Graph<N> graph, Node<N> from, ContextualReachability contextualReachability) {
 
             this.graph = graph;
             this.fromNw = (LocatedNodeWrapper<N>) from;
@@ -159,6 +159,7 @@ public class Graphs {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
+
             return fromNw.toNodes[++i];
         }
 
