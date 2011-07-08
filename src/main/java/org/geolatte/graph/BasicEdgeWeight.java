@@ -23,41 +23,22 @@ package org.geolatte.graph;
 
 /**
  * <p>
- * Base implementation of the {@link EdgeWeight} interface, providing for the most common weights.
+ * No comment provided yet for this class.
  * </p>
  *
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public class RoadEdgeWeight implements EdgeWeight {
+public class BasicEdgeWeight implements EdgeWeight {
 
-    public static int DISTANCE = 1;
-    public static int TIME_CAR = 2;
-    public static int TIME_TRUCK = 3;
-    public static int TIME_FOOT = 4;
+    private float value;
 
-    private float[] weights = new float[4];
-
-    public RoadEdgeWeight(float[] weights, int defaultWeight) {
-
-        weights[DISTANCE] = defaultWeight;
-        weights[TIME_CAR] = defaultWeight;
-        weights[TIME_TRUCK] = defaultWeight;
-        weights[TIME_FOOT] = defaultWeight;
+    public BasicEdgeWeight(float value) {
+        this.value = value;
     }
 
     public float getValue(int weightKind) {
-
-        return weights[weightKind];
-    }
-
-    public void setWeight(int weightKind, float weight) {
-
-        if (weightKind < 0 || weightKind > 3) {
-            return;
-        }
-
-        weights[weightKind] = weight;
+        return value;
     }
 }

@@ -110,7 +110,7 @@ public class Graphs {
 
             public InternalNode<N> getInternalNode(N node) {
                 for (InternalNode<N> nw : this.index.getObjectAt(node)) {
-                    if (nw.getWrappedNodal().equals(node)) {
+                    if (nw.getWrappedNode().equals(node)) {
                         return nw;
                     }
                 }

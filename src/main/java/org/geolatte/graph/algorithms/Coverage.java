@@ -110,7 +110,7 @@ public class Coverage<N extends Locatable, M> implements GraphAlgorithm<Set<Pred
         }
     }
 
-    static class PredSuccGraphImpl<N extends Locatable> implements PredSuccGraph<N> {
+    static class PredSuccGraphImpl<N> implements PredSuccGraph<N> {
         private final InternalNode<N> internalNode;
         private PredSuccGraph<N> predecessor = null;
         private final Set<PredSuccGraph<N>> successors = new HashSet<PredSuccGraph<N>>();
@@ -145,7 +145,7 @@ public class Coverage<N extends Locatable, M> implements GraphAlgorithm<Set<Pred
             return successors;
         }
 
-        public static class PGComparator<N extends Locatable> implements Comparator<PredSuccGraph<N>> {
+        public static class PGComparator<N> implements Comparator<PredSuccGraph<N>> {
 
             public int compare(PredSuccGraph<N> o1, PredSuccGraph<N> o2) {
                 if (o1 instanceof PredSuccGraphImpl && o2 instanceof PredSuccGraphImpl) {

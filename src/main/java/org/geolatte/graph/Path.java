@@ -29,7 +29,7 @@ package org.geolatte.graph;
  *
  * @param <N> The type of node.
  */
-public interface Path<N extends Locatable> extends Iterable<N>{
+public interface Path<N> extends Iterable<N>{
 
     /**
      * @return The total weight of the path.

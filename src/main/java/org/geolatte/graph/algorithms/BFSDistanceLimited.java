@@ -33,7 +33,7 @@ import java.util.*;
  * @param <N>
  * @param <M>
  */
-public class BFSDistanceLimited<N extends Locatable, M> implements GraphAlgorithm<Map<N, Float>> {
+public class BFSDistanceLimited<N, M> implements GraphAlgorithm<Map<N, Float>> {
 
     final Set<BFSState<N>> blackNodes = new HashSet<BFSState<N>>();
     final Queue<BFSState<N>> greyNodes = new LinkedList<BFSState<N>>();
@@ -93,13 +93,13 @@ public class BFSDistanceLimited<N extends Locatable, M> implements GraphAlgorith
     protected Map<N, Float> toMap(Set<BFSState<N>> nodes) {
         Map<N, Float> map = new HashMap<N, Float>(nodes.size());
         for (BFSState<N> wu : nodes) {
-            map.put(wu.internalNode.getWrappedNodal(), wu.distance);
+            map.put(wu.internalNode.getWrappedNode(), wu.distance);
         }
         return map;
 
     }
 
-    private static class BFSState<N extends Locatable> {
+    private static class BFSState<N> {
 
         final InternalNode<N> internalNode;
         float distance = Float.POSITIVE_INFINITY;

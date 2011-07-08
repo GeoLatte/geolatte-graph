@@ -30,7 +30,7 @@ package org.geolatte.graph;
  *
  * @param <N> The type of node.
  */
-public interface PredGraph<N> {
+public interface PredGraph<N> extends Traversal<N> {
 
     /**
      * Sets the predecessor of the this node.

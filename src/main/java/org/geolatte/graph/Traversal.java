@@ -22,13 +22,16 @@
 package org.geolatte.graph;
 
 /**
- * Extracts the calculation of the weight of an edge from the edge itself and allows to associate different weights with
- * a single edge, depending on the modus.
+ * No comment provided yet for this class.
+ * <p/>
+ * <p>
+ * <i>Creation-Date</i>: 08/07/11<br>
+ * <i>Creation-Time</i>:  16:35<br>
+ * </p>
  *
- * @param <M> The modus type.
- * @param <N> The type of nodes that are connected by edges.
+ * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface EdgeWeightCalculator<N, M> {
-
-    float getWeight(N fromNode, N toNode, M modus);
+public interface Traversal<N> extends Iterable<N> {
 }

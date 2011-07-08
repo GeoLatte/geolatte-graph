@@ -66,7 +66,7 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         if (internalNode == null) {
             return false;
         }
-        Object[] cell = getCellContaining(internalNode.getWrappedNodal());
+        Object[] cell = getCellContaining(internalNode.getWrappedNode());
         if (cell == null) {
             return false;
         }
@@ -209,7 +209,7 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
 
         for (Object o : cell) {
             InternalNode<T> nd = (InternalNode<T>) o;
-            Locatable c = nd.getWrappedNodal();
+            Locatable c = nd.getWrappedNode();
             if (c.getX() == loc.getX()
                     && c.getY() == loc.getY()) {
                 res.add(nd);

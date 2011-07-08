@@ -21,25 +21,32 @@
 
 package org.geolatte.graph;
 
+import java.util.Arrays;
+
 /**
  * <p>
- * Allows to indicate whether a node v is reachable from a node u when there exists an edge from u to v in the context
- * of a given (partially calculated) path through the graph. Additional state information can be recorded by
- * implementors of this interface.
- *
- * This is necessary in case reachability rules cannot be captured by a static graph but depend on previous actions of
- * the algorithm.
  * </p>
  *
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface ContextualReachability<N> {
+public class ArrayEdgeWeight implements EdgeWeight {
 
-    boolean isReachable(InternalNode<N> node);
+    private float[] weights;
 
-    void setContext(Traversal<N> pu);
+    public ArrayEdgeWeight(float[] weights) {
 
-    void setOriginDestination(N origin, N destination);
+        this.weights = Arrays.copyOf(weights, weights.length);
+    }
+
+    public float getValue(int weightIndex) {
+
+        return weights[weightIndex];
+    }
+
+    public void setWeight(int weightIndex, float weight) {
+
+        weights[weightIndex] = weight;
+    }
 }

@@ -21,8 +21,6 @@
 
 package org.geolatte.graph;
 
-import java.util.Iterator;
-
 /**
  * No comment provided yet for this class.
  * <p/>
@@ -40,7 +38,7 @@ public interface InternalNode<N> {
     /**
      * @return The decorated Locatable
      */
-    N getWrappedNodal();
+    N getWrappedNode();
 
     /**
      * Creates an edge from this node to a given node.
@@ -52,6 +50,4 @@ public interface InternalNode<N> {
     void addReachableFrom(InternalNode<N> fromNode);
 
     float getWeightTo(InternalNode<N> toNode, int weightKind);
-
-    Iterator<InternalNode<N>> outgoingEdgeIterator();
 }

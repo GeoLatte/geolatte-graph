@@ -22,7 +22,6 @@
 package org.geolatte.graph;
 
 import java.util.Arrays;
-import java.util.Iterator;
 
 /**
  * Supports only one edge between two nodes!
@@ -46,7 +45,7 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
         this.wrappedNodal = obj;
     }
 
-    public N getWrappedNodal() {
+    public N getWrappedNode() {
         return this.wrappedNodal;
     }
 
@@ -84,8 +83,7 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
 
 
     public String toString() {
-        //String str = String.format("MyNode: x = %d, y = %d", this.wrappedNodal.getX(), this.wrappedNodal.getY());
-        return "";
+        return String.format("Wraps %s", this.wrappedNodal.toString());
     }
 
     protected InternalNode<? extends N>[] getReachableFrom() {
@@ -100,14 +98,10 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
     public float getWeightTo(InternalNode<N> toInternalNode, int weightKind) {
 
         for (int i = 0; i < this.toNodes.length; i++) {
-            if (this.toNodes[i].wrappedNodal.equals(toInternalNode.getWrappedNodal())) {
+            if (this.toNodes[i].wrappedNodal.equals(toInternalNode.getWrappedNode())) {
                 return this.toWeights[i].getValue(weightKind);
             }
         }
         return Float.MAX_VALUE;
-    }
-
-    public Iterator<InternalNode<N>> outgoingEdgeIterator() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -61,7 +61,7 @@ class HeuristicRelaxer<N extends Locatable, M> extends DefaultRelaxer<N, M> {
 
     protected float update(InternalNode<N> nd, float weight) {
 
-        return weight + this.heuristicWeight * (heuristicStrategy.getValue(nd.getWrappedNodal(), destination));
+        return weight + this.heuristicWeight * (heuristicStrategy.getValue(nd.getWrappedNode(), destination));
     }
 
 

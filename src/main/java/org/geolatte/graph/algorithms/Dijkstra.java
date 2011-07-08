@@ -23,10 +23,7 @@ package org.geolatte.graph.algorithms;
 
 import org.geolatte.graph.*;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>
@@ -59,7 +56,7 @@ public class Dijkstra<N extends Locatable, M> implements GraphAlgorithm<Path<N>>
         this.relaxer = relaxer;
         this.minQueue = new PMinQueue<N>();
         this.reachability = reachability;
-        this.reachability.setOriginDestination(this.origin, this.destination);
+        this.reachability.setOriginDestination(this.origin.getWrappedNode(), this.destination.getWrappedNode());
     }
 
     protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N, M> relaxer, M modus) {
@@ -116,11 +113,11 @@ public class Dijkstra<N extends Locatable, M> implements GraphAlgorithm<Path<N>>
     private Path<N> toPath(PredGraph<N> p) {
         BasicPath<N> path = new BasicPath<N>();
         path.setTotalWeight(p.getWeight());
-        path.insert(p.getInternalNode().getWrappedNodal());
+        path.insert(p.getInternalNode().getWrappedNode());
         PredGraph<N> next = p.getPredecessor();
 
         while (next != null) {
-            path.insert(next.getInternalNode().getWrappedNodal());
+            path.insert(next.getInternalNode().getWrappedNode());
             next = next.getPredecessor();
         }
         path.setValid(true);
@@ -157,7 +154,37 @@ public class Dijkstra<N extends Locatable, M> implements GraphAlgorithm<Path<N>>
                 return this.internalNode;
             }
 
-            public static class PGComparator<N extends Locatable> implements Comparator<PredGraph<N>> {
+        /**
+         * Returns an iterator over a set of elements of type T.
+         *
+         * @return an Iterator.
+         */
+        public Iterator<N> iterator() {
+            return new Iterator<N>() {
+
+                // TODO : Unit test initialization of iterator
+                private PredGraph<N> predGraph = PredGraphImpl.this;
+
+                public boolean hasNext() {
+
+                    predGraph = predGraph.getPredecessor();
+                    return predGraph != null;
+                }
+
+                public N next() {
+                    if (predGraph == null) {
+                        throw new NoSuchElementException();
+                    }
+                    return predGraph.getInternalNode().getWrappedNode();
+                }
+
+                public void remove() {
+                    throw new UnsupportedOperationException();
+                }
+            };
+        }
+
+        public static class PGComparator<N extends Locatable> implements Comparator<PredGraph<N>> {
 
                 public int compare(PredGraph<N> o1, PredGraph<N> o2) {
                     if (o1 instanceof PredGraphImpl && o2 instanceof PredGraphImpl) {

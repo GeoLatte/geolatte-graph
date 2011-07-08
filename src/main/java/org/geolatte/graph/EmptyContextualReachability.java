@@ -37,11 +37,11 @@ public class EmptyContextualReachability<N> implements ContextualReachability<N>
     }
 
 
-    public void setContext(PredGraph<N> pu) {
+    public void setContext(Traversal<N> pu) {
         // Do nothing
     }
 
-    public void setOriginDestination(InternalNode<N> origin, InternalNode<N> destination) {
+    public void setOriginDestination(N origin, N destination) {
         // Do nothing
     }
 }

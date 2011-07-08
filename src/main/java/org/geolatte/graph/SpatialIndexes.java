@@ -62,7 +62,7 @@ public class SpatialIndexes {
         }
 
         public boolean isWithinBounds(InternalNode<T> nd) {
-            T obj = nd.getWrappedNodal();
+            T obj = nd.getWrappedNode();
             if (obj.getX() < this.env.getMinX() || obj.getX() > this.env.getMaxX()) {
                 return false;
             }
@@ -77,7 +77,7 @@ public class SpatialIndexes {
                 throw new RuntimeException("Tried insert object that lies out of bounds: " + nd);
             }
 
-            T obj = nd.getWrappedNodal();
+            T obj = nd.getWrappedNode();
 
             //calculate x/y cell index
             int xCellIdx = (int) (obj.getX() - this.env.getMinX()) / this.resolution;
