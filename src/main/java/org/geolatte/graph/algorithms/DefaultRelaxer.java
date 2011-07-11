@@ -33,14 +33,14 @@ import org.geolatte.graph.PredGraph;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class DefaultRelaxer<N, M> implements Relaxer<N, M> {
+class DefaultRelaxer<N> implements Relaxer<N> {
 
     private float newWeight;
 
-    public boolean relax(PredGraph<N> u, PredGraph<N> v, M modus) {
+    public boolean relax(PredGraph<N> u, PredGraph<N> v, int weightIndex) {
 
         // TODO: correct doorgeven van weightKind
-        float r = u.getWeight() + u.getInternalNode().getWeightTo(v.getInternalNode(), 0);
+        float r = u.getWeight() + u.getInternalNode().getWeightTo(v.getInternalNode(), weightIndex);
         if (r < v.getWeight()) {
             v.setWeight(r);
             v.setPredecessor(u);
@@ -53,7 +53,7 @@ class DefaultRelaxer<N, M> implements Relaxer<N, M> {
     }
 
     /**
-     * Method called from {@link #relax(org.geolatte.graph.PredGraph, org.geolatte.graph.PredGraph, Object)} to
+     * Method called from {@link #relax(org.geolatte.graph.PredGraph, org.geolatte.graph.PredGraph, int)} to
      * determine the new weight for the given node.
      *
      * @param nd         The node.

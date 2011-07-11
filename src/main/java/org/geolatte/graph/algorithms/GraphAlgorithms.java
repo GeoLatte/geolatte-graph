@@ -58,17 +58,16 @@ public class GraphAlgorithms {
      * @param graph       The graph on which to run the Dijkstra algorithm.
      * @param origin      The internalNode from which to start routing.
      * @param destination The destination internalNode to which to find a shortest path.
-     * @param mode        The mode used to determine edge weight.
+     * @param weightKind  The index to lookup the weight.
      * @param <N>         Type of nodes in the graph.
-     * @param <M>         Type of mode object.
      * @return A default Dijkstra algorithm.
      */
-    public <N extends Locatable, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
-                                                                           N origin,
-                                                                           N destination,
-                                                                           M mode) {
+    public <N extends Locatable> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
+                                                                        N origin,
+                                                                        N destination,
+                                                                        int weightKind) {
 
-        return new Dijkstra<N, M>(graph, origin, destination, this.<N, M>createDefaultRelaxer(), mode);
+        return new Dijkstra<N>(graph, origin, destination, this.<N>createDefaultRelaxer(), weightKind);
     }
 
     /**
@@ -77,22 +76,21 @@ public class GraphAlgorithms {
      * @param graph           The graph on which to run the Dijkstra algorithm.
      * @param origin          The internalNode from which to start routing.
      * @param destination     The destination internalNode to which to find a shortest path.
-     * @param mode            The mode used to determine edge weight.
+     * @param weightIndex     The index to lookup the weight
      * @param heuristicWeight The importance of the heuristic factor.
      * @param factor          Factor to convert distance to edge weights units.
      * @param <N>             Type of nodes in the graph.
-     * @param <M>             Type of mode object.
      * @return An A* algorithm.
      */
-    public <N extends Locatable, M> GraphAlgorithm<Path<N>> createAStar(LocateableGraph<N> graph,
-                                                                        N origin,
-                                                                        N destination,
-                                                                        M mode,
-                                                                        float heuristicWeight,
-                                                                        float factor) {
+    public <N extends Locatable> GraphAlgorithm<Path<N>> createAStar(LocateableGraph<N> graph,
+                                                                     N origin,
+                                                                     N destination,
+                                                                     int weightIndex,
+                                                                     float heuristicWeight,
+                                                                     float factor) {
 
-        Relaxer<N, M> relaxer = this.createAStarRelaxer(heuristicWeight, factor, destination);
-        return new Dijkstra<N, M>(graph, origin, destination, relaxer, mode);
+        Relaxer<N> relaxer = this.createAStarRelaxer(heuristicWeight, factor, destination);
+        return new Dijkstra<N>(graph, origin, destination, relaxer, weightIndex);
 
     }
 
@@ -100,12 +98,11 @@ public class GraphAlgorithms {
      * Constructs a default relaxer.
      *
      * @param <N> The internalNode type.
-     * @param <M> The mode type.
      * @return A default relaxer.
      */
-    protected <N, M> Relaxer<N, M> createDefaultRelaxer() {
+    protected <N> Relaxer<N> createDefaultRelaxer() {
 
-        return new DefaultRelaxer<N, M>();
+        return new DefaultRelaxer<N>();
     }
 
     /**
@@ -118,7 +115,7 @@ public class GraphAlgorithms {
      * @param <M>             The modus.
      * @return A relaxer for the A* algorithms.
      */
-    protected <N extends Locatable, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
+    protected <N extends Locatable, M> Relaxer<N> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
 
         return new HeuristicRelaxer<N, M>(heuristicWeight, destination, new DistanceHeuristicStrategy<N>(factor));
     }

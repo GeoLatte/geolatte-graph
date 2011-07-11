@@ -39,7 +39,7 @@ import org.geolatte.graph.Locatable;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class HeuristicRelaxer<N extends Locatable, M> extends DefaultRelaxer<N, M> {
+class HeuristicRelaxer<N extends Locatable, M> extends DefaultRelaxer<N> {
 
     private final float heuristicWeight; // weight given to the heuristic component
     private final N destination;

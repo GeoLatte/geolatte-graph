@@ -33,39 +33,39 @@ import java.util.*;
  *
  * @author Karel Maesen
  */
-public class Dijkstra<N, M> implements GraphAlgorithm<Path<N>> {
+public class Dijkstra<N> implements GraphAlgorithm<Path<N>> {
 
     private final InternalNode<N> origin;
     private final InternalNode<N> destination;
     private final Graph<N> graph;
-    private final M modus;
+    private final int weightIndex;
     private Path<N> result;
 
 
     private final PMinQueue<N> minQueue;
-    private final Relaxer<N, M> relaxer;
+    private final Relaxer<N> relaxer;
     private RoutingContextualReachability<N, Traversal<N>> reachability;
 
-    protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N, M> relaxer, M modus, RoutingContextualReachability<N, Traversal<N>> reachability) {
+    protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N> relaxer, int weightIndex, RoutingContextualReachability<N, Traversal<N>> reachability) {
 
         this.graph = graph;
 
         this.origin = this.graph.getInternalNode(origin);
         this.destination = this.graph.getInternalNode(destination);
-        this.modus = modus;
+        this.weightIndex = weightIndex;
         this.relaxer = relaxer;
         this.minQueue = new PMinQueue<N>();
         this.reachability = reachability;
         this.reachability.setOriginDestination(this.origin.getWrappedNode(), this.destination.getWrappedNode());
     }
 
-    protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N, M> relaxer, M modus) {
+    protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N> relaxer, int weightIndex) {
 
         this.graph = graph;
 
         this.origin = this.graph.getInternalNode(origin);
         this.destination = this.graph.getInternalNode(destination);
-        this.modus = modus;
+        this.weightIndex = weightIndex;
         this.relaxer = relaxer;
         this.minQueue = new PMinQueue<N>();
         this.reachability = new EmptyContextualReachability<N, Traversal<N>>();
@@ -95,7 +95,7 @@ public class Dijkstra<N, M> implements GraphAlgorithm<Path<N>> {
                             Float.POSITIVE_INFINITY);
                     minQueue.add(pv, Float.POSITIVE_INFINITY);
                 }
-                if (this.relaxer.relax(pu, pv, modus)) {
+                if (this.relaxer.relax(pu, pv, weightIndex)) {
                     this.minQueue.update(pv, this.relaxer.newTotalWeight());
                 }
             }

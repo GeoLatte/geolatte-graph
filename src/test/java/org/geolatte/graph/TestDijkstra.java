@@ -81,7 +81,7 @@ public class TestDijkstra {
             System.out.println(nd);
         }
 
-        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithms.instance.createDijkstra(graph, myNodes[0], myNodes[3], new MyMode());
+        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithms.instance.createDijkstra(graph, myNodes[0], myNodes[3], 0);
 
         algorithm.execute();
 
@@ -92,10 +92,6 @@ public class TestDijkstra {
         assertTrue(p.getSource().equals(myNodes[0]));
         assertTrue(p.getDestination().equals(myNodes[3]));
         assertEquals(9f, p.totalWeight(), 0.01f);
-
-    }
-
-    private static class MyMode {
 
     }
 

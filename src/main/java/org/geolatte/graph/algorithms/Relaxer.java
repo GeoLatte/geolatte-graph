@@ -35,27 +35,27 @@ import org.geolatte.graph.PredGraph;
  * </p>
  *
  * @param <N> The type of internalNode.
- * @param <M> The type of modus
  * @author Karel Maesen
  * @author Bert Vanhooff
  */
-interface Relaxer<N, M> {
+interface Relaxer<N> {
 
     /**
-     * Relaxes the edge from internalNode <code>u</code> to internalNode <code>v</internalNode>. Both are given by their
+     * Relaxes the edge from internalNode <code>u</code> to internalNode <code>v</internalNode>. Both are given by
+     * their
      * predecessor graphs.
      *
-     * @param u     Predecessor graph representing current shortest path to internalNode u.
-     * @param v     Predecessor graph representing current shortest path to internalNode v.
-     * @param modus The mode in which to execute the relaxation.
+     * @param u           Predecessor graph representing current shortest path to internalNode u.
+     * @param v           Predecessor graph representing current shortest path to internalNode v.
+     * @param weightIndex The index used to lookup the weight.
      * @return True if the weight of v was updated, false otherwise
      */
-    public boolean relax(PredGraph<N> u, PredGraph<N> v, M modus);
+    public boolean relax(PredGraph<N> u, PredGraph<N> v, int weightIndex);
 
     /**
      * Returns the new total weight of the path to internalNode v after relaxation has occured. Is only meaningful
      * after
-     * {@link #relax(PredGraph, PredGraph, Object)}
+     * {@link #relax(PredGraph, PredGraph, int)}
      * has been called.
      *
      * @return The new total weight of the path to internalNode v.
