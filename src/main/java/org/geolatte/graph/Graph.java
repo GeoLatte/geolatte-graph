@@ -22,28 +22,31 @@
 package org.geolatte.graph;
 
 import java.util.Iterator;
-import java.util.List;
 
 /**
+ * No comment provided yet for this class.
+ * <p/>
+ * <p>
+ * <i>Creation-Date</i>: 11/07/11<br>
+ * <i>Creation-Time</i>:  11:35<br>
+ * </p>
  *
  * @param <N> The type that represents the nodes.
+ * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
 public interface Graph<N> extends Iterable<InternalNode<N>> {
+    Iterator<InternalNode<N>> iterator();
 
-    public Iterator<InternalNode<N>> iterator();
-
-    public InternalNode<N> getInternalNode(N node);
-
-    public List<InternalNode<N>> getNodesAt(Locatable loc);
-
-    public List<InternalNode<N>> getClosestNodes(Locatable loc, int num, int distance);
+    InternalNode<N> getInternalNode(N node);
 
     /**
      * Gets the edges that start from the given internalNode, depending on the given modus.
      *
-     * @param internalNode  The internalNode.
-     * @param contextualReachability
+     * @param internalNode           The internalNode.
+     * @param contextualReachability An object to determine whether an edge can be used.
      * @return A internalNode iterator for the outgoing nodes.
      */
-    public Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability contextualReachability);
+    Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability contextualReachability);
 }

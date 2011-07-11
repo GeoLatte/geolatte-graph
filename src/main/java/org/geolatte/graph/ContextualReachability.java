@@ -23,12 +23,20 @@ package org.geolatte.graph;
 
 /**
  * <p>
+ * Allows routing algoritmhs to dynamically determine reachability of connected nodes in a graph. This is useful when
+ * reachability rules cannot be captured by a static graph but depend on previous actions of the algorithm.
+ * <p/>
+ * Before querying the reachability of a node ({@link #isReachable(InternalNode)}, one must set the current context:
+ * - The traversal: how is the current node reached
+ * <p/>
+ * <p/>
  * Allows to indicate whether a node v is reachable from a node u when there exists an edge from u to v in the context
- * of a given (partially calculated) path through the graph. Additional state information can be recorded by
+ * of a given (partially calculated) path through the graph.
+ * <p/>
+ * Additional state information can be recorded by
  * implementors of this interface.
- *
- * This is necessary in case reachability rules cannot be captured by a static graph but depend on previous actions of
- * the algorithm.
+ * <p/>
+ * <p/>
  * </p>
  *
  * @author Bert Vanhooff

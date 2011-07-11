@@ -24,7 +24,6 @@ package org.geolatte.graph.algorithms;
 import org.geolatte.data.PairNode;
 import org.geolatte.data.PairingHeap;
 import org.geolatte.graph.InternalNode;
-import org.geolatte.graph.Locatable;
 import org.geolatte.graph.PredGraph;
 
 import java.util.HashMap;
@@ -34,21 +33,22 @@ import java.util.Map;
 /**
  * Implements a Min-PriorityQueue in terms of a Pairing Heap.
  *
- * @author Karel Maesen, Geovise BVBA
  * @param <V>
+ * @author Karel Maesen, Geovise BVBA
  */
-public class PMinQueue<V extends Locatable> {
+public class PMinQueue<V> {
 
     private final PairingHeap<Element<V>> heap = new PairingHeap<Element<V>>();
     private final Map<InternalNode<V>, PairNode<Element<V>>> index = new HashMap<InternalNode<V>, PairNode<Element<V>>>();
 
     public void add(PredGraph<V> value, float key) {
-        PairNode<Element<V>> pn = heap.insert(new Element(value, key));
+        PairNode<Element<V>> pn = heap.insert(new Element<V>(value, key));
         this.index.put(value.getInternalNode(), pn);
     }
 
     /**
      * Removes and returns the element from the queue with the smallest key.
+     *
      * @return The element with the smallest key.
      */
     public PredGraph<V> extractMin() {
@@ -78,12 +78,12 @@ public class PMinQueue<V extends Locatable> {
         if (node == null) {
             throw new RuntimeException("MyNode not in Pairing Heap.");
         }
-        Element<V> newElement = new Element(value, r);
+        Element<V> newElement = new Element<V>(value, r);
         this.heap.decreaseKey(node, newElement);
 
     }
 
-    static class Element<V extends Locatable> implements Comparable<Element<V>> {
+    static class Element<V> implements Comparable<Element<V>> {
         private final Float key;
         private final PredGraph<V> value;
 

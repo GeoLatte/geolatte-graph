@@ -33,7 +33,7 @@ import java.util.*;
  *
  * @author Karel Maesen
  */
-public class Dijkstra<N extends Locatable, M> implements GraphAlgorithm<Path<N>> {
+public class Dijkstra<N, M> implements GraphAlgorithm<Path<N>> {
 
     private final InternalNode<N> origin;
     private final InternalNode<N> destination;
@@ -128,31 +128,31 @@ public class Dijkstra<N extends Locatable, M> implements GraphAlgorithm<Path<N>>
         return this.result;
     }
 
-    static class PredGraphImpl<N extends Locatable> implements PredGraph<N> {
-            private final InternalNode<N> internalNode;
-            private PredGraph<N> predecessor = null;
-            private float weight;
+    static class PredGraphImpl<N> implements PredGraph<N> {
+        private final InternalNode<N> internalNode;
+        private PredGraph<N> predecessor = null;
+        private float weight;
 
-            private PredGraphImpl(InternalNode<N> n, float weight) {
-                this.internalNode = n;
-                this.weight = weight;
-            }
+        private PredGraphImpl(InternalNode<N> n, float weight) {
+            this.internalNode = n;
+            this.weight = weight;
+        }
 
-            public PredGraph<N> getPredecessor() {
-                return predecessor;
-            }
+        public PredGraph<N> getPredecessor() {
+            return predecessor;
+        }
 
-            public float getWeight() {
-                return this.weight;
-            }
+        public float getWeight() {
+            return this.weight;
+        }
 
-            public void setWeight(float w) {
-                this.weight = w;
-            }
+        public void setWeight(float w) {
+            this.weight = w;
+        }
 
-            public InternalNode<N> getInternalNode() {
-                return this.internalNode;
-            }
+        public InternalNode<N> getInternalNode() {
+            return this.internalNode;
+        }
 
         /**
          * Returns an iterator over a set of elements of type T.
@@ -184,54 +184,54 @@ public class Dijkstra<N extends Locatable, M> implements GraphAlgorithm<Path<N>>
             };
         }
 
-        public static class PGComparator<N extends Locatable> implements Comparator<PredGraph<N>> {
+        public static class PGComparator<N> implements Comparator<PredGraph<N>> {
 
-                public int compare(PredGraph<N> o1, PredGraph<N> o2) {
-                    if (o1 instanceof PredGraphImpl && o2 instanceof PredGraphImpl) {
-                        PredGraphImpl<N> pg1 = (PredGraphImpl<N>) o1;
-                        PredGraphImpl<N> pg2 = (PredGraphImpl<N>) o2;
-                        if (pg1.internalNode.equals(pg2.internalNode)) {
-                            return 0;
-                        }
-                        return Float.compare(pg1.getWeight(), pg2.getWeight());
+            public int compare(PredGraph<N> o1, PredGraph<N> o2) {
+                if (o1 instanceof PredGraphImpl && o2 instanceof PredGraphImpl) {
+                    PredGraphImpl<N> pg1 = (PredGraphImpl<N>) o1;
+                    PredGraphImpl<N> pg2 = (PredGraphImpl<N>) o2;
+                    if (pg1.internalNode.equals(pg2.internalNode)) {
+                        return 0;
                     }
-                    throw new IllegalArgumentException();
+                    return Float.compare(pg1.getWeight(), pg2.getWeight());
                 }
+                throw new IllegalArgumentException();
             }
+        }
 
-            public void setPredecessor(PredGraph<N> pred) {
-                this.predecessor = pred;
-            }
+        public void setPredecessor(PredGraph<N> pred) {
+            this.predecessor = pred;
+        }
 
-            @Override
-            public int hashCode() {
-                final int prime = 31;
-                int result = 1;
-                result = prime * result + ((internalNode == null) ? 0 : internalNode.hashCode());
-                return result;
-            }
+        @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((internalNode == null) ? 0 : internalNode.hashCode());
+            return result;
+        }
 
-            @Override
-            public boolean equals(Object obj) {
-                if (this == obj)
-                    return true;
-                if (obj == null)
-                    return false;
-                if (getClass() != obj.getClass())
-                    return false;
-                PredGraphImpl<N> other = (PredGraphImpl<N>) obj;
-                if (internalNode == null) {
-                    if (other.internalNode != null)
-                        return false;
-                } else if (!internalNode.equals(other.internalNode))
-                    return false;
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
                 return true;
-            }
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            PredGraphImpl<N> other = (PredGraphImpl<N>) obj;
+            if (internalNode == null) {
+                if (other.internalNode != null)
+                    return false;
+            } else if (!internalNode.equals(other.internalNode))
+                return false;
+            return true;
+        }
 
-            public String toString() {
-                return String.format("MyNode: %s, weight: %.1f", this.internalNode,
-                        this.weight);
-            }
-        }    
+        public String toString() {
+            return String.format("MyNode: %s, weight: %.1f", this.internalNode,
+                    this.weight);
+        }
+    }
 
 }

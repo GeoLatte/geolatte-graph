@@ -83,7 +83,7 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
 
 
     public String toString() {
-        return String.format("Wraps %s", this.wrappedNodal.toString());
+        return String.format("InternalNodeWrapper, wraps: %s", this.wrappedNodal.toString());
     }
 
     protected InternalNode<? extends N>[] getReachableFrom() {

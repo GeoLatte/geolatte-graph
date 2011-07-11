@@ -45,7 +45,7 @@ public class Graphs {
         }
 
 
-        public Graph<N> build() throws BuilderException {
+        public LocateableGraph<N> build() throws BuilderException {
 
             if (map.isEmpty()) {
                 throw new IllegalStateException("No nodes added since last built");
@@ -82,8 +82,8 @@ public class Graphs {
             fNw.addEdge(toNw, null, edgeWeight);
         }
 
-        // Graph Implementation
-        private static class GridIndexedGraph<N extends Locatable> implements Graph<N> {
+        // LocateableGraph Implementation
+        private static class GridIndexedGraph<N extends Locatable> implements LocateableGraph<N> {
 
             private final SpatialIndex<N> index;
 
@@ -119,11 +119,10 @@ public class Graphs {
 
 
             public Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability contextualReachability) {
-                
+
                 return new OutEdgeIteratorImpl<N>((InternalNodeWrapper<N>) internalNode, contextualReachability);
             }
         }
-
 
         private static class OutEdgeIteratorImpl<N extends Locatable> implements Iterator<InternalNode<N>> {
 
