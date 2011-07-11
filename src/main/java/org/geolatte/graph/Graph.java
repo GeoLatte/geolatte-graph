@@ -24,12 +24,7 @@ package org.geolatte.graph;
 import java.util.Iterator;
 
 /**
- * No comment provided yet for this class.
- * <p/>
- * <p>
- * <i>Creation-Date</i>: 11/07/11<br>
- * <i>Creation-Time</i>:  11:35<br>
- * </p>
+ * Representation of a graph of internal nodes.
  *
  * @param <N> The type that represents the nodes.
  * @author Bert Vanhooff
@@ -37,8 +32,13 @@ import java.util.Iterator;
  * @since SDK1.5
  */
 public interface Graph<N> extends Iterable<InternalNode<N>> {
-    Iterator<InternalNode<N>> iterator();
 
+    /**
+     * Gets the internal node that represents the given domain node.
+     *
+     * @param node The domain node.
+     * @return The internal node that corresponds to the domain node.
+     */
     InternalNode<N> getInternalNode(N node);
 
     /**
@@ -48,5 +48,5 @@ public interface Graph<N> extends Iterable<InternalNode<N>> {
      * @param contextualReachability An object to determine whether an edge can be used.
      * @return A internalNode iterator for the outgoing nodes.
      */
-    Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability contextualReachability);
+    Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability<N, ?> contextualReachability);
 }

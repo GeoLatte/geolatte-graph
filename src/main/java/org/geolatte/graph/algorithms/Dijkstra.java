@@ -102,7 +102,7 @@ public class Dijkstra<N, M> implements GraphAlgorithm<Path<N>> {
         }
     }
 
-    protected boolean isDone(PredGraph<N> pu) {
+    boolean isDone(PredGraph<N> pu) {
         if (pu.getInternalNode().equals(this.destination)) {
             this.result = toPath(pu);
             return true;

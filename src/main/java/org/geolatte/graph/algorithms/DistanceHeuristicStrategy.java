@@ -34,7 +34,7 @@ import org.geolatte.graph.Locatable;
  */
 public class DistanceHeuristicStrategy<T extends Locatable> implements HeuristicStrategy<T> {
 
-    private float factor;
+    private final float factor;
 
     public DistanceHeuristicStrategy(float factor) {
         this.factor = factor;
@@ -44,6 +44,6 @@ public class DistanceHeuristicStrategy<T extends Locatable> implements Heuristic
 
         double dx = (double) (from.getX() - to.getX());
         double dy = (double) (from.getY() - to.getY());
-        return (float)(factor * Math.sqrt(dx * dx + dy * dy));
+        return (float) (factor * Math.sqrt(dx * dx + dy * dy));
     }
 }

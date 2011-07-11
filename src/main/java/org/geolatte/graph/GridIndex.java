@@ -23,10 +23,7 @@ package org.geolatte.graph;
 
 import com.vividsolutions.jts.geom.Envelope;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -141,7 +138,7 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    public Iterator<InternalNode<T>> getObjects() {
+    public Iterator<InternalNode<T>> getInternalNodes() {
 
         return new Iterator<InternalNode<T>>() {
 
@@ -170,7 +167,8 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
                     return retVal;
 
                 }
-                return null;
+
+                throw new NoSuchElementException();
             }
 
             private void incrementPointers() {
@@ -197,7 +195,7 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         };
     }
 
-    public List<InternalNode<T>> getObjectAt(Locatable loc) {
+    public List<InternalNode<T>> getNodeAt(Locatable loc) {
         List<InternalNode<T>> res = new ArrayList<InternalNode<T>>();
         if (loc == null) {
             return res;

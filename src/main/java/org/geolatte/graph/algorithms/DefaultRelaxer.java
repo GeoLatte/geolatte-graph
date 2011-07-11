@@ -22,21 +22,20 @@
 package org.geolatte.graph.algorithms;
 
 import org.geolatte.graph.InternalNode;
-import org.geolatte.graph.Locatable;
 import org.geolatte.graph.PredGraph;
 
 /**
  * <p>
- * No comment provided yet for this class.
+ * Default relaxer simply uses the edge weights to determine whether the shortest path can be improved.
  * </p>
  *
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class DefaultRelaxer<N extends Locatable, M> implements Relaxer<N, M> {
+class DefaultRelaxer<N, M> implements Relaxer<N, M> {
 
-    float newWeight;
+    private float newWeight;
 
     public boolean relax(PredGraph<N> u, PredGraph<N> v, M modus) {
 
@@ -53,9 +52,17 @@ class DefaultRelaxer<N extends Locatable, M> implements Relaxer<N, M> {
         }
     }
 
-    protected float update(InternalNode<N> nd, float distance) {
+    /**
+     * Method called from {@link #relax(org.geolatte.graph.PredGraph, org.geolatte.graph.PredGraph, Object)} to
+     * determine the new weight for the given node.
+     *
+     * @param nd         The node.
+     * @param baseWeight The new base weight.
+     * @return A new weight.
+     */
+    protected float update(InternalNode<N> nd, float baseWeight) {
 
-        return distance;
+        return baseWeight;
     }
 
     public float newTotalWeight() {

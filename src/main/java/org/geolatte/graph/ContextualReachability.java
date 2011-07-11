@@ -22,15 +22,25 @@
 package org.geolatte.graph;
 
 /**
- * Allows algorithms to dynamically determine reachability of connected nodes in a graph. This is useful when
- * reachability rules cannot be captured by a static graph but depend on previous actions of the algorithm.
+ * <p>
+ * Allows algorithms to dynamically determine reachability of connected nodes in a graph. Can be used in a
+ * context-aware
+ * filter on the outgoing edges of a given node. This is useful when reachability rules cannot be captured by a static
+ * graph but depend on previous actions of the algorithm.
+ * </p>
  * <p/>
+ * <p>
  * Before querying the reachability of a node ({@link #isReachable(InternalNode)}, one must set the current context (
  * this is usually done by the graph algorithm).
+ * </p>
  * <p/>
+ * <p>
  * Implementers can use the available context information to determine whether a node is reachable.
+ * </p>
  * <p/>
- * TODO: Document thread safety requirements
+ * <p>
+ * <i><b>TODO: Document thread safety requirements</b></i>
+ * </p>
  *
  * @param <N> The domain node type.
  * @param <C> The type of the context object.
@@ -40,7 +50,19 @@ package org.geolatte.graph;
  */
 public interface ContextualReachability<N, C> {
 
+    /**
+     * Determines whether there exists a usable edge from the current node (given by the set context, see
+     * {@link #setContext(Object)} to the given node.
+     *
+     * @param node The node.
+     * @return True if the given node is reachable, false otherwise.
+     */
     boolean isReachable(InternalNode<N> node);
 
+    /**
+     * Sets the current context.
+     *
+     * @param context The current context.
+     */
     void setContext(C context);
 }

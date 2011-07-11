@@ -31,19 +31,18 @@ import java.util.*;
  * Breath-first search algorithm that over a given maximum distance. (Documentation to be completed)
  * <p/>
  *
- * @param <N>
- * @param <M>
+ * @param <N> The type of domain node
  */
-public class BFSDistanceLimited<N, M> implements GraphAlgorithm<Map<N, Float>> {
+public class BFSDistanceLimited<N> implements GraphAlgorithm<Map<N, Float>> {
 
-    final Set<BFSState<N>> blackNodes = new HashSet<BFSState<N>>();
-    final Queue<BFSState<N>> greyNodes = new LinkedList<BFSState<N>>();
-    final InternalNode<N> source;
-    final float maxDistance;
-    final Graph<N> graph;
-    Map<N, Float> result;
+    private final Set<BFSState<N>> blackNodes = new HashSet<BFSState<N>>();
+    private final Queue<BFSState<N>> greyNodes = new LinkedList<BFSState<N>>();
+    private final InternalNode<N> source;
+    private final float maxDistance;
+    private final Graph<N> graph;
+    private Map<N, Float> result;
 
-    protected BFSDistanceLimited(Graph<N> graph, N source, float maxDistance) {
+    BFSDistanceLimited(Graph<N> graph, N source, float maxDistance) {
         this.graph = graph;
         this.source = graph.getInternalNode(source);
         this.maxDistance = maxDistance;
@@ -69,7 +68,7 @@ public class BFSDistanceLimited<N, M> implements GraphAlgorithm<Map<N, Float>> {
                 InternalNode<N> v = outEdges.next();
                 BFSState<N> wv = new BFSState<N>(v);
                 if (greyNodes.contains(wv) || blackNodes.contains(wv)) {
-                    continue; // do nothing
+                    ; // do nothing
                 } else {
                     // TODO: correct doorgeven van wieghtKind
                     wv.distance = wu.distance + wu.internalNode.getWeightTo(v, 0);

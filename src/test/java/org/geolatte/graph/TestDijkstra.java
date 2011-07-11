@@ -23,7 +23,7 @@ package org.geolatte.graph;
 
 import com.vividsolutions.jts.geom.Envelope;
 import org.geolatte.graph.algorithms.GraphAlgorithm;
-import org.geolatte.graph.algorithms.GraphAlgorithmFactory;
+import org.geolatte.graph.algorithms.GraphAlgorithms;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -81,7 +81,7 @@ public class TestDijkstra {
             System.out.println(nd);
         }
 
-        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithmFactory.instance.createDijkstra(graph, myNodes[0], myNodes[3], new MyMode());
+        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithms.instance.createDijkstra(graph, myNodes[0], myNodes[3], new MyMode());
 
         algorithm.execute();
 

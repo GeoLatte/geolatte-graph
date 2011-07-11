@@ -25,6 +25,7 @@ import java.util.Arrays;
 
 /**
  * <p>
+ * A simple implementation of {@link EdgeWeight} that can store an arbitrary set of weights can be stored.
  * </p>
  *
  * @author Bert Vanhooff
@@ -33,8 +34,13 @@ import java.util.Arrays;
  */
 public class ArrayEdgeWeight implements EdgeWeight {
 
-    private float[] weights;
+    private final float[] weights;
 
+    /**
+     * Constructs an ArrayEdgeWeight using the given array of weights.
+     *
+     * @param weights An array of weights.
+     */
     public ArrayEdgeWeight(float[] weights) {
 
         this.weights = Arrays.copyOf(weights, weights.length);

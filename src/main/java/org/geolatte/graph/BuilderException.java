@@ -21,8 +21,11 @@
 
 package org.geolatte.graph;
 
+/**
+ * Exception thrown when a builder fails.
+ */
 public class BuilderException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
 }

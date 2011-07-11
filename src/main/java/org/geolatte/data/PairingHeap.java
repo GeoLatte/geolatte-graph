@@ -29,7 +29,7 @@ import java.util.List;
  * <p>
  * An implementation of the Pairing Heap as discussed in 'The Pairing Heap: A New Form of Self-Adjusting Heap' by
  * Fredman, e.a., Algorithmica (1986) 1: 111 - 129.
- *
+ * <p/>
  * A pairing heap is an alternative to a Fibonacci heap, but is faster in practice and easier to implement. It is a
  * semi-ordered tree, where a nodes is always smaller than its left child.
  * </p>
@@ -37,38 +37,40 @@ import java.util.List;
  * This implementation is based on the implementation in the GNU C++ standard library (libstdc++)
  * </p>
  * <p>
- * Elements in the heap are compared using a given {@link Comparator<E>} or uses the elements' natural ordering. In the
- * latter case, the elements must implement {@link Comparable<E>}.
+ * Elements in the heap are compared using a given {@link Comparator} or uses the elements' natural ordering. In the
+ * latter case, the elements must implement {@link Comparable}.
  * </p>
- *
+ * <p/>
  * <p>
  * This pairing heap uses a left child / right sibling representation:
-
- *                                  2
- *                                 *
- *                             *
- *                          6 <---> 3 <---> 4 <---> 5 <---> 9 <---> 7
- *                                 *       *       *
- *                             *         *       *
- *                         10 <-> 13   8       11 <-> 15
- *                                            *      *
- *                                          *      *
- *                                        12     16 <-> 18
- *
+ * <p/>
+ * 2
+ * *
+ * *
+ * 6 <---> 3 <---> 4 <---> 5 <---> 9 <---> 7
+ * *       *       *
+ * *         *       *
+ * 10 <-> 13   8       11 <-> 15
+ * *      *
+ * *      *
+ * 12     16 <-> 18
+ * <p/>
  * Remarks:
  * - The root never has a sibling
- * - PairNode.getNextSibling() navigates to the right through siblings. For the example, starting from 6, this would yield:
+ * - PairNode.getNextSibling() navigates to the right through siblings. For the example, starting from 6, this would
+ * yield:
  * 6->3->4->5->9->7; starting from 10: 10->13; from 5: 5->11->12
  * - PairNode.getLeft() navigates through children. For the example, starting from 2, this would yield: 2->6
- * - PairNode.getPrev() navigates through previous siblings and through the parent (if there is no previous sibling) until
+ * - PairNode.getPrev() navigates through previous siblings and through the parent (if there is no previous sibling)
+ * until
  * the root is reached. For the example this would yield: 18->16->15->11->5->4->3->6->2
- *
+ * <p/>
  * </p>
  *
+ * @param <E> The type of elements stored in the heap. These serve as the key in the tree and hence need to be
+ *            comparable.
  * @author karel  Maesen, Geovise BVBA
- *
- * @param <E> The type of elements stored in the heap. These serve as the key in the tree and hence need to be comparable.
-  */
+ */
 public class PairingHeap<E> {
 
     private PairNode<E> root;
@@ -76,14 +78,15 @@ public class PairingHeap<E> {
 
     /**
      * Constructs a PairingHeap which uses the natural ordering of its elements. Therefore, elements are expected to
-     * implement the {@link Comparable<E>} interface. If they do not, you must use
-     * {@link PairingHeap#PairingHeap(java.util.Comparator)} to provide a {@link Comparator<E>}.
+     * implement the {@link Comparable} interface. If they do not, you must use
+     * {@link PairingHeap#PairingHeap(java.util.Comparator)} to provide a {@link Comparator}.
      */
     public PairingHeap() {
     }
 
     /**
      * Constructs a PairingHeap with the given comparator.
+     *
      * @param comparator The comparator that will be used to compare the heap elements.
      */
     public PairingHeap(Comparator<E> comparator) {
@@ -94,6 +97,7 @@ public class PairingHeap<E> {
     /**
      * Creates a new node for the given element and inserts in into the heap. If the heap was empty, this node becomes
      * the root.
+     *
      * @param element The element to insert.
      * @return The node created for the inserted element.
      */
@@ -102,11 +106,10 @@ public class PairingHeap<E> {
         PairNode<E> node = new PairNode<E>(element, this.comparator);
         if (root == null) {
             root = node;
-        }
-        else {
+        } else {
             root = compareAndLink(root, node);
         }
-        
+
         return node;
     }
 
@@ -129,6 +132,7 @@ public class PairingHeap<E> {
 
     /**
      * Removes the current root and merges its subtrees.
+     *
      * @return The old root node.
      * @throws IllegalStateException When the heap is empty
      */
@@ -190,11 +194,13 @@ public class PairingHeap<E> {
     /**
      * Compares the given elements using the comparator set at construction time. If no comparator is given, the first
      * element is cast to {@link Comparable<E>}.
+     *
      * @param element  The first element to be compared.
      * @param newValue The second element to be compared.
-     * @return negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater than the second.
+     * @return negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater
+     *         than the second.
      * @throws ClassCastException When <code>element</code> does not implement {@link Comparable<E>} and no
-     * {@link Comparator<E>} was given at construction time. 
+     *                            {@link Comparator} was given at construction time.
      */
     private int compare(E element, E newValue) {
         if (this.comparator != null) {
@@ -207,6 +213,7 @@ public class PairingHeap<E> {
      * Internal merge method that is the basic operation to maintain order. Links first and second trees together to
      * satisfy heap order.
      * first becomes the result of the tree merge
+     *
      * @param first  The root of tree 1 (cannot be null and cannot have a sibling).
      * @param second The root of tree 2 (can be null).
      * @return Whichever of the two given nodes becomes the new root.
@@ -247,6 +254,7 @@ public class PairingHeap<E> {
 
     /**
      * Internal method that implements two-pass merging.
+     *
      * @param firstSibling The root of the conglomerate, assumed not null.
      * @return The new root node.
      */

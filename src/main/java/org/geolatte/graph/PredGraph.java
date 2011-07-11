@@ -22,42 +22,45 @@
 package org.geolatte.graph;
 
 /**
- * Decorator that allows to store total weight and a predecessor reference for a node. An instance of PredGraph
- * represents a node in a path through a graph which can be followed back to a source node (which has no predecessor)
+ * Represents the end node in a path through a graph which can be followed back to a start node through a set of
+ * predecessor nodes.
  *
+ * @param <N> The type of domain node.
  * @author Karel Maesen
  * @author Bert Vanhooff
- *
- * @param <N> The type of node.
  */
 public interface PredGraph<N> extends Traversal<N> {
 
     /**
-     * Sets the predecessor of the this node.
+     * @return The end node of the predecessor graph.
+     */
+    InternalNode<N> getInternalNode();
+
+    /**
+     * Sets the predecessor of the current node.
+     *
      * @param pred The predecessor.
      */
     void setPredecessor(PredGraph<N> pred);
 
     /**
-     * @return The predecessor of this node. Null if this is the first element of the path.
+     * @return The predecessor of the current node. Null if this is the first element of the path.
      */
     PredGraph<N> getPredecessor();
 
     /**
-     * Sets the weight of this node. This usually takes into account its predecessors (the path before this node).
+     * Sets the weight up to the current node. This usually takes into account its predecessors (the path before this
+     * node).
      *
      * @param d The new weight.
      */
     void setWeight(float d);
 
     /**
+     * Gets the weight of the path to the current node.
+     *
      * @return The weight of this node.
      */
     float getWeight();
-
-    /**
-     * @return The node that is decorated by this predecessor graph.
-     */
-    InternalNode<N> getInternalNode();
 
 }

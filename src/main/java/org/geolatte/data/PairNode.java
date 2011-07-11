@@ -25,26 +25,26 @@ import java.util.Comparator;
 
 /**
  * <p>
- * The node data structure used by {@link PairingHeap<E>}. A PairNode uses a left child / sibling representation
+ * The node data structure used by {@link PairingHeap}. A PairNode uses a left child / sibling representation
  * (= binary tree)
  * </p>
- *
+ * <p/>
  * <p>
- *              n <---> next sibling <---> ..
- *             /
- *            /
- *  left child <---> ..
+ * n <---> next sibling <---> ..
+ * /
+ * /
+ * left child <---> ..
  * </p>
  * <p>
- * See {@link PairingHeap<E>} for additional documentation.
+ * See {@link PairingHeap} for additional documentation.
  * </p>
- *
+ * <p/>
  * creation-date: Apr 22, 2010
  *
  * @author Karel Maesen
  * @author Bert Vanhooff
  */
-public class PairNode<E> implements Comparable<PairNode<E>> {
+public final class PairNode<E> implements Comparable<PairNode<E>> {
 
     private E element;
     private PairNode<E> leftChild;
@@ -54,11 +54,12 @@ public class PairNode<E> implements Comparable<PairNode<E>> {
 
     /**
      * Constructs an PairNode with the given element and comparator.
+     *
      * @param element    The element (key) stored in the node.
      * @param comparator The comparator used to compare nodes
      * @throws IllegalArgumentException When the given element is not comparable or no comparator has been given.
      */
-    protected PairNode(E element, Comparator<E> comparator) {
+    PairNode(E element, Comparator<E> comparator) {
 
         if (comparator == null && !(element instanceof Comparable))
             throw new IllegalArgumentException("Require either explicit comparator, or Comparable element object.");
@@ -69,6 +70,7 @@ public class PairNode<E> implements Comparable<PairNode<E>> {
 
     /**
      * Sets the element of this node.
+     *
      * @param element The element.
      */
     void setElement(E element) {
@@ -84,6 +86,7 @@ public class PairNode<E> implements Comparable<PairNode<E>> {
 
     /**
      * Sets the left child of this node.
+     *
      * @param node The left child.
      */
     void setLeftChild(PairNode<E> node) {
@@ -92,6 +95,7 @@ public class PairNode<E> implements Comparable<PairNode<E>> {
 
     /**
      * Sets the previous node.
+     *
      * @param node The previous node.
      */
     void setPrev(PairNode<E> node) {
@@ -100,6 +104,7 @@ public class PairNode<E> implements Comparable<PairNode<E>> {
 
     /**
      * Sets the next sibling of this node.
+     *
      * @param node The next sibling.
      */
     void setNextSibling(PairNode<E> node) {
@@ -125,12 +130,14 @@ public class PairNode<E> implements Comparable<PairNode<E>> {
     }
 
     /**
-     * Compares this node to the given node using the comparator set at construction time. If no comparator is set, this
-     * node must implement {@link Comparable<E>}.
+     * Compares this node to the given node using the comparator set at construction time. If no comparator is set,
+     * this
+     * node must implement {@link Comparable}.
+     *
      * @param node The node to compare to this node.
      * @return negative integer, zero, or a positive integer as this node is less than, equal to, or greater than the
-     * given node.
-     * @throws ClassCastException When no comparator was set and this node does not implement {@link Comparable<E>}.
+     *         given node.
+     * @throws ClassCastException When no comparator was set and this node does not implement {@link Comparable}.
      */
     public int compareTo(PairNode<E> node) {
         if (this.comparator == null) {

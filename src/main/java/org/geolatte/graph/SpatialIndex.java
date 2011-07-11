@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * A spatial indexes is used to optimize spatial queries.
  *
- * @param <N>
+ * @param <N> The type of the domain nodes.
  */
 public interface SpatialIndex<N extends Locatable> {
 
@@ -49,16 +49,27 @@ public interface SpatialIndex<N extends Locatable> {
 
     /**
      * Searches the given number of node closest to the given node, within a maximum distance.
-     * 
-     * @param locatable       The center node.
+     *
+     * @param locatable   The center node.
      * @param num         The number of closest nodes to find.
      * @param maxDistance The maximum distance to search in.
      * @return A list of closest nodes.
      */
     public List<InternalNode<N>> getNClosest(Locatable locatable, int num, int maxDistance);
 
-    public Iterator<InternalNode<N>> getObjects();
+    /**
+     * An iterator over all internal nodes in the index.
+     *
+     * @return An internal node iterator.
+     */
+    public Iterator<InternalNode<N>> getInternalNodes();
 
-    public List<InternalNode<N>> getObjectAt(Locatable loc);
+    /**
+     * Gets the internal node with the given location.
+     *
+     * @param loc The location.
+     * @return An internal node.
+     */
+    public List<InternalNode<N>> getNodeAt(Locatable loc);
 
 }

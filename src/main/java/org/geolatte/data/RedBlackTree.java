@@ -18,6 +18,7 @@
  * Qmino bvba - Romeinsestraat 18 - 3001 Heverlee  (http://www.qmino.com)
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
+
 package org.geolatte.data;
 
 import java.io.PrintStream;
@@ -26,13 +27,13 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * A Red-Black Tree is a self-balancinf binary search tree.
+ * A Red-Black Tree is a self-balancing binary search tree.
  * <p/>
  * This implementation is based on Introduction to Algorithms, 2nd Ed, Cormed e.a., chapter 13.
  *
- * @author Karel Maesen, Geovise BVBA
  * @param <K> Type of the key value of tree nodes.
  * @param <D> Type of the data contained in a node.
+ * @author Karel Maesen, Geovise BVBA
  */
 public class RedBlackTree<K, D> {
 
@@ -43,10 +44,11 @@ public class RedBlackTree<K, D> {
 
     protected final Comparator<K> comparator;
     protected TreeNode<K, D> root = NIL;
-    protected NodeWriter nodeWriter = new NodeWriter();
+    protected final NodeWriter nodeWriter = new NodeWriter();
 
     /**
      * Constructs a RedBlackTree with the given key comparator.
+     *
      * @param comparator A comparator for the key type
      */
     public RedBlackTree(Comparator<K> comparator) {
@@ -61,6 +63,7 @@ public class RedBlackTree<K, D> {
 
     /**
      * Searches the tree for the data associated with the given key.
+     *
      * @param key The key to search for.
      * @return If found, the data associated with the given key, else, null.
      */
@@ -97,6 +100,7 @@ public class RedBlackTree<K, D> {
 
     /**
      * Inserts a new node with the given key and data value.
+     *
      * @param key  The key value. Must be unique within a tree.
      * @param data The data value.
      * @throws IllegalArgumentException When a node with the given key is already present in the tree.
@@ -142,6 +146,7 @@ public class RedBlackTree<K, D> {
 
     /**
      * Not implemented.
+     *
      * @return A flat list with all data in this tree.
      */
     public List<D> getData() {
@@ -150,6 +155,7 @@ public class RedBlackTree<K, D> {
 
     /**
      * Not implemented.
+     *
      * @return A flat list with all keys in this tree.
      */
     public List<K> getKeys() {
@@ -460,7 +466,7 @@ public class RedBlackTree<K, D> {
             this.detailed = detailed;
         }
 
-        StringBuilder stb = new StringBuilder();
+        final StringBuilder stb = new StringBuilder();
 
         public void visit(TreeNode<K, D> obj) {
             if (obj == NIL) {
@@ -498,7 +504,7 @@ public class RedBlackTree<K, D> {
         private PrintTreeVisitor() {
         }
 
-        List<StringBuilder> rulers = new ArrayList<StringBuilder>();
+        final List<StringBuilder> rulers = new ArrayList<StringBuilder>();
         int currentRule = -1;
         int col = 0;
 

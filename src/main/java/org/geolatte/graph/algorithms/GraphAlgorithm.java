@@ -22,25 +22,23 @@
 package org.geolatte.graph.algorithms;
 
 /**
- * Represents a category of an algorithm that operates on graphs.
- *
- * @author Karel Maesen
+ * Represents a category of algorithms that operates on graphs.
  *
  * @param <T> The object type of the result of the algorithm.
+ * @author Karel Maesen
  */
 public interface GraphAlgorithm<T> {
-	
-	/**
-	 * Executes this graph algorithm. 
-	 */
-	public void execute();
 
-	/**
-	 * Gets the result of this graph algorithm.
-	 * 
-	 * @return the result
-	 * @throws IllegalStateException when this method is invoked before the graph has been executed.
-	 * 
-	 */
-	public T getResult();
+    /**
+     * Executes this graph algorithm.
+     */
+    public void execute();
+
+    /**
+     * Gets the result of this graph algorithm.
+     *
+     * @return the result
+     * @throws IllegalStateException when this method is invoked before the graph has been executed.
+     */
+    public T getResult();
 }

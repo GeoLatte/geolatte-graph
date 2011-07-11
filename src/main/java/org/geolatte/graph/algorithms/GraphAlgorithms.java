@@ -21,6 +21,7 @@
 
 package org.geolatte.graph.algorithms;
 
+import org.geolatte.graph.Graph;
 import org.geolatte.graph.Locatable;
 import org.geolatte.graph.LocateableGraph;
 import org.geolatte.graph.Path;
@@ -28,21 +29,31 @@ import org.geolatte.graph.Path;
 import java.util.Map;
 
 /**
+ * Offers a number of static factory methods to instantiate pre-configured graph algorithms.
+ *
  * @author Karel Maesen
- *         <p/>
- *         Creates {@link GraphAlgorithm}s.
+ * @author Bert Vanhooff
  */
-public class GraphAlgorithmFactory {
+public class GraphAlgorithms {
 
-    public static GraphAlgorithmFactory instance = new GraphAlgorithmFactory();
+    public static GraphAlgorithms instance = new GraphAlgorithms();
 
-    public <N extends Locatable, M> GraphAlgorithm<Map<N, Float>> createBFS(LocateableGraph<N> graph, N source, float maxDistance) {
+    /**
+     * Creates a {@link BFSDistanceLimited} algorithm instance.
+     *
+     * @param graph       The graph.
+     * @param source      The source node.
+     * @param maxDistance The maximum distance to seach in.
+     * @param <N>         The type of domain node.
+     * @return A ready-to-use BFS algorithm.
+     */
+    public <N extends Locatable> GraphAlgorithm<Map<N, Float>> createBFS(LocateableGraph<N> graph, N source, float maxDistance) {
 
-        return new BFSDistanceLimited<N, M>(graph, source, maxDistance);
+        return new BFSDistanceLimited<N>(graph, source, maxDistance);
     }
 
     /**
-     * Constructs a default Dijkstra shortest-path algorithm instance.
+     * Constructs a Dijkstra shortest-path algorithm instance.
      *
      * @param graph       The graph on which to run the Dijkstra algorithm.
      * @param origin      The internalNode from which to start routing.
@@ -52,12 +63,12 @@ public class GraphAlgorithmFactory {
      * @param <M>         Type of mode object.
      * @return A default Dijkstra algorithm.
      */
-    public <N extends Locatable, M> GraphAlgorithm<Path<N>> createDijkstra(LocateableGraph<N> graph,
+    public <N extends Locatable, M> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
                                                                            N origin,
                                                                            N destination,
                                                                            M mode) {
 
-        return new Dijkstra<N, M>(graph, origin, destination, new DefaultRelaxer<N, M>(), mode);
+        return new Dijkstra<N, M>(graph, origin, destination, this.<N, M>createDefaultRelaxer(), mode);
     }
 
     /**
@@ -92,7 +103,7 @@ public class GraphAlgorithmFactory {
      * @param <M> The mode type.
      * @return A default relaxer.
      */
-    protected <N extends Locatable, M> Relaxer<N, M> createDefaultRelaxer() {
+    protected <N, M> Relaxer<N, M> createDefaultRelaxer() {
 
         return new DefaultRelaxer<N, M>();
     }
@@ -104,8 +115,8 @@ public class GraphAlgorithmFactory {
      * @param factor          Factor to convert distance to edge weights units.
      * @param destination     The destination node.
      * @param <N>             The node type.
-     * @param <M>             The Modus.
-     * @return A relaxer for the A* algoritmh
+     * @param <M>             The modus.
+     * @return A relaxer for the A* algorithms.
      */
     protected <N extends Locatable, M> Relaxer<N, M> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
 

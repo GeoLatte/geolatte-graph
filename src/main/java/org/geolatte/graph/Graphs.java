@@ -25,9 +25,19 @@ import com.vividsolutions.jts.geom.Envelope;
 
 import java.util.*;
 
-
+/**
+ * Offers a number of static factory methods to create graphs.
+ */
 public class Graphs {
 
+    /**
+     * Creates a builder for grid indexed graphs.
+     *
+     * @param env        The envelope.
+     * @param resolution The grid resolution.
+     * @param <N>        Type of the domain nodes.
+     * @return A builder for grid indexed graphs.
+     */
     public static <N extends Locatable> GraphBuilder<N> createGridIndexedGraphBuilder(Envelope env, int resolution) {
 
         return new GridIndexedGraphBuilder<N>(env, resolution);
@@ -77,12 +87,11 @@ public class Graphs {
                 this.map.put(toNode, toNw);
             }
 
-            // TODO: modus should not be null
             // Add the edge between the nodes
             fNw.addEdge(toNw, edgeWeight);
         }
 
-        // LocateableGraph Implementation
+
         private static class GridIndexedGraph<N extends Locatable> implements LocateableGraph<N> {
 
             private final SpatialIndex<N> index;
@@ -94,12 +103,12 @@ public class Graphs {
 
 
             public List<InternalNode<N>> getNodesAt(Locatable loc) {
-                return Collections.unmodifiableList(this.index.getObjectAt(loc));
+                return Collections.unmodifiableList(this.index.getNodeAt(loc));
             }
 
 
             public Iterator<InternalNode<N>> iterator() {
-                return this.index.getObjects();
+                return this.index.getInternalNodes();
             }
 
 
@@ -109,7 +118,7 @@ public class Graphs {
 
 
             public InternalNode<N> getInternalNode(N node) {
-                for (InternalNode<N> nw : this.index.getObjectAt(node)) {
+                for (InternalNode<N> nw : this.index.getNodeAt(node)) {
                     if (nw.getWrappedNode().equals(node)) {
                         return nw;
                     }
@@ -118,18 +127,22 @@ public class Graphs {
             }
 
 
-            public Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, RoutingContextualReachability contextualReachability) {
+            public Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability<N, ?> contextualReachability) {
 
                 return new OutEdgeIteratorImpl<N>((InternalNodeWrapper<N>) internalNode, contextualReachability);
             }
         }
 
+        /**
+         * Simple private implementation of OutEdgeIterator.
+         *
+         * @param <N>
+         */
         private static class OutEdgeIteratorImpl<N extends Locatable> implements Iterator<InternalNode<N>> {
 
-            int i = -1;
-            Iterator<InternalNode<N>> reachableNodesIt;
+            Iterator<InternalNode<N>> reachableNodesIterator;
 
-            private OutEdgeIteratorImpl(InternalNodeWrapper<N> from, RoutingContextualReachability<N, Traversal<N>> contextualReachability) {
+            private OutEdgeIteratorImpl(InternalNodeWrapper<N> from, ContextualReachability<N, ?> contextualReachability) {
 
 
                 List<InternalNode<N>> reachableNodes = new ArrayList<InternalNode<N>>();
@@ -138,16 +151,16 @@ public class Graphs {
                         reachableNodes.add(node);
                     }
                 }
-                reachableNodesIt = reachableNodes.iterator();
+                reachableNodesIterator = reachableNodes.iterator();
             }
 
             public boolean hasNext() {
-                return reachableNodesIt.hasNext();
+                return reachableNodesIterator.hasNext();
             }
 
             public InternalNode<N> next() {
 
-                return reachableNodesIt.next();
+                return reachableNodesIterator.next();
             }
 
             public void remove() {

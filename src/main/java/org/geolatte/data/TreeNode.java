@@ -25,11 +25,11 @@ package org.geolatte.data;
  * <p>
  * The node structure used by {@link RedBlackTree}.
  * </p>
- * 
- * @param <K>
- * @param <D>
+ *
+ * @param <K> The key type.
+ * @param <D> The data type.
  */
-public class TreeNode<K, D> {
+public final class TreeNode<K, D> {
 
     protected byte color = RedBlackTree.BLACK;
 
@@ -46,7 +46,7 @@ public class TreeNode<K, D> {
     public TreeNode() {
     }
 
-    public TreeNode(K key, D data, TreeNode<K, D> parent, TreeNode<K, D> sentinel) {
+    TreeNode(K key, D data, TreeNode<K, D> parent, TreeNode<K, D> sentinel) {
         this.color = RedBlackTree.RED;
         this.parent = parent;
         this.left = sentinel;

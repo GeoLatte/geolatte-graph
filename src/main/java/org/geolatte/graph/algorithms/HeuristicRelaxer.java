@@ -29,9 +29,9 @@ import org.geolatte.graph.Locatable;
  * A heuristic relaxer that takes into account:
  * - The path cost (from source to the current internalNode),
  * - A heuristic calculated by a given strategy.
- *
- * For example, the {@link DistanceHeuristicStrategy} can be used to take the straight-line distance to the target internalNode
- * as heuristic value.
+ * <p/>
+ * For example, the {@link DistanceHeuristicStrategy} can be used to take the straight-line distance to the target
+ * internalNode as heuristic value.
  * </p>
  *
  * @author Karel Measen
@@ -43,7 +43,7 @@ class HeuristicRelaxer<N extends Locatable, M> extends DefaultRelaxer<N, M> {
 
     private final float heuristicWeight; // weight given to the heuristic component
     private final N destination;
-    private HeuristicStrategy<N> heuristicStrategy;
+    private final HeuristicStrategy<N> heuristicStrategy;
 
     /**
      * Constructs a heuristic relaxer
@@ -59,11 +59,10 @@ class HeuristicRelaxer<N extends Locatable, M> extends DefaultRelaxer<N, M> {
         this.heuristicStrategy = heuristicStrategy;
     }
 
-    protected float update(InternalNode<N> nd, float weight) {
+    protected float update(InternalNode<N> nd, float baseWeight) {
 
-        return weight + this.heuristicWeight * (heuristicStrategy.getValue(nd.getWrappedNode(), destination));
+        return baseWeight + this.heuristicWeight * (heuristicStrategy.getValue(nd.getWrappedNode(), destination));
     }
-
 
 
 }

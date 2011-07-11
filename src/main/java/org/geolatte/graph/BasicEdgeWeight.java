@@ -23,7 +23,7 @@ package org.geolatte.graph;
 
 /**
  * <p>
- * No comment provided yet for this class.
+ * An implementation of {@link EdgeWeight} that has a single weight.
  * </p>
  *
  * @author Bert Vanhooff
@@ -34,6 +34,11 @@ public class BasicEdgeWeight implements EdgeWeight {
 
     private float value;
 
+    /**
+     * Constructs a BasiEdgeWeight with the given weight value.
+     *
+     * @param value The weight.
+     */
     public BasicEdgeWeight(float value) {
         this.value = value;
     }

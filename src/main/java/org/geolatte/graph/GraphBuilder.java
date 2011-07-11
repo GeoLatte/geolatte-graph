@@ -23,7 +23,7 @@ package org.geolatte.graph;
 
 
 /**
- * Represents a builder for all kinds of graph implementations.
+ * A builder for graphs.
  *
  * @param <N> The type of node.
  * @author Karel Maesen

@@ -22,11 +22,8 @@
 package org.geolatte.graph;
 
 /**
- * No comment provided yet for this class.
- * <p/>
  * <p>
- * <i>Creation-Date</i>: 08/07/11<br>
- * <i>Creation-Time</i>:  16:35<br>
+ * A traversal is a list of subsequent nodes through a graph over which can be iterated.
  * </p>
  *
  * @author Bert Vanhooff

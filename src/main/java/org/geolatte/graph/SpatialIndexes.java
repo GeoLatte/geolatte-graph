@@ -26,11 +26,21 @@ import com.vividsolutions.jts.geom.Envelope;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Offers a number of static factory methods to create spatial indexes.
+ */
 public class SpatialIndexes {
 
-    //Factory methods.
-    public static <E extends Locatable> SpatialIndexBuilder<E> createGridIndexBuilder(Envelope env, int resolution) {
-        return new GridIndexBuilder<E>(env, resolution);
+    /**
+     * Creates a builder for a spatial index.
+     *
+     * @param env        The envelope.
+     * @param resolution The grid resolution.
+     * @param <N>        Type of the domain nodes.
+     * @return A builder for grid indexes.
+     */
+    public static <N extends Locatable> SpatialIndexBuilder<N> createGridIndexBuilder(Envelope env, int resolution) {
+        return new GridIndexBuilder<N>(env, resolution);
     }
 
 
@@ -72,24 +82,24 @@ public class SpatialIndexes {
             return true;
         }
 
-        public void insert(InternalNode<T> nd) {
-            if (!isWithinBounds(nd)) {
-                throw new RuntimeException("Tried insert object that lies out of bounds: " + nd);
+        public void insert(InternalNode<T> node) {
+            if (!isWithinBounds(node)) {
+                throw new RuntimeException("Tried insert object that lies out of bounds: " + node);
             }
 
-            T obj = nd.getWrappedNode();
+            T obj = node.getWrappedNode();
 
             //calculate x/y cell index
             int xCellIdx = (int) (obj.getX() - this.env.getMinX()) / this.resolution;
             int yCellIdx = (int) (obj.getY() - this.env.getMinY()) / this.resolution;
 
-            List<InternalNode<T>> cell = (List<InternalNode<T>>) this.grid[xCellIdx][yCellIdx];
+            List<InternalNode<T>> cell = this.grid[xCellIdx][yCellIdx];
             if (cell == null) {
                 cell = new ArrayList<InternalNode<T>>();
                 this.grid[xCellIdx][yCellIdx] = cell;
 
             }
-            cell.add(nd);
+            cell.add(node);
 
         }
 
@@ -106,7 +116,7 @@ public class SpatialIndexes {
                 for (int yi = 0; yi < xar.length; yi++) {
                     List<InternalNode<T>> cell = xar[yi];
                     if (cell != null) {
-                        newGrid[xi][yi] = (Object[]) cell.toArray();
+                        newGrid[xi][yi] = cell.toArray();
                     }
                 }
             }
@@ -114,7 +124,6 @@ public class SpatialIndexes {
         }
 
     }
-
 
 
 }

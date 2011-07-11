@@ -19,18 +19,23 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
+
+import org.geolatte.graph.Path;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BasicPath<N> implements Path<N> {
+/**
+ * Basic implementation of a path.
+ *
+ * @param <N>
+ */
+class BasicPath<N> implements Path<N> {
 
-    private List<N> nodes = new LinkedList<N>();
-
+    private final List<N> nodes = new LinkedList<N>();
     private boolean valid = false;
-
     private float weight;
 
     public void insert(N nd) {
@@ -38,7 +43,7 @@ public class BasicPath<N> implements Path<N> {
     }
 
     public void setValid(boolean v) {
-        this.valid = v;
+        this.valid = true;
     }
 
     public void setTotalWeight(float w) {

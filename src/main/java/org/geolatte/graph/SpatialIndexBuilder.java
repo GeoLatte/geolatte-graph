@@ -21,10 +21,26 @@
 
 package org.geolatte.graph;
 
-public interface SpatialIndexBuilder<T extends Locatable> {
+/**
+ * A builder for spatial indexes.
+ *
+ * @param <N> The type of the domain node. Must be locatable.
+ */
+public interface SpatialIndexBuilder<N extends Locatable> {
 
-    public void insert(InternalNode<T> obj);
+    /**
+     * Adds a node to the index under construction.
+     *
+     * @param node The node to add.
+     */
+    public void insert(InternalNode<N> node);
 
-    public SpatialIndex<T> build() throws BuilderException;
+    /**
+     * Builds the spatial index.
+     *
+     * @return The spatial index.
+     * @throws BuilderException If the spatial index could not be built.
+     */
+    public SpatialIndex<N> build() throws BuilderException;
 
 }

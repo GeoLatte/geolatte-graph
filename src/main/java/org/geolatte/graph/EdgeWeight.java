@@ -23,7 +23,7 @@ package org.geolatte.graph;
 
 /**
  * <p>
- * No comment provided yet for this class.
+ * Represents a set of weights assigned to an edge.
  * </p>
  *
  * @author Bert Vanhooff
@@ -33,7 +33,7 @@ package org.geolatte.graph;
 public interface EdgeWeight {
 
     /**
-     * Gets the weight for the given kind.
+     * Gets the weight for the given index.
      *
      * @param weightIndex The kind of weight to return.
      * @return A weight value.

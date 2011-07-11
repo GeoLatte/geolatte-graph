@@ -22,7 +22,8 @@
 package org.geolatte.graph;
 
 /**
- * Internal representation of a node, used by the various graph algorithms.
+ * Internal representation of a node, used by the various graph algorithms. Should not normally be implemented by
+ * clients. Use {@link Graphs} to build graphs based on existing domain objects.
  *
  * @param <N> The domain node type.
  * @author Karel Maesen
@@ -33,7 +34,9 @@ package org.geolatte.graph;
 public interface InternalNode<N> {
 
     /**
-     * @return The represented domain node.
+     * Gets the wrapped domain node.
+     *
+     * @return A domain node.
      */
     N getWrappedNode();
 

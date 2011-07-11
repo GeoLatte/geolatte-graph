@@ -21,7 +21,12 @@
 
 package org.geolatte.data;
 
-public interface Visitor<K> {
+/**
+ * Basic visitor interface.
+ *
+ * @param <K>
+ */
+interface Visitor<K> {
 
     public void visit(K obj);
 

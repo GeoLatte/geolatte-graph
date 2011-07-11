@@ -24,22 +24,26 @@ package org.geolatte.graph.algorithms;
 import org.geolatte.graph.PredGraph;
 
 /**
+ * <p>
  * Encapsulates the relaxation step of a shortest path algorithm.
- * <p/>
+ * </p>
+ * <p>
  * From "Introduction to Algorithms 3rd edition":
- * The process of relaxing an edge (u, v) consists of testing whether we can improve the shortest path to v found so far
+ * The process of relaxing an edge (u, v) consists of testing whether we can improve the shortest path to v found so
+ * far
  * by going through u and, if so, updating (decreasing) the new total weight of v and its predecessor internalNode
- *
- * @author Karel Maesen
- * @author Bert Vanhooff
+ * </p>
  *
  * @param <N> The type of internalNode.
  * @param <M> The type of modus
+ * @author Karel Maesen
+ * @author Bert Vanhooff
  */
 interface Relaxer<N, M> {
 
     /**
-     * Relaxes the edge from internalNode <code>u</code> to internalNode <code>v</internalNode>. Both are given by their predecessor graphs.
+     * Relaxes the edge from internalNode <code>u</code> to internalNode <code>v</internalNode>. Both are given by their
+     * predecessor graphs.
      *
      * @param u     Predecessor graph representing current shortest path to internalNode u.
      * @param v     Predecessor graph representing current shortest path to internalNode v.
@@ -49,10 +53,11 @@ interface Relaxer<N, M> {
     public boolean relax(PredGraph<N> u, PredGraph<N> v, M modus);
 
     /**
-     * Returns the new total weight of the path to internalNode v after relaxation has occured. Is only meaningful after
+     * Returns the new total weight of the path to internalNode v after relaxation has occured. Is only meaningful
+     * after
      * {@link #relax(PredGraph, PredGraph, Object)}
      * has been called.
-     * 
+     *
      * @return The new total weight of the path to internalNode v.
      */
     public float newTotalWeight();
