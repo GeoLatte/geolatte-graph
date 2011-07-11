@@ -39,7 +39,6 @@ class DefaultRelaxer<N> implements Relaxer<N> {
 
     public boolean relax(PredGraph<N> u, PredGraph<N> v, int weightIndex) {
 
-        // TODO: correct doorgeven van weightKind
         float r = u.getWeight() + u.getInternalNode().getWeightTo(v.getInternalNode(), weightIndex);
         if (r < v.getWeight()) {
             v.setWeight(r);

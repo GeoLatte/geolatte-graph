@@ -33,7 +33,7 @@ import org.geolatte.graph.RoutingContextualReachability;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class EmptyContextualReachability<N, C> implements RoutingContextualReachability<N, C> {
+final class EmptyContextualReachability<N, C> implements RoutingContextualReachability<N, C> {
 
     public boolean isReachable(InternalNode<N> nInternalNode) {
         return true;

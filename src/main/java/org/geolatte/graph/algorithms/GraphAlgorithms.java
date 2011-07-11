@@ -43,13 +43,14 @@ public class GraphAlgorithms {
      *
      * @param graph       The graph.
      * @param source      The source node.
-     * @param maxDistance The maximum distance to seach in.
+     * @param maxDistance The maximum distance to search in.
+     * @param weightIndex The index to lookup the weight.
      * @param <N>         The type of domain node.
      * @return A ready-to-use BFS algorithm.
      */
-    public <N extends Locatable> GraphAlgorithm<Map<N, Float>> createBFS(LocateableGraph<N> graph, N source, float maxDistance) {
+    public <N extends Locatable> GraphAlgorithm<Map<N, Float>> createBFS(LocateableGraph<N> graph, N source, float maxDistance, int weightIndex) {
 
-        return new BFSDistanceLimited<N>(graph, source, maxDistance);
+        return new BFSDistanceLimited<N>(graph, source, maxDistance, weightIndex);
     }
 
     /**

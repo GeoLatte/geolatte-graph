@@ -23,6 +23,7 @@ package org.geolatte.graph.algorithms;
 
 import org.geolatte.graph.Graph;
 import org.geolatte.graph.InternalNode;
+import org.geolatte.graph.RoutingContextualReachability;
 
 import java.util.*;
 
@@ -41,11 +42,20 @@ public class BFSDistanceLimited<N> implements GraphAlgorithm<Map<N, Float>> {
     private final float maxDistance;
     private final Graph<N> graph;
     private Map<N, Float> result;
+    private final int weightIndex;
+    private final RoutingContextualReachability<N, BFSState<N>> contextualReachability;
 
-    BFSDistanceLimited(Graph<N> graph, N source, float maxDistance) {
+    BFSDistanceLimited(Graph<N> graph, N source, float maxDistance, int weightIndex) {
+        this(graph, source, maxDistance, weightIndex, new EmptyContextualReachability<N, BFSState<N>>());
+    }
+
+    BFSDistanceLimited(Graph<N> graph, N source, float maxDistance, int weightIndex, RoutingContextualReachability<N, BFSState<N>> contextualReachability) {
         this.graph = graph;
         this.source = graph.getInternalNode(source);
         this.maxDistance = maxDistance;
+        this.weightIndex = weightIndex;
+        this.contextualReachability = contextualReachability;
+        this.contextualReachability.setOriginDestination(source, null);
     }
 
 
@@ -63,15 +73,16 @@ public class BFSDistanceLimited<N> implements GraphAlgorithm<Map<N, Float>> {
                 continue; //don't expand when the internalNode is beyond maximum distance.
             }
 
-            Iterator<InternalNode<N>> outEdges = this.graph.getOutGoingEdges(wu.internalNode, null); // TODO: context reachability
+            // TODO : Is the context set correctly here?
+            contextualReachability.setContext(wu);
+            Iterator<InternalNode<N>> outEdges = this.graph.getOutGoingEdges(wu.internalNode, contextualReachability);
             while (outEdges.hasNext()) {
                 InternalNode<N> v = outEdges.next();
                 BFSState<N> wv = new BFSState<N>(v);
                 if (greyNodes.contains(wv) || blackNodes.contains(wv)) {
                     ; // do nothing
                 } else {
-                    // TODO: correct doorgeven van wieghtKind
-                    wv.distance = wu.distance + wu.internalNode.getWeightTo(v, 0);
+                    wv.distance = wu.distance + wu.internalNode.getWeightTo(v, weightIndex);
                     wv.predecessor = wu.internalNode;
                     greyNodes.add(wv);
                 }
