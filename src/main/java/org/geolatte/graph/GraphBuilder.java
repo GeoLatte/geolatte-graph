@@ -36,7 +36,7 @@ public interface GraphBuilder<N extends Locatable> {
      *
      * @param fromNode   The node from which the edge starts.
      * @param toNode     The destination node for the edge.
-     * @param edgeWeight The weigth.
+     * @param edgeWeight The weight.
      */
     public void addEdge(N fromNode, N toNode, EdgeWeight edgeWeight);
 

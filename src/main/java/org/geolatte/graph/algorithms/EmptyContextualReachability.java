@@ -19,25 +19,28 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
+
+import org.geolatte.graph.InternalNode;
+import org.geolatte.graph.RoutingContextualReachability;
 
 /**
- * <p>
- * No comment provided yet for this class.
- * </p>
+ * An implementation of {@link org.geolatte.graph.RoutingContextualReachability} that does not limit reachability. Is
+ * used internally
+ * when no contextual reachability is required by the client.
  *
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public class EmptyContextualReachability<N> implements ContextualReachability<N> {
+class EmptyContextualReachability<N, C> implements RoutingContextualReachability<N, C> {
 
     public boolean isReachable(InternalNode<N> nInternalNode) {
         return true;
     }
 
 
-    public void setContext(Traversal<N> pu) {
+    public void setContext(C context) {
         // Do nothing
     }
 

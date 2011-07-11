@@ -21,14 +21,15 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.*;
+import org.geolatte.graph.Graph;
+import org.geolatte.graph.InternalNode;
 
 import java.util.*;
 
 /**
- * <p>
+ * <p/>
  * Breath-first search algorithm that over a given maximum distance. (Documentation to be completed)
- * <p>
+ * <p/>
  *
  * @param <N>
  * @param <M>
@@ -39,15 +40,13 @@ public class BFSDistanceLimited<N, M> implements GraphAlgorithm<Map<N, Float>> {
     final Queue<BFSState<N>> greyNodes = new LinkedList<BFSState<N>>();
     final InternalNode<N> source;
     final float maxDistance;
-    private final M modus;
     final Graph<N> graph;
     Map<N, Float> result;
 
-    protected BFSDistanceLimited(Graph<N> graph, N source, float maxDistance, M modus) {
+    protected BFSDistanceLimited(Graph<N> graph, N source, float maxDistance) {
         this.graph = graph;
         this.source = graph.getInternalNode(source);
         this.maxDistance = maxDistance;
-        this.modus = modus;
     }
 
 

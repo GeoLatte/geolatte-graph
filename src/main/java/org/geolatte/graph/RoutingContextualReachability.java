@@ -21,36 +21,26 @@
 
 package org.geolatte.graph;
 
-import java.util.Set;
-
 /**
- * A PredGraph that also keeps track of its successors.
+ * Allows routing algorithms to dynamically determine whether a neighboring target node can be reached from a source
+ * node, knowing the starting node and the destination node.
  * <p/>
- * <p>
- * <i>Creation-Date</i>: 9-apr-2010<br>
- * <i>Creation-Time</i>:  11:48:54<br>
- * </p>
+ * TODO: Document thread safety requirements
  *
- * @author Peter Rigole
+ * @param <N> The domain node type.
+ * @param <C> The type of the context object.
+ * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface PredSuccGraph<N> {
+public interface RoutingContextualReachability<N, C> extends ContextualReachability<N, C> {
 
-    PredSuccGraph<N> getPredecessor();
-
-    void setPredecessor(PredSuccGraph<N> pred);
-
-    float getWeight();
-
-    void setWeight(float d);
-
-    InternalNode<N> getInternalNode();
-
-    Set<PredSuccGraph<N>> getSuccessors();
-
-    void addSuccessor(PredSuccGraph<N> pred);
-
-    void removeSuccessor(PredSuccGraph<N> pred);
-
+    /**
+     * Sets the source and destination of the route to be calculated. This method may only be called once during the
+     * execution of a routing algorithm.
+     *
+     * @param origin      The origin node.
+     * @param destination The destination node.
+     */
+    void setOriginDestination(N origin, N destination);
 }

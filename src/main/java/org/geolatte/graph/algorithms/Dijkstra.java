@@ -44,9 +44,9 @@ public class Dijkstra<N, M> implements GraphAlgorithm<Path<N>> {
 
     private final PMinQueue<N> minQueue;
     private final Relaxer<N, M> relaxer;
-    private ContextualReachability<N> reachability;
+    private RoutingContextualReachability<N, Traversal<N>> reachability;
 
-    protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N, M> relaxer, M modus, ContextualReachability<N> reachability) {
+    protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N, M> relaxer, M modus, RoutingContextualReachability<N, Traversal<N>> reachability) {
 
         this.graph = graph;
 
@@ -68,7 +68,7 @@ public class Dijkstra<N, M> implements GraphAlgorithm<Path<N>> {
         this.modus = modus;
         this.relaxer = relaxer;
         this.minQueue = new PMinQueue<N>();
-        this.reachability = new EmptyContextualReachability<N>();
+        this.reachability = new EmptyContextualReachability<N, Traversal<N>>();
     }
 
     public void execute() {

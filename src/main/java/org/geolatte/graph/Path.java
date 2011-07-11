@@ -24,31 +24,30 @@ package org.geolatte.graph;
 /**
  * A path between a source and destination whose nodes can be iterated from source to destination node.
  *
+ * @param <N> The type of the domain node.
  * @author Karel Maesen
  * @author Bert Vanhooff
- *
- * @param <N> The type of node.
  */
-public interface Path<N> extends Iterable<N>{
+public interface Path<N> extends Iterable<N> {
 
     /**
      * @return The total weight of the path.
      */
-	public float totalWeight();
+    public float totalWeight();
 
     /**
      * @return The source node.
      */
-	public N getSource();
+    public N getSource();
 
     /**
      * @return The target node.
      */
-	public N getDestination();
+    public N getDestination();
 
     /**
      * @return True if this path is valid, false otherwise.
      */
-	public boolean isValid();
+    public boolean isValid();
 
 }

@@ -79,7 +79,7 @@ public class Graphs {
 
             // TODO: modus should not be null
             // Add the edge between the nodes
-            fNw.addEdge(toNw, null, edgeWeight);
+            fNw.addEdge(toNw, edgeWeight);
         }
 
         // LocateableGraph Implementation
@@ -118,7 +118,7 @@ public class Graphs {
             }
 
 
-            public Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability contextualReachability) {
+            public Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, RoutingContextualReachability contextualReachability) {
 
                 return new OutEdgeIteratorImpl<N>((InternalNodeWrapper<N>) internalNode, contextualReachability);
             }
@@ -129,7 +129,7 @@ public class Graphs {
             int i = -1;
             Iterator<InternalNode<N>> reachableNodesIt;
 
-            private OutEdgeIteratorImpl(InternalNodeWrapper<N> from, ContextualReachability<N> contextualReachability) {
+            private OutEdgeIteratorImpl(InternalNodeWrapper<N> from, RoutingContextualReachability<N, Traversal<N>> contextualReachability) {
 
 
                 List<InternalNode<N>> reachableNodes = new ArrayList<InternalNode<N>>();

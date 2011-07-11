@@ -22,13 +22,10 @@
 package org.geolatte.graph;
 
 /**
- * No comment provided yet for this class.
- * <p/>
- * <p>
- * <i>Creation-Date</i>: 08/07/11<br>
- * <i>Creation-Time</i>:  10:35<br>
- * </p>
+ * Internal representation of a node, used by the various graph algorithms.
  *
+ * @param <N> The domain node type.
+ * @author Karel Maesen
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
@@ -36,18 +33,28 @@ package org.geolatte.graph;
 public interface InternalNode<N> {
 
     /**
-     * @return The decorated Locatable
+     * @return The represented domain node.
      */
     N getWrappedNode();
 
     /**
      * Creates an edge from this node to a given node.
-     * @param toNode The node to connect to.
-     * @param label  An arbitrary object that will be associated to the edge.
+     *
+     * @param toNode     The node to connect to.
+     * @param edgeWeight The weight of the edge between this node and the toNode.
      */
-    void addEdge(InternalNode<N> toNode, Object label, EdgeWeight edgeWeight);
+    void addEdge(InternalNode<N> toNode, EdgeWeight edgeWeight);
+
 
     void addReachableFrom(InternalNode<N> fromNode);
 
-    float getWeightTo(InternalNode<N> toNode, int weightKind);
+    /**
+     * Gets the edge weight to get from this node to the given <code>toNode</code>, using the given weight index (see
+     * also {@link EdgeWeight}).
+     *
+     * @param toNode      The node to which to get the edge weight.
+     * @param weightIndex Indicates which weight to use.
+     * @return An edge weight.
+     */
+    float getWeightTo(InternalNode<N> toNode, int weightIndex);
 }

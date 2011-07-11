@@ -1,3 +1,24 @@
+/*
+ * This file is part of the GeoLatte project.
+ *
+ *     GeoLatte is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     GeoLatte is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Lesser General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Lesser General Public License
+ *     along with GeoLatte.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) 2010 - 2011 and Ownership of code is shared by:
+ * Qmino bvba - Romeinsestraat 18 - 3001 Heverlee  (http://www.qmino.com)
+ * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
+ */
+
 package org.geolatte.graph;
 
 import com.vividsolutions.jts.geom.Envelope;
@@ -23,11 +44,11 @@ public class TestDijkstra {
         };
 
         weights = new float[][]{
-                {-1f, 10f,  5f, -1f, -1f},
-                {-1f, -1f,  2f,  1f, -1f},
-                {-1f,  3f, -1f,  9f,  2f},
-                {-1f, -1f, -1f, -1f,  4f},
-                { 7f, -1f, -1f,  6f, -1f}
+                {-1f, 10f, 5f, -1f, -1f},
+                {-1f, -1f, 2f, 1f, -1f},
+                {-1f, 3f, -1f, 9f, 2f},
+                {-1f, -1f, -1f, -1f, 4f},
+                {7f, -1f, -1f, 6f, -1f}
         };
     }
 
@@ -39,7 +60,7 @@ public class TestDijkstra {
     public void testExecute() throws Exception {
         Envelope env = new Envelope(0, 200, 0, 200);
 
-        GraphBuilder<MyNode> builder = Graphs.<MyNode>createGridIndexedGraphBuilder(env, 10);
+        GraphBuilder<MyNode> builder = Graphs.createGridIndexedGraphBuilder(env, 10);
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 if (weights[i][j] > 0f) {
@@ -55,7 +76,7 @@ public class TestDijkstra {
         }
 
 
-        Graph<MyNode> graph = builder.build();
+        LocateableGraph<MyNode> graph = builder.build();
         for (InternalNode<MyNode> nd : graph) {
             System.out.println(nd);
         }
@@ -75,7 +96,7 @@ public class TestDijkstra {
     }
 
     private static class MyMode {
-        
+
     }
 
     private static class MyNode implements Locatable {

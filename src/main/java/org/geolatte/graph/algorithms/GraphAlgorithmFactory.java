@@ -38,8 +38,7 @@ public class GraphAlgorithmFactory {
 
     public <N extends Locatable, M> GraphAlgorithm<Map<N, Float>> createBFS(LocateableGraph<N> graph, N source, float maxDistance) {
 
-        // TODO: must give a modus
-        return new BFSDistanceLimited<N, M>(graph, source, maxDistance, null);
+        return new BFSDistanceLimited<N, M>(graph, source, maxDistance);
     }
 
     /**

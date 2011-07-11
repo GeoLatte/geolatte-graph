@@ -21,8 +21,8 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.Locatable;
 import org.geolatte.graph.InternalNode;
+import org.geolatte.graph.Locatable;
 import org.geolatte.graph.PredGraph;
 
 /**
@@ -36,31 +36,31 @@ import org.geolatte.graph.PredGraph;
  */
 class DefaultRelaxer<N extends Locatable, M> implements Relaxer<N, M> {
 
-        float newWeight;
+    float newWeight;
 
-        public boolean relax(PredGraph<N> u, PredGraph<N> v, M modus) {
+    public boolean relax(PredGraph<N> u, PredGraph<N> v, M modus) {
 
-            // TODO: correct doorgeven van weightKind
-            float r = u.getWeight() + u.getInternalNode().getWeightTo(v.getInternalNode(), 0);
-            if (r < v.getWeight()) {
-                v.setWeight(r);
-                v.setPredecessor(u);
-                newWeight = update(v.getInternalNode(), v.getWeight());
-                return true;
-            } else {
-                newWeight = v.getWeight();
-                return false;
-            }
+        // TODO: correct doorgeven van weightKind
+        float r = u.getWeight() + u.getInternalNode().getWeightTo(v.getInternalNode(), 0);
+        if (r < v.getWeight()) {
+            v.setWeight(r);
+            v.setPredecessor(u);
+            newWeight = update(v.getInternalNode(), v.getWeight());
+            return true;
+        } else {
+            newWeight = v.getWeight();
+            return false;
         }
-
-        protected float update(InternalNode<N> nd, float distance) {
-
-            return distance;
-        }
-
-        public float newTotalWeight() {
-
-            return newWeight;
-        }
-
     }
+
+    protected float update(InternalNode<N> nd, float distance) {
+
+        return distance;
+    }
+
+    public float newTotalWeight() {
+
+        return newWeight;
+    }
+
+}

@@ -34,8 +34,9 @@ public interface EdgeWeight {
 
     /**
      * Gets the weight for the given kind.
-     * @param weightKind The kind of weight to return.
+     *
+     * @param weightIndex The kind of weight to return.
      * @return A weight value.
      */
-    float getValue(int weightKind);
+    float getValue(int weightIndex);
 }

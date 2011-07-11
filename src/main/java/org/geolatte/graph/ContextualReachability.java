@@ -22,32 +22,25 @@
 package org.geolatte.graph;
 
 /**
- * <p>
- * Allows routing algoritmhs to dynamically determine reachability of connected nodes in a graph. This is useful when
+ * Allows algorithms to dynamically determine reachability of connected nodes in a graph. This is useful when
  * reachability rules cannot be captured by a static graph but depend on previous actions of the algorithm.
  * <p/>
- * Before querying the reachability of a node ({@link #isReachable(InternalNode)}, one must set the current context:
- * - The traversal: how is the current node reached
+ * Before querying the reachability of a node ({@link #isReachable(InternalNode)}, one must set the current context (
+ * this is usually done by the graph algorithm).
  * <p/>
+ * Implementers can use the available context information to determine whether a node is reachable.
  * <p/>
- * Allows to indicate whether a node v is reachable from a node u when there exists an edge from u to v in the context
- * of a given (partially calculated) path through the graph.
- * <p/>
- * Additional state information can be recorded by
- * implementors of this interface.
- * <p/>
- * <p/>
- * </p>
+ * TODO: Document thread safety requirements
  *
+ * @param <N> The domain node type.
+ * @param <C> The type of the context object.
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface ContextualReachability<N> {
+public interface ContextualReachability<N, C> {
 
     boolean isReachable(InternalNode<N> node);
 
-    void setContext(Traversal<N> pu);
-
-    void setOriginDestination(N origin, N destination);
+    void setContext(C context);
 }

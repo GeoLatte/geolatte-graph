@@ -38,7 +38,6 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
     final N wrappedNodal;
     InternalNodeWrapper<N>[] toNodes = new InternalNodeWrapper[0];
     EdgeWeight[] toWeights = new EdgeWeight[0];
-    Object[] toLabels = new Object[0];
     private InternalNode<N>[] fromInternalNodes = new InternalNode[0];
 
     InternalNodeWrapper(N obj) {
@@ -49,7 +48,7 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
         return this.wrappedNodal;
     }
 
-    public void addEdge(InternalNode<N> toInternalNode, Object label, EdgeWeight edgeWeight) {
+    public void addEdge(InternalNode<N> toInternalNode, EdgeWeight edgeWeight) {
 
         // TODO : do not add multiple edges between the same pair of nodes
         // We only remember the last weight added
@@ -57,10 +56,8 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
         //add the outgoing edge (complete information)
         toNodes = Arrays.copyOf(toNodes, toNodes.length + 1);
         toWeights = Arrays.copyOf(toWeights, toWeights.length + 1);
-        toLabels = Arrays.copyOf(toLabels, toLabels.length + 1);
         toNodes[toNodes.length - 1] = (InternalNodeWrapper) toInternalNode;
         toWeights[toWeights.length - 1] = edgeWeight;
-        toLabels[toLabels.length - 1] = label;
 
         //add the incoming edge info
         toInternalNode.addReachableFrom(this);
@@ -71,16 +68,6 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
     protected InternalNode<? extends N>[] getConnected() {
         return this.toNodes;
     }
-
-    protected Object getLabelToNode(N toNode) {
-        for (int i = 0; i < this.toNodes.length; i++) {
-            if (this.toNodes[i].wrappedNodal.equals(toNode)) {
-                return this.toLabels[i];
-            }
-        }
-        return null;
-    }
-
 
     public String toString() {
         return String.format("InternalNodeWrapper, wraps: %s", this.wrappedNodal.toString());
