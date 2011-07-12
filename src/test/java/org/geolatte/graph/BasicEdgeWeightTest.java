@@ -21,33 +21,26 @@
 
 package org.geolatte.graph;
 
-import java.util.Arrays;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * <p>
- * A simple implementation of {@link EdgeWeight} that can store an arbitrary set of weights can be stored.
+ * Unit test for the {@link BasicEdgeWeight} class.
  * </p>
  *
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public class ArrayEdgeWeight implements EdgeWeight {
+public class BasicEdgeWeightTest {
 
-    private final float[] weights;
+    @Test
+    public void testGetValue() throws Exception {
 
-    /**
-     * Constructs an ArrayEdgeWeight using the given array of weights.
-     *
-     * @param weights An array of weights.
-     */
-    public ArrayEdgeWeight(float[] weights) {
+        BasicEdgeWeight basicEdgeWeight = new BasicEdgeWeight(5.0f);
 
-        this.weights = Arrays.copyOf(weights, weights.length);
-    }
-
-    public float getValue(int weightIndex) {
-
-        return weights[weightIndex];
+        Assert.assertEquals(5.0f, basicEdgeWeight.getValue(0), 0.005);
+        Assert.assertEquals(5.0f, basicEdgeWeight.getValue(42), 0.005);
     }
 }

@@ -19,35 +19,39 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
 
-import java.util.Arrays;
+import org.geolatte.graph.InternalNode;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * <p>
- * A simple implementation of {@link EdgeWeight} that can store an arbitrary set of weights can be stored.
+ * Test for the {@link EmptyContextualReachability} class.
  * </p>
  *
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public class ArrayEdgeWeight implements EdgeWeight {
-
-    private final float[] weights;
+public class EmptyContextualReachabilityTest {
 
     /**
-     * Constructs an ArrayEdgeWeight using the given array of weights.
+     * A single test.
      *
-     * @param weights An array of weights.
+     * @throws Exception
      */
-    public ArrayEdgeWeight(float[] weights) {
+    @Test
+    public void test() throws Exception {
 
-        this.weights = Arrays.copyOf(weights, weights.length);
-    }
+        EmptyContextualReachability<Object, Object> subject = new EmptyContextualReachability<Object, Object>();
 
-    public float getValue(int weightIndex) {
+        Assert.assertEquals(true, subject.isReachable(Mockito.mock(InternalNode.class)));
 
-        return weights[weightIndex];
+        subject.setOriginDestination(new Object(), new Object());
+        subject.setContext(new Object());
+
+        Assert.assertEquals(true, subject.isReachable(Mockito.mock(InternalNode.class)));
     }
 }

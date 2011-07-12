@@ -23,7 +23,9 @@ package org.geolatte.graph.algorithms;
 
 import org.geolatte.graph.*;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * <p>
@@ -61,19 +63,12 @@ public class Dijkstra<N> implements GraphAlgorithm<Path<N>> {
 
     protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N> relaxer, int weightIndex) {
 
-        this.graph = graph;
-
-        this.origin = this.graph.getInternalNode(origin);
-        this.destination = this.graph.getInternalNode(destination);
-        this.weightIndex = weightIndex;
-        this.relaxer = relaxer;
-        this.minQueue = new PMinQueue<N>();
-        this.reachability = new EmptyContextualReachability<N, Traversal<N>>();
+        this(graph, origin, destination, relaxer, weightIndex, new EmptyContextualReachability<N, Traversal<N>>());
     }
 
     public void execute() {
         Set<InternalNode<N>> closed = new HashSet<InternalNode<N>>();
-        PredGraphImpl<N> startPG = new PredGraphImpl<N>(this.origin, 0.0f);
+        BasicPredGraph<N> startPG = new BasicPredGraph<N>(this.origin, 0.0f);
         minQueue.add(startPG, Float.POSITIVE_INFINITY);
         while (!minQueue.isEmpty()) {
             PredGraph<N> pu = minQueue.extractMin();
@@ -91,7 +86,7 @@ public class Dijkstra<N> implements GraphAlgorithm<Path<N>> {
                 }
                 PredGraph<N> pv = minQueue.get(v);
                 if (pv == null) {
-                    pv = new PredGraphImpl<N>(v,
+                    pv = new BasicPredGraph<N>(v,
                             Float.POSITIVE_INFINITY);
                     minQueue.add(pv, Float.POSITIVE_INFINITY);
                 }
@@ -127,111 +122,4 @@ public class Dijkstra<N> implements GraphAlgorithm<Path<N>> {
     public Path<N> getResult() {
         return this.result;
     }
-
-    static class PredGraphImpl<N> implements PredGraph<N> {
-        private final InternalNode<N> internalNode;
-        private PredGraph<N> predecessor = null;
-        private float weight;
-
-        private PredGraphImpl(InternalNode<N> n, float weight) {
-            this.internalNode = n;
-            this.weight = weight;
-        }
-
-        public PredGraph<N> getPredecessor() {
-            return predecessor;
-        }
-
-        public float getWeight() {
-            return this.weight;
-        }
-
-        public void setWeight(float w) {
-            this.weight = w;
-        }
-
-        public InternalNode<N> getInternalNode() {
-            return this.internalNode;
-        }
-
-        /**
-         * Returns an iterator over a set of elements of type T.
-         *
-         * @return an Iterator.
-         */
-        public Iterator<N> iterator() {
-            return new Iterator<N>() {
-
-                // TODO : Unit test initialization of iterator
-                private PredGraph<N> predGraph = PredGraphImpl.this;
-
-                public boolean hasNext() {
-
-                    predGraph = predGraph.getPredecessor();
-                    return predGraph != null;
-                }
-
-                public N next() {
-                    if (predGraph == null) {
-                        throw new NoSuchElementException();
-                    }
-                    return predGraph.getInternalNode().getWrappedNode();
-                }
-
-                public void remove() {
-                    throw new UnsupportedOperationException();
-                }
-            };
-        }
-
-        public static class PGComparator<N> implements Comparator<PredGraph<N>> {
-
-            public int compare(PredGraph<N> o1, PredGraph<N> o2) {
-                if (o1 instanceof PredGraphImpl && o2 instanceof PredGraphImpl) {
-                    PredGraphImpl<N> pg1 = (PredGraphImpl<N>) o1;
-                    PredGraphImpl<N> pg2 = (PredGraphImpl<N>) o2;
-                    if (pg1.internalNode.equals(pg2.internalNode)) {
-                        return 0;
-                    }
-                    return Float.compare(pg1.getWeight(), pg2.getWeight());
-                }
-                throw new IllegalArgumentException();
-            }
-        }
-
-        public void setPredecessor(PredGraph<N> pred) {
-            this.predecessor = pred;
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + ((internalNode == null) ? 0 : internalNode.hashCode());
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            PredGraphImpl<N> other = (PredGraphImpl<N>) obj;
-            if (internalNode == null) {
-                if (other.internalNode != null)
-                    return false;
-            } else if (!internalNode.equals(other.internalNode))
-                return false;
-            return true;
-        }
-
-        public String toString() {
-            return String.format("MyNode: %s, weight: %.1f", this.internalNode,
-                    this.weight);
-        }
-    }
-
 }

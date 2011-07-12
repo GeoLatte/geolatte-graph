@@ -19,35 +19,40 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
 
-import java.util.Arrays;
+import org.geolatte.graph.Locatable;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
  * <p>
- * A simple implementation of {@link EdgeWeight} that can store an arbitrary set of weights can be stored.
+ * Test for the {@link DistanceHeuristicStrategy} class.
  * </p>
  *
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public class ArrayEdgeWeight implements EdgeWeight {
+public class DistanceHeuristicStrategyTest {
 
-    private final float[] weights;
+    @Test
+    public void testGetValue() throws Exception {
 
-    /**
-     * Constructs an ArrayEdgeWeight using the given array of weights.
-     *
-     * @param weights An array of weights.
-     */
-    public ArrayEdgeWeight(float[] weights) {
+        final float factor = 0.5f;
+        DistanceHeuristicStrategy<Locatable> strategy = new DistanceHeuristicStrategy<Locatable>(factor);
 
-        this.weights = Arrays.copyOf(weights, weights.length);
-    }
+        Locatable loc1 = Mockito.mock(Locatable.class);
+        Mockito.when(loc1.getX()).thenReturn(0);
+        Mockito.when(loc1.getY()).thenReturn(0);
 
-    public float getValue(int weightIndex) {
+        Locatable loc2 = Mockito.mock(Locatable.class);
+        Mockito.when(loc2.getX()).thenReturn(1);
+        Mockito.when(loc2.getY()).thenReturn(1);
 
-        return weights[weightIndex];
+        // => distance = sqrt(1*1 + 1*1)
+
+        Assert.assertEquals(factor * Math.sqrt(2), strategy.getValue(loc1, loc2), 0.005);
     }
 }

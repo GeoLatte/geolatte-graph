@@ -37,6 +37,7 @@ public interface EdgeWeight {
      *
      * @param weightIndex The kind of weight to return.
      * @return A weight value.
+     * @throws IndexOutOfBoundsException When the given index is not valid.
      */
     float getValue(int weightIndex);
 }

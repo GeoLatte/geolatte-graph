@@ -54,7 +54,7 @@ public class RedBlackTree<K, D> {
     public RedBlackTree(Comparator<K> comparator) {
 
         if (comparator == null)
-            throw new IllegalArgumentException("Must prodide a comparator.");
+            throw new IllegalArgumentException("Must provide a comparator.");
 
         this.comparator = comparator;
         NIL.left = NIL;

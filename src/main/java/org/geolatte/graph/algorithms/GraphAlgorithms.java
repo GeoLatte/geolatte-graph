@@ -113,12 +113,11 @@ public class GraphAlgorithms {
      * @param factor          Factor to convert distance to edge weights units.
      * @param destination     The destination node.
      * @param <N>             The node type.
-     * @param <M>             The modus.
      * @return A relaxer for the A* algorithms.
      */
-    protected <N extends Locatable, M> Relaxer<N> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
+    protected <N extends Locatable> Relaxer<N> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
 
-        return new HeuristicRelaxer<N, M>(heuristicWeight, destination, new DistanceHeuristicStrategy<N>(factor));
+        return new HeuristicRelaxer<N>(heuristicWeight, destination, new DistanceHeuristicStrategy<N>(factor));
     }
 
 }

@@ -25,7 +25,7 @@ import org.geolatte.graph.Locatable;
 
 /**
  * <p>
- * A heuristic strategy that uses the straight-line distane between two objects.
+ * A heuristic strategy that uses the straight-line distance between two objects.
  * </p>
  *
  * @author Bert Vanhooff

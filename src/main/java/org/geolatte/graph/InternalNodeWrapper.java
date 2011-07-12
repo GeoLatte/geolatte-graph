@@ -51,7 +51,6 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
     public void addEdge(InternalNode<N> toInternalNode, EdgeWeight edgeWeight) {
 
         // TODO : do not add multiple edges between the same pair of nodes
-        // We only remember the last weight added
 
         //add the outgoing edge (complete information)
         toNodes = Arrays.copyOf(toNodes, toNodes.length + 1);

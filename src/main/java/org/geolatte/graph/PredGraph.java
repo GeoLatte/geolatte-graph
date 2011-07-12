@@ -40,8 +40,9 @@ public interface PredGraph<N> extends Traversal<N> {
      * Sets the predecessor of the current node.
      *
      * @param pred The predecessor.
+     * @return The given pred.
      */
-    void setPredecessor(PredGraph<N> pred);
+    PredGraph<N> setPredecessor(PredGraph<N> pred);
 
     /**
      * @return The predecessor of the current node. Null if this is the first element of the path.

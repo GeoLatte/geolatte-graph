@@ -22,7 +22,6 @@
 package org.geolatte.graph.algorithms;
 
 import org.geolatte.graph.InternalNode;
-import org.geolatte.graph.Locatable;
 
 /**
  * <p>
@@ -34,12 +33,13 @@ import org.geolatte.graph.Locatable;
  * internalNode as heuristic value.
  * </p>
  *
+ * @param <N> The type of domain node.
  * @author Karel Measen
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class HeuristicRelaxer<N extends Locatable, M> extends DefaultRelaxer<N> {
+class HeuristicRelaxer<N> extends DefaultRelaxer<N> {
 
     private final float heuristicWeight; // weight given to the heuristic component
     private final N destination;
