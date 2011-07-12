@@ -19,43 +19,32 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
+
+import org.geolatte.graph.InternalNode;
+import org.geolatte.graph.RoutingContextualReachability;
 
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * An implementation of {@link org.geolatte.graph.RoutingContextualReachability} that does not limit reachability. Is
+ * used internally
+ * when no contextual reachability is required by the client.
  *
- * @param <N> The type of the domain node.
- * @author Karel Maesen
  * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Path<N> extends Iterable<N> {
+final class EmptyContextualReachability<N, C> implements RoutingContextualReachability<N, C> {
 
-    /**
-     * Gets the total weight of the path.
-     *
-     * @return The total weight of the path.
-     */
-    public float totalWeight();
+    public boolean isReachable(InternalNode<N> nInternalNode) {
+        return true;
+    }
 
-    /**
-     * Gets the source node.
-     *
-     * @return The source node.
-     */
-    public N getSource();
 
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
+    public void setContext(C context) {
+        // Do nothing
+    }
 
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
-
+    public void setOriginDestination(N origin, N destination) {
+        // Do nothing
+    }
 }

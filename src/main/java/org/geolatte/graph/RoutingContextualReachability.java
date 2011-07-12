@@ -22,40 +22,25 @@
 package org.geolatte.graph;
 
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * Allows routing algorithms to dynamically determine whether a neighboring target node can be reached from a source
+ * node, knowing the starting node and the destination node.
+ * <p/>
+ * TODO: Document thread safety requirements
  *
- * @param <N> The type of the domain node.
- * @author Karel Maesen
+ * @param <N> The domain node type.
+ * @param <C> The type of the context object.
  * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Path<N> extends Iterable<N> {
+public interface RoutingContextualReachability<N, C> extends ContextualReachability<N, C> {
 
     /**
-     * Gets the total weight of the path.
+     * Sets the source and destination of the route to be calculated. This method may only be called once during the
+     * execution of a routing algorithm.
      *
-     * @return The total weight of the path.
+     * @param origin      The origin node.
+     * @param destination The destination node.
      */
-    public float totalWeight();
-
-    /**
-     * Gets the source node.
-     *
-     * @return The source node.
-     */
-    public N getSource();
-
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
-
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
-
+    void setOriginDestination(N origin, N destination);
 }

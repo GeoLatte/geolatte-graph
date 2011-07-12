@@ -19,43 +19,26 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
 
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * Represents a category of algorithms that operates on graphs.
  *
- * @param <N> The type of the domain node.
+ * @param <T> The object type of the result of the algorithm.
  * @author Karel Maesen
- * @author Bert Vanhooff
  */
-public interface Path<N> extends Iterable<N> {
+public interface GraphAlgorithm<T> {
 
     /**
-     * Gets the total weight of the path.
-     *
-     * @return The total weight of the path.
+     * Executes this graph algorithm.
      */
-    public float totalWeight();
+    public void execute();
 
     /**
-     * Gets the source node.
+     * Gets the result of this graph algorithm.
      *
-     * @return The source node.
+     * @return the result
+     * @throws IllegalStateException when this method is invoked before the graph has been executed.
      */
-    public N getSource();
-
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
-
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
-
+    public T getResult();
 }

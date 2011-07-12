@@ -1,146 +1,173 @@
+/*
+ * This file is part of the GeoLatte project.
+ *
+ *     GeoLatte is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     GeoLatte is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Lesser General Public License for more details.
+ *
+ *     You should have received a copy of the GNU Lesser General Public License
+ *     along with GeoLatte.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) 2010 - 2011 and Ownership of code is shared by:
+ * Qmino bvba - Esperantolaan 4 - 3001 Heverlee  (http://www.qmino.com)
+ * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
+ */
+
 package org.geolatte.graph;
 
 import com.vividsolutions.jts.geom.Envelope;
 
 import java.util.*;
 
+/**
+ * Offers a number of static factory methods to create graphs.
+ */
 public class Graphs {
 
-    public static <N extends Nodal, E> GraphBuilder<N, E> createGridIndexedGraphBuilder(Envelope env,
-                                                                                        int resolution) {
-        return new GridIndexedGraphBuilder<N, E>(env, resolution);
+    /**
+     * Creates a builder for grid indexed graphs.
+     *
+     * @param env        The envelope.
+     * @param resolution The grid resolution.
+     * @param <N>        Type of the domain nodes.
+     * @return A builder for grid indexed graphs.
+     */
+    public static <N extends Locatable> GraphBuilder<N> createGridIndexedGraphBuilder(Envelope env, int resolution) {
+
+        return new GridIndexedGraphBuilder<N>(env, resolution);
     }
 
     // Builder implementation
-    private static class GridIndexedGraphBuilder<N extends Nodal, E> implements GraphBuilder<N, E> {
+    private static class GridIndexedGraphBuilder<N extends Locatable> implements GraphBuilder<N> {
 
         private final SpatialIndexBuilder<N> indexBuilder;
-        // map is used to quickly locate Nodes based on MyNode equality.
-        private final Map<N, InternalNode<N>> map = new HashMap<N, InternalNode<N>>();
+        private final Map<N, InternalNode<N>> map = new HashMap<N, InternalNode<N>>(); // map is used to quickly locate Nodes based on node equality.
 
         private GridIndexedGraphBuilder(Envelope env, int resolution) {
-            this.indexBuilder = SpatialIndexes.createGridIndexBuilder(env,
-                    resolution);
+
+            this.indexBuilder = SpatialIndexes.createGridIndexBuilder(env, resolution);
         }
 
 
-        public Graph<N, E> build() throws BuilderException {
+        public LocateableGraph<N> build() throws BuilderException {
+
             if (map.isEmpty()) {
-                throw new IllegalStateException(
-                        "No myNodes added since last built");
+                throw new IllegalStateException("No nodes added since last built");
             }
+
             map.clear(); // empty to save on memory.
             SpatialIndex<N> index = this.indexBuilder.build();
-            return new GridIndexedGraph<N, E>(index);
+            return new GridIndexedGraph<N>(index);
         }
 
-
-        public void addEdge(N fromNode, N toNode, E label, float weight) {
-
+        public void addEdge(N fromNode, N toNode, EdgeWeight edgeWeight) {
 
             if (fromNode.equals(toNode)) {
                 return;
                 //System.err.println("Tried adding zero-length edge");
             }
 
+            // Lookup nodes or create them if new
             InternalNode<N> fNw = this.map.get(fromNode);
             InternalNode<N> toNw = this.map.get(toNode);
             if (fNw == null) {
-                fNw = new NodeWrapper<N>(fromNode);
+                fNw = new InternalNodeWrapper<N>(fromNode);
                 this.indexBuilder.insert(fNw);
                 this.map.put(fromNode, fNw);
             }
             if (toNw == null) {
-                toNw = new NodeWrapper<N>(toNode);
+                toNw = new InternalNodeWrapper<N>(toNode);
                 this.indexBuilder.insert(toNw);
                 this.map.put(toNode, toNw);
             }
 
-            fNw.addEdge(toNw, label, weight);
-        }
-
-    }
-
-    // Graph Implementation
-    private static class GridIndexedGraph<N extends Nodal, E> implements Graph<N, E> {
-
-        private final SpatialIndex<N> index;
-
-
-        private GridIndexedGraph(SpatialIndex<N> index) {
-            this.index = index;
+            // Add the edge between the nodes
+            fNw.addEdge(toNw, edgeWeight);
         }
 
 
-        public List<InternalNode<N>> getNodesAt(Nodal loc) {
-            return Collections.unmodifiableList(this.index.getObjectAt(loc));
-        }
+        private static class GridIndexedGraph<N extends Locatable> implements LocateableGraph<N> {
 
+            private final SpatialIndex<N> index;
 
-        public Iterator<InternalNode<N>> iterator() {
-            return this.index.getObjects();
-        }
+            private GridIndexedGraph(SpatialIndex<N> index) {
 
-
-        public List<InternalNode<N>> getClosestNodes(Nodal loc, int num, int distance) {
-            return Collections.unmodifiableList(this.index.getNClosest(loc, num, distance));
-        }
-
-
-        public InternalNode<N> getInternalNode(N node) {
-            for (InternalNode<N> nw : this.index.getObjectAt(node)) {
-                if (nw.getWrappedNodal().equals(node)) {
-                    return nw;
-                }
+                this.index = index;
             }
-            return null;
-        }
 
 
-        public OutEdgeIterator<N, E> getOutGoingEdges(InternalNode<N> node) {
-            return new OutEdgeIteratorImpl<N, E>(this, node);
-        }
-
-        public E getEdgeLabel(InternalNode<N> from, InternalNode<N> to) {
-            OutEdgeIterator<N, E> outEdges = getOutGoingEdges(from);
-            while (outEdges.next()) {
-                if (outEdges.getToInternalNode().equals(to)) {
-                    return outEdges.getEdgeLabel();
-                }
+            public List<InternalNode<N>> getNodesAt(Locatable loc) {
+                return Collections.unmodifiableList(this.index.getNodeAt(loc));
             }
-            throw new IllegalArgumentException(String.format("No Edge between nodes: %s and %s", from.getWrappedNodal(), to.getWrappedNodal()));
-        }
-    }
 
 
-    private static class OutEdgeIteratorImpl<N extends Nodal, E> implements OutEdgeIterator<N, E> {
-
-        final NodeWrapper<N> fromNw;
-        final GridIndexedGraph<N, E> graph;
-        int i = -1;
-
-        private OutEdgeIteratorImpl(GridIndexedGraph<N, E> graph, InternalNode<N> from) {
-            this.graph = graph;
-            this.fromNw = (NodeWrapper<N>) from;
-        }
+            public Iterator<InternalNode<N>> iterator() {
+                return this.index.getInternalNodes();
+            }
 
 
-        public E getEdgeLabel() {
-            return (E) fromNw.toLabels[i];
-        }
-
-        public InternalNode<N> getToInternalNode() {
-            return fromNw.toNodes[i];
-        }
+            public List<InternalNode<N>> getClosestNodes(Locatable loc, int num, int distance) {
+                return Collections.unmodifiableList(this.index.getNClosest(loc, num, distance));
+            }
 
 
-        public float getWeight() {
-            return fromNw.toWeights[i];
+            public InternalNode<N> getInternalNode(N node) {
+                for (InternalNode<N> nw : this.index.getNodeAt(node)) {
+                    if (nw.getWrappedNode().equals(node)) {
+                        return nw;
+                    }
+                }
+                return null;
+            }
+
+
+            public Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability<N, ?> contextualReachability) {
+
+                return new OutEdgeIteratorImpl<N>((InternalNodeWrapper<N>) internalNode, contextualReachability);
+            }
         }
 
-        public boolean next() {
-            i++;
-            return i < fromNw.toNodes.length;
+        /**
+         * Simple private implementation of OutEdgeIterator.
+         *
+         * @param <N>
+         */
+        private static class OutEdgeIteratorImpl<N extends Locatable> implements Iterator<InternalNode<N>> {
+
+            Iterator<InternalNode<N>> reachableNodesIterator;
+
+            private OutEdgeIteratorImpl(InternalNodeWrapper<N> from, ContextualReachability<N, ?> contextualReachability) {
+
+
+                List<InternalNode<N>> reachableNodes = new ArrayList<InternalNode<N>>();
+                for (InternalNode<N> node : from.toNodes) {
+                    if (contextualReachability.isReachable(node)) {
+                        reachableNodes.add(node);
+                    }
+                }
+                reachableNodesIterator = reachableNodes.iterator();
+            }
+
+            public boolean hasNext() {
+                return reachableNodesIterator.hasNext();
+            }
+
+            public InternalNode<N> next() {
+
+                return reachableNodesIterator.next();
+            }
+
+            public void remove() {
+
+                throw new UnsupportedOperationException();
+            }
+
         }
 
     }

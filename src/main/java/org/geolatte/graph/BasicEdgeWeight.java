@@ -22,40 +22,28 @@
 package org.geolatte.graph;
 
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * <p>
+ * An implementation of {@link EdgeWeight} that has a single weight.
+ * </p>
  *
- * @param <N> The type of the domain node.
- * @author Karel Maesen
  * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Path<N> extends Iterable<N> {
+public class BasicEdgeWeight implements EdgeWeight {
+
+    private float value;
 
     /**
-     * Gets the total weight of the path.
+     * Constructs a BasiEdgeWeight with the given weight value.
      *
-     * @return The total weight of the path.
+     * @param value The weight.
      */
-    public float totalWeight();
+    public BasicEdgeWeight(float value) {
+        this.value = value;
+    }
 
-    /**
-     * Gets the source node.
-     *
-     * @return The source node.
-     */
-    public N getSource();
-
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
-
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
-
+    public float getValue(int weightKind) {
+        return value;
+    }
 }

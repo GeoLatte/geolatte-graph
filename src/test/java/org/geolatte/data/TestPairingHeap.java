@@ -1,16 +1,22 @@
 /*
  * This file is part of the GeoLatte project.
  *
- * This code is licenced under the Apache License, Version 2.0 (the "License");
- * you may not use  this file except in compliance with the License. You may obtain
- * a copy of the License at  http://www.apache.org/licenses/LICENSE-2.0
+ *     GeoLatte is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
  *
- * Unless required by applicable law or agreed to in writing, software  distributed
- * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ *     GeoLatte is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Lesser General Public License for more details.
  *
- * Copyright @ 2010 Geovise BVBA, QMINO BVBA.
+ *     You should have received a copy of the GNU Lesser General Public License
+ *     along with GeoLatte.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) 2010 - 2011 and Ownership of code is shared by:
+ * Qmino bvba - Esperantolaan 4 - 3001 Heverlee  (http://www.qmino.com)
+ * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
 package org.geolatte.data;
@@ -23,9 +29,7 @@ import java.util.List;
 import java.util.Random;
 
 import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * @author Karel Maesen, Geovise BVBA
@@ -59,15 +63,15 @@ public class TestPairingHeap {
         assertEquals(Float.valueOf(1f), min.value);
 
         //start deleting elements in order
-        min = heap.extractMin();
+        min = heap.deleteMin();
         assertEquals(Float.valueOf(1f), min.value);
         min = heap.findMin();
         assertEquals(Float.valueOf(4.0f), min.value);
-        min = heap.extractMin();
+        min = heap.deleteMin();
         assertEquals(Float.valueOf(4.0f), min.value);
-        min = heap.extractMin();
+        min = heap.deleteMin();
         assertEquals(Float.valueOf(10.0f), min.value);
-        min = heap.extractMin();
+        min = heap.deleteMin();
         assertEquals(Float.valueOf(12.0f), min.value);
         assertTrue(heap.isEmpty());
 
@@ -81,19 +85,19 @@ public class TestPairingHeap {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int rint = random.nextInt();
-            Data d = new Data(Float.valueOf(rint));
+            Data d = new Data((float) rint);
             heap.insert(d);
         }
 
-        Data prev = heap.extractMin();
+        Data prev = heap.deleteMin();
 
         while (!heap.isEmpty()) {
-            Data min = heap.extractMin();
+            Data min = heap.deleteMin();
             assertTrue(min.value >= prev.value);
         }
 
     }
-    
+
     @Test
     public void test_random_decrease() {
         int size = 100000;
@@ -102,21 +106,21 @@ public class TestPairingHeap {
         List<PairNode<Data>> nodelist = new ArrayList<PairNode<Data>>();
         for (int i = 0; i < size; i++) {
             int rint = random.nextInt();
-            Data d = new Data(Float.valueOf(rint));
+            Data d = new Data((float) rint);
             PairNode<Data> pn = heap.insert(d);
             nodelist.add(pn);
         }
 
-        for (int i = 0; i < size; i++){
+        for (int i = 0; i < size; i++) {
             PairNode<Data> pn = nodelist.get(i);
             Data data = pn.getElement();
             data.value -= 100f;
             heap.decreaseKey(pn, data);
         }
 
-        Data prev = heap.extractMin();
+        Data prev = heap.deleteMin();
         while (!heap.isEmpty()) {
-            Data min = heap.extractMin();
+            Data min = heap.deleteMin();
             assertTrue(min.value >= prev.value);
         }
 
@@ -129,26 +133,26 @@ public class TestPairingHeap {
         Random random = new Random();
         for (int i = 0; i < size; i++) {
             int rint = random.nextInt();
-            NCData d = new NCData(Float.valueOf(rint));
+            NCData d = new NCData((float) rint);
             heap.insert(d);
         }
 
-        NCData prev = heap.extractMin();
+        NCData prev = heap.deleteMin();
 
         while (!heap.isEmpty()) {
-            NCData min = heap.extractMin();
+            NCData min = heap.deleteMin();
             assertTrue(min.value >= prev.value);
         }
 
     }
 
     @Test
-    public void test_comparator_or_comparable(){
+    public void test_comparator_or_comparable() {
         PairingHeap<NCData> heap = new PairingHeap<NCData>();
         try {
             heap.insert(new NCData(10f));
             fail("Either comparable, or explicit comparator needed!");
-        }catch(IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             //OK
         }
     }
@@ -157,20 +161,20 @@ public class TestPairingHeap {
     public void test_decrease_key() {
         PairingHeap<Data> heap = new PairingHeap<Data>();
 
-        Data d1 = new Data(Float.valueOf(1.0f));
-        Data d2 = new Data(Float.valueOf(2.0f));
-        Data d3 = new Data(Float.valueOf(3.0f));
-        Data d4 = new Data(Float.valueOf(4.0f));
+        Data d1 = new Data(1.0f);
+        Data d2 = new Data(2.0f);
+        Data d3 = new Data(3.0f);
+        Data d4 = new Data(4.0f);
 
         PairNode<Data> pn2 = heap.insert(d2);
         PairNode<Data> pn4 = heap.insert(d4);
         PairNode<Data> pn1 = heap.insert(d1);
         PairNode<Data> pn3 = heap.insert(d3);
 
-        heap.decreaseKey(pn4, new Data(Float.valueOf(-1.0f)));
+        heap.decreaseKey(pn4, new Data(-1.0f));
         assertEquals(Float.valueOf(-1.0f), heap.findMin().value);
 
-        heap.decreaseKey(pn3, new Data(Float.valueOf(-2.0f)));
+        heap.decreaseKey(pn3, new Data(-2.0f));
         assertEquals(Float.valueOf(-2.0f), heap.findMin().value);
 
     }
@@ -179,30 +183,30 @@ public class TestPairingHeap {
     public void test_decrease_key_with_higher_value() {
         PairingHeap<Data> heap = new PairingHeap<Data>();
 
-        Data d1 = new Data(Float.valueOf(1.0f));
-        Data d2 = new Data(Float.valueOf(2.0f));
-        Data d3 = new Data(Float.valueOf(3.0f));
-        Data d4 = new Data(Float.valueOf(4.0f));
+        Data d1 = new Data(1.0f);
+        Data d2 = new Data(2.0f);
+        Data d3 = new Data(3.0f);
+        Data d4 = new Data(4.0f);
 
         PairNode<Data> pn2 = heap.insert(d2);
         PairNode<Data> pn4 = heap.insert(d4);
         PairNode<Data> pn1 = heap.insert(d1);
         PairNode<Data> pn3 = heap.insert(d3);
 
-        heap.decreaseKey(pn1, new Data(Float.valueOf(2.0f)));
-        heap.decreaseKey(pn2, new Data(Float.valueOf(3.0f)));
-        heap.decreaseKey(pn3, new Data(Float.valueOf(3.0f)));
+        heap.decreaseKey(pn1, new Data(2.0f));
+        heap.decreaseKey(pn2, new Data(3.0f));
+        heap.decreaseKey(pn3, new Data(3.0f));
 
-        assertEquals(Float.valueOf(1.0f), heap.extractMin().value);
-        assertEquals(Float.valueOf(2.0f), heap.extractMin().value);
-        assertEquals(Float.valueOf(3.0f), heap.extractMin().value);
+        assertEquals(Float.valueOf(1.0f), heap.deleteMin().value);
+        assertEquals(Float.valueOf(2.0f), heap.deleteMin().value);
+        assertEquals(Float.valueOf(3.0f), heap.deleteMin().value);
     }
 
     @Test
     public void test_delete_min_on_empty_throws_exception() {
         PairingHeap<Data> heap = new PairingHeap<Data>();
         try {
-            heap.extractMin();
+            heap.deleteMin();
             fail("Exception should be thrown.");
         } catch (IllegalStateException e) {
             //OK

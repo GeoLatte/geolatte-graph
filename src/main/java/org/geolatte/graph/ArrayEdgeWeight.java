@@ -21,41 +21,33 @@
 
 package org.geolatte.graph;
 
+import java.util.Arrays;
+
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * <p>
+ * A simple implementation of {@link EdgeWeight} that can store an arbitrary set of weights can be stored.
+ * </p>
  *
- * @param <N> The type of the domain node.
- * @author Karel Maesen
  * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Path<N> extends Iterable<N> {
+public class ArrayEdgeWeight implements EdgeWeight {
+
+    private final float[] weights;
 
     /**
-     * Gets the total weight of the path.
+     * Constructs an ArrayEdgeWeight using the given array of weights.
      *
-     * @return The total weight of the path.
+     * @param weights An array of weights.
      */
-    public float totalWeight();
+    public ArrayEdgeWeight(float[] weights) {
 
-    /**
-     * Gets the source node.
-     *
-     * @return The source node.
-     */
-    public N getSource();
+        this.weights = Arrays.copyOf(weights, weights.length);
+    }
 
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
+    public float getValue(int weightIndex) {
 
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
-
+        return weights[weightIndex];
+    }
 }

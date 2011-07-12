@@ -19,43 +19,40 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
+
+import org.geolatte.graph.Locatable;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * <p>
+ * Test for the {@link DistanceHeuristicStrategy} class.
+ * </p>
  *
- * @param <N> The type of the domain node.
- * @author Karel Maesen
  * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Path<N> extends Iterable<N> {
+public class DistanceHeuristicStrategyTest {
 
-    /**
-     * Gets the total weight of the path.
-     *
-     * @return The total weight of the path.
-     */
-    public float totalWeight();
+    @Test
+    public void testGetValue() throws Exception {
 
-    /**
-     * Gets the source node.
-     *
-     * @return The source node.
-     */
-    public N getSource();
+        final float factor = 0.5f;
+        DistanceHeuristicStrategy<Locatable> strategy = new DistanceHeuristicStrategy<Locatable>(factor);
 
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
+        Locatable loc1 = Mockito.mock(Locatable.class);
+        Mockito.when(loc1.getX()).thenReturn(0);
+        Mockito.when(loc1.getY()).thenReturn(0);
 
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
+        Locatable loc2 = Mockito.mock(Locatable.class);
+        Mockito.when(loc2.getX()).thenReturn(1);
+        Mockito.when(loc2.getY()).thenReturn(1);
 
+        // => distance = sqrt(1*1 + 1*1)
+
+        Assert.assertEquals(factor * Math.sqrt(2), strategy.getValue(loc1, loc2), 0.005);
+    }
 }

@@ -21,41 +21,26 @@
 
 package org.geolatte.graph;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * <p>
+ * Unit test for the {@link BasicEdgeWeight} class.
+ * </p>
  *
- * @param <N> The type of the domain node.
- * @author Karel Maesen
  * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Path<N> extends Iterable<N> {
+public class BasicEdgeWeightTest {
 
-    /**
-     * Gets the total weight of the path.
-     *
-     * @return The total weight of the path.
-     */
-    public float totalWeight();
+    @Test
+    public void testGetValue() throws Exception {
 
-    /**
-     * Gets the source node.
-     *
-     * @return The source node.
-     */
-    public N getSource();
+        BasicEdgeWeight basicEdgeWeight = new BasicEdgeWeight(5.0f);
 
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
-
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
-
+        Assert.assertEquals(5.0f, basicEdgeWeight.getValue(0), 0.005);
+        Assert.assertEquals(5.0f, basicEdgeWeight.getValue(42), 0.005);
+    }
 }

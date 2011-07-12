@@ -19,43 +19,25 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
 
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * <p>
+ * Encapsulates the calculation of a heuristic value for a {@link HeuristicRelaxer}.
+ * </p>
  *
- * @param <N> The type of the domain node.
- * @author Karel Maesen
  * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Path<N> extends Iterable<N> {
+public interface HeuristicStrategy<T> {
 
     /**
-     * Gets the total weight of the path.
+     * Calculates a heuristic value/cost to go from 'from' to 'to'.
      *
-     * @return The total weight of the path.
+     * @param from The start object.
+     * @param to   The destination object.
+     * @return A heuristic value.
      */
-    public float totalWeight();
-
-    /**
-     * Gets the source node.
-     *
-     * @return The source node.
-     */
-    public N getSource();
-
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
-
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
-
+    float getValue(T from, T to);
 }

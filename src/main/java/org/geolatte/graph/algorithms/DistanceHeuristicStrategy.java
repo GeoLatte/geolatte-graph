@@ -19,43 +19,31 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
+
+import org.geolatte.graph.Locatable;
 
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * <p>
+ * A heuristic strategy that uses the straight-line distance between two objects.
+ * </p>
  *
- * @param <N> The type of the domain node.
- * @author Karel Maesen
  * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Path<N> extends Iterable<N> {
+public class DistanceHeuristicStrategy<T extends Locatable> implements HeuristicStrategy<T> {
 
-    /**
-     * Gets the total weight of the path.
-     *
-     * @return The total weight of the path.
-     */
-    public float totalWeight();
+    private final float factor;
 
-    /**
-     * Gets the source node.
-     *
-     * @return The source node.
-     */
-    public N getSource();
+    public DistanceHeuristicStrategy(float factor) {
+        this.factor = factor;
+    }
 
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
+    public float getValue(T from, T to) {
 
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
-
+        double dx = (double) (from.getX() - to.getX());
+        double dy = (double) (from.getY() - to.getY());
+        return (float) (factor * Math.sqrt(dx * dx + dy * dy));
+    }
 }

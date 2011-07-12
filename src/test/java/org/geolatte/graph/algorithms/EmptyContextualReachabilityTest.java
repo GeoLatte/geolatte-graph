@@ -19,43 +19,39 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph;
+package org.geolatte.graph.algorithms;
+
+import org.geolatte.graph.InternalNode;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * <p>
+ * Test for the {@link EmptyContextualReachability} class.
+ * </p>
  *
- * @param <N> The type of the domain node.
- * @author Karel Maesen
  * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Path<N> extends Iterable<N> {
+public class EmptyContextualReachabilityTest {
 
     /**
-     * Gets the total weight of the path.
+     * A single test.
      *
-     * @return The total weight of the path.
+     * @throws Exception
      */
-    public float totalWeight();
+    @Test
+    public void test() throws Exception {
 
-    /**
-     * Gets the source node.
-     *
-     * @return The source node.
-     */
-    public N getSource();
+        EmptyContextualReachability<Object, Object> subject = new EmptyContextualReachability<Object, Object>();
 
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
+        Assert.assertEquals(true, subject.isReachable(Mockito.mock(InternalNode.class)));
 
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
+        subject.setOriginDestination(new Object(), new Object());
+        subject.setContext(new Object());
 
+        Assert.assertEquals(true, subject.isReachable(Mockito.mock(InternalNode.class)));
+    }
 }

@@ -1,17 +1,24 @@
 /*
  * This file is part of the GeoLatte project.
  *
- * This code is licenced under the Apache License, Version 2.0 (the "License");
- * you may not use  this file except in compliance with the License. You may obtain
- * a copy of the License at  http://www.apache.org/licenses/LICENSE-2.0
+ *     GeoLatte is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU Lesser General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
  *
- * Unless required by applicable law or agreed to in writing, software  distributed
- * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ *     GeoLatte is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU Lesser General Public License for more details.
  *
- * Copyright @ 2010 Geovise BVBA, QMINO BVBA.
+ *     You should have received a copy of the GNU Lesser General Public License
+ *     along with GeoLatte.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Copyright (C) 2010 - 2011 and Ownership of code is shared by:
+ * Qmino bvba - Esperantolaan 4 - 3001 Heverlee  (http://www.qmino.com)
+ * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
+
 package org.geolatte.data;
 
 import java.io.PrintStream;
@@ -20,34 +27,46 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * A Red-Black Tree implementation.
+ * A Red-Black Tree is a self-balancing binary search tree.
  * <p/>
  * This implementation is based on Introduction to Algorithms, 2nd Ed, Cormed e.a., chapter 13.
  *
+ * @param <K> Type of the key value of tree nodes.
+ * @param <D> Type of the data contained in a node.
  * @author Karel Maesen, Geovise BVBA
- * @param <K>
- * @param <D>
  */
 public class RedBlackTree<K, D> {
 
     public static final byte RED = 0;
-
     public static final byte BLACK = 1;
 
-    public final TreeNode<K, D> NIL = new TreeNode<K, D>();
+    public final TreeNode<K, D> NIL = new TreeNode<K, D>(); // singleton leaf node
 
     protected final Comparator<K> comparator;
     protected TreeNode<K, D> root = NIL;
-    protected NodeWriter nodeWriter = new NodeWriter();
+    protected final NodeWriter nodeWriter = new NodeWriter();
 
-
+    /**
+     * Constructs a RedBlackTree with the given key comparator.
+     *
+     * @param comparator A comparator for the key type
+     */
     public RedBlackTree(Comparator<K> comparator) {
+
+        if (comparator == null)
+            throw new IllegalArgumentException("Must provide a comparator.");
+
         this.comparator = comparator;
         NIL.left = NIL;
         NIL.right = NIL;
     }
 
-
+    /**
+     * Searches the tree for the data associated with the given key.
+     *
+     * @param key The key to search for.
+     * @return If found, the data associated with the given key, else, null.
+     */
     public D get(K key) {
         TreeNode<K, D> nd = iterativeSearch(getRoot(), key);
         if (isNil(nd)) {
@@ -79,6 +98,13 @@ public class RedBlackTree<K, D> {
         return isNil(pred) ? null : pred.getData();
     }
 
+    /**
+     * Inserts a new node with the given key and data value.
+     *
+     * @param key  The key value. Must be unique within a tree.
+     * @param data The data value.
+     * @throws IllegalArgumentException When a node with the given key is already present in the tree.
+     */
     public void insert(K key, D data) {
 
         TreeNode<K, D> parent = NIL;
@@ -94,7 +120,7 @@ public class RedBlackTree<K, D> {
                 pointer = pointer.right;
             } else {
                 //throw exception when duplicate key is entered
-                throw new RuntimeException("Entry is key " + key + " already present in tree.");
+                throw new IllegalArgumentException("Entry is key " + key + " already present in tree.");
             }
         }
         //create new node
@@ -118,10 +144,20 @@ public class RedBlackTree<K, D> {
         return true;
     }
 
+    /**
+     * Not implemented.
+     *
+     * @return A flat list with all data in this tree.
+     */
     public List<D> getData() {
         return null;
     }
 
+    /**
+     * Not implemented.
+     *
+     * @return A flat list with all keys in this tree.
+     */
     public List<K> getKeys() {
         return null;
     }
@@ -430,7 +466,7 @@ public class RedBlackTree<K, D> {
             this.detailed = detailed;
         }
 
-        StringBuilder stb = new StringBuilder();
+        final StringBuilder stb = new StringBuilder();
 
         public void visit(TreeNode<K, D> obj) {
             if (obj == NIL) {
@@ -468,7 +504,7 @@ public class RedBlackTree<K, D> {
         private PrintTreeVisitor() {
         }
 
-        List<StringBuilder> rulers = new ArrayList<StringBuilder>();
+        final List<StringBuilder> rulers = new ArrayList<StringBuilder>();
         int currentRule = -1;
         int col = 0;
 

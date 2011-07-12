@@ -21,41 +21,39 @@
 
 package org.geolatte.graph;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * <p>
+ * Tests the {@link ArrayEdgeWeight} class.
+ * </p>
  *
- * @param <N> The type of the domain node.
- * @author Karel Maesen
  * @author Bert Vanhooff
+ * @author <a href="http://www.qmino.com">Qmino bvba</a>
+ * @since SDK1.5
  */
-public interface Path<N> extends Iterable<N> {
+public class ArrayEdgeWeightTest {
 
-    /**
-     * Gets the total weight of the path.
-     *
-     * @return The total weight of the path.
-     */
-    public float totalWeight();
+    @Test
+    public void testConstructorGetValue() throws Exception {
 
-    /**
-     * Gets the source node.
-     *
-     * @return The source node.
-     */
-    public N getSource();
+        float[] weights = new float[]{1, 2, 3};
 
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
+        ArrayEdgeWeight arrayEdgeWeight = new ArrayEdgeWeight(weights);
 
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
+        Assert.assertEquals(1.0f, arrayEdgeWeight.getValue(0), 0.005);
+        Assert.assertEquals(2.0f, arrayEdgeWeight.getValue(1), 0.005);
+        Assert.assertEquals(3.0f, arrayEdgeWeight.getValue(2), 0.005);
+    }
 
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testGetValueError() throws Exception {
+
+        float[] weights = new float[]{1, 2, 3};
+
+        ArrayEdgeWeight arrayEdgeWeight = new ArrayEdgeWeight(weights);
+
+        arrayEdgeWeight.getValue(3);
+    }
 }

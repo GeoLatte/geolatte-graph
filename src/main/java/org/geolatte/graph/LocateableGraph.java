@@ -21,41 +21,31 @@
 
 package org.geolatte.graph;
 
+import java.util.List;
+
 /**
- * A path between a source and destination node. All nodes from the path can be iterated from source to destination.
+ * Representation of a graph of internal nodes, which have a X/Y location.
  *
- * @param <N> The type of the domain node.
- * @author Karel Maesen
- * @author Bert Vanhooff
+ * @param <N> The type that represents the nodes.
  */
-public interface Path<N> extends Iterable<N> {
+public interface LocateableGraph<N> extends Graph<N> {
 
     /**
-     * Gets the total weight of the path.
+     * Gets the nodes at the given location.
      *
-     * @return The total weight of the path.
+     * @param loc A location.
+     * @return A list of nodes.
      */
-    public float totalWeight();
+    public List<InternalNode<N>> getNodesAt(Locatable loc);
 
     /**
-     * Gets the source node.
+     * Searches the given number of nodes closest to the given location.
      *
-     * @return The source node.
+     * @param location    The reference location to search from.
+     * @param number      The number of closest nodes to find.
+     * @param maxDistance The maximum distance to search in.
+     * @return A list of closest nodes.
      */
-    public N getSource();
-
-    /**
-     * Gets the destination node.
-     *
-     * @return The destination node.
-     */
-    public N getDestination();
-
-    /**
-     * Gets a value indicating whether this path is valid.
-     *
-     * @return True if this path is valid, false otherwise.
-     */
-    public boolean isValid();
+    public List<InternalNode<N>> getClosestNodes(Locatable location, int number, int maxDistance);
 
 }
