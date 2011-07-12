@@ -15,7 +15,7 @@
  *     along with GeoLatte.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright (C) 2010 - 2011 and Ownership of code is shared by:
- * Qmino bvba - Romeinsestraat 18 - 3001 Heverlee  (http://www.qmino.com)
+ * Qmino bvba - Esperantolaan 4 - 3001 Heverlee  (http://www.qmino.com)
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
@@ -32,6 +32,7 @@ public interface LocateableGraph<N> extends Graph<N> {
 
     /**
      * Gets the nodes at the given location.
+     *
      * @param loc A location.
      * @return A list of nodes.
      */
