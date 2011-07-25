@@ -21,6 +21,7 @@
 
 package org.geolatte.graph.algorithms;
 
+import org.geolatte.graph.EmptyContextualReachability;
 import org.geolatte.graph.InternalNode;
 import org.junit.Assert;
 import org.junit.Test;

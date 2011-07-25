@@ -63,8 +63,8 @@ class BasicPredGraph<N> implements PredGraph<N> {
         return this.internalNode;
     }
 
-    public Iterator<N> iterator() {
-        return new Iterator<N>() {
+    public Iterator<InternalNode<N>> iterator() {
+        return new Iterator<InternalNode<N>>() {
 
             // initialize to the current predgraph
             private PredGraph<N> currentPredGraph = BasicPredGraph.this;
@@ -74,7 +74,7 @@ class BasicPredGraph<N> implements PredGraph<N> {
                 return currentPredGraph != null;
             }
 
-            public N next() {
+            public InternalNode<N> next() {
 
                 if (currentPredGraph == null) {
                     throw new NoSuchElementException();
@@ -83,7 +83,7 @@ class BasicPredGraph<N> implements PredGraph<N> {
                 PredGraph<N> current = currentPredGraph;
                 currentPredGraph = currentPredGraph.getPredecessor();
 
-                return current.getInternalNode().getWrappedNode();
+                return current.getInternalNode();
             }
 
             public void remove() {
@@ -124,5 +124,11 @@ class BasicPredGraph<N> implements PredGraph<N> {
 
     public String toString() {
         return String.format("PredGraph for node: %s, weight: %.1f", this.internalNode.toString(), this.weight);
+    }
+
+
+    public InternalNode<N> getFirst() {
+
+        return getInternalNode();
     }
 }

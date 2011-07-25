@@ -19,10 +19,7 @@
  * Geovise bvba - Generaal Eisenhowerlei 9 - 2140 Antwerpen (http://www.geovise.com)
  */
 
-package org.geolatte.graph.algorithms;
-
-import org.geolatte.graph.InternalNode;
-import org.geolatte.graph.RoutingContextualReachability;
+package org.geolatte.graph;
 
 /**
  * An implementation of {@link org.geolatte.graph.RoutingContextualReachability} that does not limit reachability. Is
@@ -33,7 +30,7 @@ import org.geolatte.graph.RoutingContextualReachability;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-final class EmptyContextualReachability<N, C> implements RoutingContextualReachability<N, C> {
+public final class EmptyContextualReachability<N, C> implements RoutingContextualReachability<N, C> {
 
     public boolean isReachable(InternalNode<N> nInternalNode) {
         return true;

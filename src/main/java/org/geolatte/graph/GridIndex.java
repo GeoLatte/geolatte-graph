@@ -148,7 +148,7 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
 
             public boolean hasNext() {
 
-                //first check if we have a non-null cell
+                //getFirst check if we have a non-null cell
                 try {
                     while (grid[ix][iy] == null) {
                         incrementPointers();

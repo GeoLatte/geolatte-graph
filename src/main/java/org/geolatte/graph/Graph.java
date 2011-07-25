@@ -45,8 +45,12 @@ public interface Graph<N> extends Iterable<InternalNode<N>> {
      * Gets the edges that start from the given internalNode, depending on the given modus.
      *
      * @param internalNode           The internalNode.
-     * @param contextualReachability An object to determine whether an edge can be used.
+     * @param contextualReachability An object to determine whether an edge can be used. Can be null.
      * @return A internalNode iterator for the outgoing nodes.
      */
     Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability<N, ?> contextualReachability);
+    // TODO : getOutgoingEdges -> return iterable so it can be used in for loops
+
+    // TODO: add this? would be very convenient for clients
+    //Iterator<N> getOutgoingEdges(N node, ContextualReachability<N, ?> contextualReachability);
 }

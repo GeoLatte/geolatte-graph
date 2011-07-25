@@ -81,7 +81,7 @@ public class TestDijkstra {
             System.out.println(nd);
         }
 
-        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithms.instance.createDijkstra(graph, myNodes[0], myNodes[3], 0);
+        GraphAlgorithm<Path<MyNode>> algorithm = GraphAlgorithms.createDijkstra(graph, myNodes[0], myNodes[3], 0);
 
         algorithm.execute();
 
@@ -98,10 +98,10 @@ public class TestDijkstra {
     private static class MyNode implements Locatable {
 
         private final int id;
-        private final int x;
-        private final int y;
+        private final float x;
+        private final float y;
 
-        protected MyNode(int id, int x, int y) {
+        protected MyNode(int id, float x, float y) {
             this.id = id;
             this.x = x;
             this.y = y;
@@ -117,12 +117,12 @@ public class TestDijkstra {
         }
 
 
-        public int getX() {
+        public float getX() {
             return this.x;
         }
 
 
-        public int getY() {
+        public float getY() {
             return this.y;
         }
 
@@ -131,7 +131,7 @@ public class TestDijkstra {
         }
 
         public String toString() {
-            return String.format("%d: (%d,%d)", this.id, this.x, this.y);
+            return String.format("%d: (%f, %f)", this.id, this.x, this.y);
         }
 
         /* (non-Javadoc)
@@ -142,8 +142,8 @@ public class TestDijkstra {
             final int prime = 31;
             int result = 1;
             result = prime * result + id;
-            result = prime * result + x;
-            result = prime * result + y;
+            result = prime * result + (int) x;
+            result = prime * result + (int) y;
             return result;
         }
 

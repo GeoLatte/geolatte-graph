@@ -192,12 +192,14 @@ public class PairingHeap<E> {
     }
 
     /**
-     * Compares the given elements using the comparator set at construction time. If no comparator is given, the first
+     * Compares the given elements using the comparator set at construction time. If no comparator is given, the
+     * getFirst
      * element is cast to {@link Comparable<E>}.
      *
-     * @param element  The first element to be compared.
+     * @param element  The getFirst element to be compared.
      * @param newValue The second element to be compared.
-     * @return negative integer, zero, or a positive integer as the first argument is less than, equal to, or greater
+     * @return negative integer, zero, or a positive integer as the getFirst argument is less than, equal to, or
+     *         greater
      *         than the second.
      * @throws ClassCastException When <code>element</code> does not implement {@link Comparable<E>} and no
      *                            {@link Comparator} was given at construction time.
@@ -210,14 +212,14 @@ public class PairingHeap<E> {
     }
 
     /**
-     * Internal merge method that is the basic operation to maintain order. Links first and second trees together to
+     * Internal merge method that is the basic operation to maintain order. Links getFirst and second trees together to
      * satisfy heap order.
-     * first becomes the result of the tree merge
+     * getFirst becomes the result of the tree merge
      *
      * @param first  The root of tree 1 (cannot be null and cannot have a sibling).
      * @param second The root of tree 2 (can be null).
      * @return Whichever of the two given nodes becomes the new root.
-     * @throws IllegalArgumentException When <code>first</code> is null or has a sibling.
+     * @throws IllegalArgumentException When <code>getFirst</code> is null or has a sibling.
      */
     private PairNode<E> compareAndLink(PairNode<E> first, PairNode<E> second) {
 
@@ -227,7 +229,7 @@ public class PairingHeap<E> {
         if (second == null) return first;
 
         if (second.compareTo(first) < 0) {
-            //attach first as leftmost child of second
+            //attach getFirst as leftmost child of second
             second.setPrev(first.getPrev());
             first.setPrev(second);
             first.setNextSibling(second.getLeftChild());
@@ -237,7 +239,7 @@ public class PairingHeap<E> {
             second.setLeftChild(first);
             return second;
         } else {
-            //attach second as leftmost child of first
+            //attach second as leftmost child of getFirst
             second.setPrev(first);
             first.setNextSibling(second.getNextSibling());
             if (first.getNextSibling() != null) {

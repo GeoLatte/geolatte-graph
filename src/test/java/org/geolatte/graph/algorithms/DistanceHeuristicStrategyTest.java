@@ -44,12 +44,12 @@ public class DistanceHeuristicStrategyTest {
         DistanceHeuristicStrategy<Locatable> strategy = new DistanceHeuristicStrategy<Locatable>(factor);
 
         Locatable loc1 = Mockito.mock(Locatable.class);
-        Mockito.when(loc1.getX()).thenReturn(0);
-        Mockito.when(loc1.getY()).thenReturn(0);
+        Mockito.when(loc1.getX()).thenReturn(0.0f);
+        Mockito.when(loc1.getY()).thenReturn(0.0f);
 
         Locatable loc2 = Mockito.mock(Locatable.class);
-        Mockito.when(loc2.getX()).thenReturn(1);
-        Mockito.when(loc2.getY()).thenReturn(1);
+        Mockito.when(loc2.getX()).thenReturn(1.0f);
+        Mockito.when(loc2.getY()).thenReturn(1.0f);
 
         // => distance = sqrt(1*1 + 1*1)
 

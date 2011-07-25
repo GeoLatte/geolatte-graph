@@ -31,7 +31,7 @@ import java.util.*;
 public class Graphs {
 
     /**
-     * Creates a builder for grid indexed graphs.
+     * Creates a builder for directed grid-indexed graphs.
      *
      * @param env        The envelope.
      * @param resolution The grid resolution.
@@ -129,6 +129,9 @@ public class Graphs {
 
             public Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability<N, ?> contextualReachability) {
 
+                if (contextualReachability == null) {
+                    contextualReachability = new EmptyContextualReachability<N, Object>();
+                }
                 return new OutEdgeIteratorImpl<N>((InternalNodeWrapper<N>) internalNode, contextualReachability);
             }
         }

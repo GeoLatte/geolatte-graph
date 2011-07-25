@@ -21,6 +21,7 @@
 
 package org.geolatte.graph.algorithms;
 
+import org.geolatte.graph.EmptyContextualReachability;
 import org.geolatte.graph.Graph;
 import org.geolatte.graph.InternalNode;
 import org.geolatte.graph.RoutingContextualReachability;

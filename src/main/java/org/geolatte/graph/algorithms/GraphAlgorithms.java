@@ -21,10 +21,7 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.Graph;
-import org.geolatte.graph.Locatable;
-import org.geolatte.graph.LocateableGraph;
-import org.geolatte.graph.Path;
+import org.geolatte.graph.*;
 
 import java.util.Map;
 
@@ -36,8 +33,6 @@ import java.util.Map;
  */
 public class GraphAlgorithms {
 
-    public static GraphAlgorithms instance = new GraphAlgorithms();
-
     /**
      * Creates a {@link BFSDistanceLimited} algorithm instance.
      *
@@ -48,7 +43,10 @@ public class GraphAlgorithms {
      * @param <N>         The type of domain node.
      * @return A ready-to-use BFS algorithm.
      */
-    public <N extends Locatable> GraphAlgorithm<Map<N, Float>> createBFS(LocateableGraph<N> graph, N source, float maxDistance, int weightIndex) {
+    public static <N extends Locatable> GraphAlgorithm<Map<N, Float>> createBFS(LocateableGraph<N> graph,
+                                                                                N source,
+                                                                                float maxDistance,
+                                                                                int weightIndex) {
 
         return new BFSDistanceLimited<N>(graph, source, maxDistance, weightIndex);
     }
@@ -63,12 +61,32 @@ public class GraphAlgorithms {
      * @param <N>         Type of nodes in the graph.
      * @return A default Dijkstra algorithm.
      */
-    public <N extends Locatable> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
-                                                                        N origin,
-                                                                        N destination,
-                                                                        int weightKind) {
+    public static <N> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
+                                                             N origin,
+                                                             N destination,
+                                                             int weightKind) {
 
-        return new Dijkstra<N>(graph, origin, destination, this.<N>createDefaultRelaxer(), weightKind);
+        return new Dijkstra<N>(graph, origin, destination, GraphAlgorithms.<N>createDefaultRelaxer(), weightKind);
+    }
+
+    /**
+     * Constructs a Dijkstra shortest-path algorithm instance.
+     *
+     * @param graph                  The graph on which to run the Dijkstra algorithm.
+     * @param origin                 The internalNode from which to start routing.
+     * @param destination            The destination internalNode to which to find a shortest path.
+     * @param weightKind             The index to lookup the weight.
+     * @param contextualReachability Object that determines node reachability on the fly.
+     * @param <N>                    Type of nodes in the graph.
+     * @return A default Dijkstra algorithm.
+     */
+    public static <N> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
+                                                             N origin,
+                                                             N destination,
+                                                             int weightKind,
+                                                             RoutingContextualReachability<N, Traversal<N>> contextualReachability) {
+
+        return new Dijkstra<N>(graph, origin, destination, GraphAlgorithms.<N>createDefaultRelaxer(), weightKind, contextualReachability);
     }
 
     /**
@@ -83,14 +101,14 @@ public class GraphAlgorithms {
      * @param <N>             Type of nodes in the graph.
      * @return An A* algorithm.
      */
-    public <N extends Locatable> GraphAlgorithm<Path<N>> createAStar(LocateableGraph<N> graph,
-                                                                     N origin,
-                                                                     N destination,
-                                                                     int weightIndex,
-                                                                     float heuristicWeight,
-                                                                     float factor) {
+    public static <N extends Locatable> GraphAlgorithm<Path<N>> createAStar(LocateableGraph<N> graph,
+                                                                            N origin,
+                                                                            N destination,
+                                                                            int weightIndex,
+                                                                            float heuristicWeight,
+                                                                            float factor) {
 
-        Relaxer<N> relaxer = this.createAStarRelaxer(heuristicWeight, factor, destination);
+        Relaxer<N> relaxer = createAStarRelaxer(heuristicWeight, factor, destination);
         return new Dijkstra<N>(graph, origin, destination, relaxer, weightIndex);
 
     }
@@ -101,7 +119,7 @@ public class GraphAlgorithms {
      * @param <N> The internalNode type.
      * @return A default relaxer.
      */
-    protected <N> Relaxer<N> createDefaultRelaxer() {
+    protected static <N> Relaxer<N> createDefaultRelaxer() {
 
         return new DefaultRelaxer<N>();
     }
@@ -115,7 +133,7 @@ public class GraphAlgorithms {
      * @param <N>             The node type.
      * @return A relaxer for the A* algorithms.
      */
-    protected <N extends Locatable> Relaxer<N> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
+    protected static <N extends Locatable> Relaxer<N> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
 
         return new HeuristicRelaxer<N>(heuristicWeight, destination, new DistanceHeuristicStrategy<N>(factor));
     }

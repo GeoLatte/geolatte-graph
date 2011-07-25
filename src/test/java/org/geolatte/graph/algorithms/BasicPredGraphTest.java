@@ -97,10 +97,10 @@ public class BasicPredGraphTest {
 
         basicPredGraph1.setPredecessor(basicPredGraph2).setPredecessor(basicPredGraph3);
 
-        Iterator<Object> it = basicPredGraph1.iterator();
+        Iterator<InternalNode<Object>> it = basicPredGraph1.iterator();
         int i = 0;
         for (; it.hasNext(); i++) {
-            Object obj = it.next();
+            Object obj = it.next().getWrappedNode();
             Assert.assertEquals(domainNodes.get(i), obj);
         }
 
