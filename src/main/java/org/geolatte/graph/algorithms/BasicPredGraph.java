@@ -36,18 +36,18 @@ import java.util.NoSuchElementException;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class BasicPredGraph<N> implements PredGraph<N> {
+class BasicPredGraph<N, E> implements PredGraph<N, E> {
 
-    private final InternalNode<N> internalNode;
-    private PredGraph<N> predecessor = null;
+    private final InternalNode<N, E> internalNode;
+    private PredGraph<N, E> predecessor = null;
     private float weight;
 
-    BasicPredGraph(InternalNode<N> n, float weight) {
+    BasicPredGraph(InternalNode<N, E> n, float weight) {
         this.internalNode = n;
         this.weight = weight;
     }
 
-    public PredGraph<N> getPredecessor() {
+    public PredGraph<N, E> getPredecessor() {
         return predecessor;
     }
 
@@ -59,28 +59,28 @@ class BasicPredGraph<N> implements PredGraph<N> {
         this.weight = w;
     }
 
-    public InternalNode<N> getInternalNode() {
+    public InternalNode<N, E> getInternalNode() {
         return this.internalNode;
     }
 
-    public Iterator<InternalNode<N>> iterator() {
-        return new Iterator<InternalNode<N>>() {
+    public Iterator<InternalNode<N, E>> iterator() {
+        return new Iterator<InternalNode<N, E>>() {
 
             // initialize to the current predgraph
-            private PredGraph<N> currentPredGraph = BasicPredGraph.this;
+            private PredGraph<N, E> currentPredGraph = BasicPredGraph.this;
 
             public boolean hasNext() {
 
                 return currentPredGraph != null;
             }
 
-            public InternalNode<N> next() {
+            public InternalNode<N, E> next() {
 
                 if (currentPredGraph == null) {
                     throw new NoSuchElementException();
                 }
 
-                PredGraph<N> current = currentPredGraph;
+                PredGraph<N, E> current = currentPredGraph;
                 currentPredGraph = currentPredGraph.getPredecessor();
 
                 return current.getInternalNode();
@@ -92,7 +92,7 @@ class BasicPredGraph<N> implements PredGraph<N> {
         };
     }
 
-    public PredGraph<N> setPredecessor(PredGraph<N> pred) {
+    public PredGraph<N, E> setPredecessor(PredGraph<N, E> pred) {
         this.predecessor = pred;
         return pred;
     }
@@ -113,7 +113,7 @@ class BasicPredGraph<N> implements PredGraph<N> {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        BasicPredGraph<N> other = (BasicPredGraph<N>) obj;
+        BasicPredGraph<N, E> other = (BasicPredGraph<N, E>) obj;
         if (internalNode == null) {
             if (other.internalNode != null)
                 return false;
@@ -127,7 +127,7 @@ class BasicPredGraph<N> implements PredGraph<N> {
     }
 
 
-    public InternalNode<N> getFirst() {
+    public InternalNode<N, E> getFirst() {
 
         return getInternalNode();
     }

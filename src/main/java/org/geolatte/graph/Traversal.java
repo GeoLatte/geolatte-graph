@@ -30,7 +30,7 @@ package org.geolatte.graph;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface Traversal<N> extends Iterable<InternalNode<N>> {
+public interface Traversal<N, E> extends Iterable<InternalNode<N, E>> {
 
     /**
      * Convenience method to get the getFirst element from the traversal. To get other elements, use {@link
@@ -38,5 +38,5 @@ public interface Traversal<N> extends Iterable<InternalNode<N>> {
      *
      * @return The getFirst element.
      */
-    InternalNode<N> getFirst();
+    InternalNode<N, E> getFirst();
 }

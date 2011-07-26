@@ -34,11 +34,12 @@ import org.geolatte.graph.PredGraph;
  * by going through u and, if so, updating (decreasing) the new total weight of v and its predecessor internalNode
  * </p>
  *
- * @param <N> The type of internalNode.
+ * @param <N> The type of node.
+ * @param <E> The edge label type.
  * @author Karel Maesen
  * @author Bert Vanhooff
  */
-interface Relaxer<N> {
+interface Relaxer<N, E> {
 
     /**
      * Relaxes the edge from internalNode <code>u</code> to internalNode <code>v</internalNode>. Both are given by
@@ -50,7 +51,7 @@ interface Relaxer<N> {
      * @param weightIndex The index used to lookup the weight.
      * @return True if the weight of v was updated, false otherwise
      */
-    public boolean relax(PredGraph<N> u, PredGraph<N> v, int weightIndex);
+    public boolean relax(PredGraph<N, E> u, PredGraph<N, E> v, int weightIndex);
 
     /**
      * Returns the new total weight of the path to internalNode v after relaxation has occured. Is only meaningful

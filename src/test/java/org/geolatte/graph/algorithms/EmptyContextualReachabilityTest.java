@@ -46,7 +46,7 @@ public class EmptyContextualReachabilityTest {
     @Test
     public void test() throws Exception {
 
-        EmptyContextualReachability<Object, Object> subject = new EmptyContextualReachability<Object, Object>();
+        EmptyContextualReachability<Object, Object, Object> subject = new EmptyContextualReachability<Object, Object, Object>();
 
         Assert.assertEquals(true, subject.isReachable(Mockito.mock(InternalNode.class)));
 

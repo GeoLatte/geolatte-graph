@@ -41,14 +41,15 @@ public class GraphAlgorithms {
      * @param maxDistance The maximum distance to search in.
      * @param weightIndex The index to lookup the weight.
      * @param <N>         The type of domain node.
+     * @param <E>         The edge label type.
      * @return A ready-to-use BFS algorithm.
      */
-    public static <N extends Locatable> GraphAlgorithm<Map<N, Float>> createBFS(LocateableGraph<N> graph,
-                                                                                N source,
-                                                                                float maxDistance,
-                                                                                int weightIndex) {
+    public static <N extends Locatable, E> GraphAlgorithm<Map<N, Float>> createBFS(LocateableGraph<N, E> graph,
+                                                                                   N source,
+                                                                                   float maxDistance,
+                                                                                   int weightIndex) {
 
-        return new BFSDistanceLimited<N>(graph, source, maxDistance, weightIndex);
+        return new BFSDistanceLimited<N, E>(graph, source, maxDistance, weightIndex);
     }
 
     /**
@@ -61,12 +62,12 @@ public class GraphAlgorithms {
      * @param <N>         Type of nodes in the graph.
      * @return A default Dijkstra algorithm.
      */
-    public static <N> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
-                                                             N origin,
-                                                             N destination,
-                                                             int weightKind) {
+    public static <N, E> GraphAlgorithm<Path<N>> createDijkstra(Graph<N, E> graph,
+                                                                N origin,
+                                                                N destination,
+                                                                int weightKind) {
 
-        return new Dijkstra<N>(graph, origin, destination, GraphAlgorithms.<N>createDefaultRelaxer(), weightKind);
+        return new Dijkstra<N, E>(graph, origin, destination, GraphAlgorithms.<N, E>createDefaultRelaxer(), weightKind);
     }
 
     /**
@@ -78,15 +79,16 @@ public class GraphAlgorithms {
      * @param weightKind             The index to lookup the weight.
      * @param contextualReachability Object that determines node reachability on the fly.
      * @param <N>                    Type of nodes in the graph.
+     * @param <E>                    The edge label type.
      * @return A default Dijkstra algorithm.
      */
-    public static <N> GraphAlgorithm<Path<N>> createDijkstra(Graph<N> graph,
-                                                             N origin,
-                                                             N destination,
-                                                             int weightKind,
-                                                             RoutingContextualReachability<N, Traversal<N>> contextualReachability) {
+    public static <N, E> GraphAlgorithm<Path<N>> createDijkstra(Graph<N, E> graph,
+                                                                N origin,
+                                                                N destination,
+                                                                int weightKind,
+                                                                RoutingContextualReachability<N, E, Traversal<N, E>> contextualReachability) {
 
-        return new Dijkstra<N>(graph, origin, destination, GraphAlgorithms.<N>createDefaultRelaxer(), weightKind, contextualReachability);
+        return new Dijkstra<N, E>(graph, origin, destination, GraphAlgorithms.<N, E>createDefaultRelaxer(), weightKind, contextualReachability);
     }
 
     /**
@@ -99,17 +101,18 @@ public class GraphAlgorithms {
      * @param heuristicWeight The importance of the heuristic factor.
      * @param factor          Factor to convert distance to edge weights units.
      * @param <N>             Type of nodes in the graph.
+     * @param <E>             The edge label type.
      * @return An A* algorithm.
      */
-    public static <N extends Locatable> GraphAlgorithm<Path<N>> createAStar(LocateableGraph<N> graph,
-                                                                            N origin,
-                                                                            N destination,
-                                                                            int weightIndex,
-                                                                            float heuristicWeight,
-                                                                            float factor) {
+    public static <N extends Locatable, E> GraphAlgorithm<Path<N>> createAStar(LocateableGraph<N, E> graph,
+                                                                               N origin,
+                                                                               N destination,
+                                                                               int weightIndex,
+                                                                               float heuristicWeight,
+                                                                               float factor) {
 
-        Relaxer<N> relaxer = createAStarRelaxer(heuristicWeight, factor, destination);
-        return new Dijkstra<N>(graph, origin, destination, relaxer, weightIndex);
+        Relaxer<N, E> relaxer = createAStarRelaxer(heuristicWeight, factor, destination);
+        return new Dijkstra<N, E>(graph, origin, destination, relaxer, weightIndex);
 
     }
 
@@ -117,11 +120,12 @@ public class GraphAlgorithms {
      * Constructs a default relaxer.
      *
      * @param <N> The internalNode type.
+     * @param <E> The edge label type.
      * @return A default relaxer.
      */
-    protected static <N> Relaxer<N> createDefaultRelaxer() {
+    protected static <N, E> Relaxer<N, E> createDefaultRelaxer() {
 
-        return new DefaultRelaxer<N>();
+        return new DefaultRelaxer<N, E>();
     }
 
     /**
@@ -131,11 +135,12 @@ public class GraphAlgorithms {
      * @param factor          Factor to convert distance to edge weights units.
      * @param destination     The destination node.
      * @param <N>             The node type.
+     * @param <E>             The edge label type.
      * @return A relaxer for the A* algorithms.
      */
-    protected static <N extends Locatable> Relaxer<N> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
+    protected static <N extends Locatable, E> Relaxer<N, E> createAStarRelaxer(float heuristicWeight, float factor, N destination) {
 
-        return new HeuristicRelaxer<N>(heuristicWeight, destination, new DistanceHeuristicStrategy<N>(factor));
+        return new HeuristicRelaxer<N, E>(heuristicWeight, destination, new DistanceHeuristicStrategy<N>(factor));
     }
 
 }

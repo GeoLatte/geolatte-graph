@@ -26,15 +26,16 @@ package org.geolatte.graph;
  * predecessor nodes.
  *
  * @param <N> The type of domain node.
+ * @param <E> The edge label type.
  * @author Karel Maesen
  * @author Bert Vanhooff
  */
-public interface PredGraph<N> extends Traversal<N> {
+public interface PredGraph<N, E> extends Traversal<N, E> {
 
     /**
      * @return The end node of the predecessor graph.
      */
-    InternalNode<N> getInternalNode();
+    InternalNode<N, E> getInternalNode();
 
     /**
      * Sets the predecessor of the current node.
@@ -42,12 +43,12 @@ public interface PredGraph<N> extends Traversal<N> {
      * @param pred The predecessor.
      * @return The given pred.
      */
-    PredGraph<N> setPredecessor(PredGraph<N> pred);
+    PredGraph<N, E> setPredecessor(PredGraph<N, E> pred);
 
     /**
      * @return The predecessor of the current node. Null if this is the getFirst element of the path.
      */
-    PredGraph<N> getPredecessor();
+    PredGraph<N, E> getPredecessor();
 
     /**
      * Sets the weight up to the current node. This usually takes into account its predecessors (the path before this

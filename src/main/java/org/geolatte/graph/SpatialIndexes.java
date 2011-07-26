@@ -37,22 +37,23 @@ public class SpatialIndexes {
      * @param env        The envelope.
      * @param resolution The grid resolution.
      * @param <N>        Type of the domain nodes.
+     * @param <E>        The edge label type.
      * @return A builder for grid indexes.
      */
-    public static <N extends Locatable> SpatialIndexBuilder<N> createGridIndexBuilder(Envelope env, int resolution) {
-        return new GridIndexBuilder<N>(env, resolution);
+    public static <N extends Locatable, E> SpatialIndexBuilder<N, E> createGridIndexBuilder(Envelope env, int resolution) {
+        return new GridIndexBuilder<N, E>(env, resolution);
     }
 
 
     // Implementation Spatial Index Builders
-    private static class GridIndexBuilder<T extends Locatable> implements SpatialIndexBuilder<T> {
+    private static class GridIndexBuilder<N extends Locatable, E> implements SpatialIndexBuilder<N, E> {
 
         private final int resolution;
         private final Envelope env;
 
         //the resolution values satisfy the property:
         // value / resolution provides the cell number
-        private final List<InternalNode<T>>[][] grid;
+        private final List<InternalNode<N, E>>[][] grid;
         private final int xNumCells, yNumCells;
 
         @SuppressWarnings("unchecked")
@@ -71,8 +72,8 @@ public class SpatialIndexes {
 
         }
 
-        public boolean isWithinBounds(InternalNode<T> nd) {
-            T obj = nd.getWrappedNode();
+        public boolean isWithinBounds(InternalNode<N, E> nd) {
+            N obj = nd.getWrappedNode();
             if (obj.getX() < this.env.getMinX() || obj.getX() > this.env.getMaxX()) {
                 return false;
             }
@@ -82,20 +83,20 @@ public class SpatialIndexes {
             return true;
         }
 
-        public void insert(InternalNode<T> node) {
+        public void insert(InternalNode<N, E> node) {
             if (!isWithinBounds(node)) {
                 throw new RuntimeException("Tried insert object that lies out of bounds: " + node);
             }
 
-            T obj = node.getWrappedNode();
+            N obj = node.getWrappedNode();
 
             //calculate x/y cell index
             int xCellIdx = (int) (obj.getX() - this.env.getMinX()) / this.resolution;
             int yCellIdx = (int) (obj.getY() - this.env.getMinY()) / this.resolution;
 
-            List<InternalNode<T>> cell = this.grid[xCellIdx][yCellIdx];
+            List<InternalNode<N, E>> cell = this.grid[xCellIdx][yCellIdx];
             if (cell == null) {
-                cell = new ArrayList<InternalNode<T>>();
+                cell = new ArrayList<InternalNode<N, E>>();
                 this.grid[xCellIdx][yCellIdx] = cell;
 
             }
@@ -103,18 +104,18 @@ public class SpatialIndexes {
 
         }
 
-        public SpatialIndex<T> build() throws BuilderException {
-            GridIndex<T> index = new GridIndex<T>(this.env, this.resolution);
+        public SpatialIndex<N, E> build() throws BuilderException {
+            GridIndex<N, E> index = new GridIndex<N, E>(this.env, this.resolution);
             index.setGrid(toCompressedArray(this.grid));
             return index;
         }
 
-        private Object[][][] toCompressedArray(List<InternalNode<T>>[][] grid) {
+        private Object[][][] toCompressedArray(List<InternalNode<N, E>>[][] grid) {
             Object[][][] newGrid = new Object[this.xNumCells][this.yNumCells][];
             for (int xi = 0; xi < grid.length; xi++) {
-                List<InternalNode<T>>[] xar = grid[xi];
+                List<InternalNode<N, E>>[] xar = grid[xi];
                 for (int yi = 0; yi < xar.length; yi++) {
-                    List<InternalNode<T>> cell = xar[yi];
+                    List<InternalNode<N, E>> cell = xar[yi];
                     if (cell != null) {
                         newGrid[xi][yi] = cell.toArray();
                     }

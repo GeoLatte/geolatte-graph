@@ -30,9 +30,9 @@ package org.geolatte.graph;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public final class EmptyContextualReachability<N, C> implements RoutingContextualReachability<N, C> {
+public final class EmptyContextualReachability<N, E, C> implements RoutingContextualReachability<N, E, C> {
 
-    public boolean isReachable(InternalNode<N> nInternalNode) {
+    public boolean isReachable(InternalNode<N, E> nInternalNode) {
         return true;
     }
 

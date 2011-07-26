@@ -28,12 +28,13 @@ package org.geolatte.graph;
  * TODO: Document thread safety requirements
  *
  * @param <N> The domain node type.
+ * @param <E> The edge label type.
  * @param <C> The type of the context object.
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface RoutingContextualReachability<N, C> extends ContextualReachability<N, C> {
+public interface RoutingContextualReachability<N, E, C> extends ContextualReachability<N, E, C> {
 
     /**
      * Sets the source and destination of the route to be calculated. This method may only be called once during the

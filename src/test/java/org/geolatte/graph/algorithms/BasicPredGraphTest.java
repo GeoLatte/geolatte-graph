@@ -45,9 +45,9 @@ public class BasicPredGraphTest {
     @Test
     public void testConstructor() throws Exception {
 
-        InternalNode<Object> node = (InternalNode<Object>) Mockito.mock(InternalNode.class);
+        InternalNode<Object, Object> node = (InternalNode<Object, Object>) Mockito.mock(InternalNode.class);
 
-        BasicPredGraph<Object> basicPredGraph = new BasicPredGraph<Object>(node, 42);
+        BasicPredGraph<Object, Object> basicPredGraph = new BasicPredGraph<Object, Object>(node, 42);
 
         Assert.assertEquals(node, basicPredGraph.getInternalNode());
         Assert.assertEquals(42, basicPredGraph.getWeight(), 0.005);
@@ -56,11 +56,11 @@ public class BasicPredGraphTest {
     @Test
     public void testSetGetPredecessor() throws Exception {
 
-        InternalNode<Object> node1 = (InternalNode<Object>) Mockito.mock(InternalNode.class);
-        InternalNode<Object> node2 = (InternalNode<Object>) Mockito.mock(InternalNode.class);
+        InternalNode<Object, Object> node1 = (InternalNode<Object, Object>) Mockito.mock(InternalNode.class);
+        InternalNode<Object, Object> node2 = (InternalNode<Object, Object>) Mockito.mock(InternalNode.class);
 
-        BasicPredGraph<Object> basicPredGraph1 = new BasicPredGraph<Object>(node1, 42);
-        BasicPredGraph<Object> basicPredGraph2 = new BasicPredGraph<Object>(node2, 43);
+        BasicPredGraph<Object, Object> basicPredGraph1 = new BasicPredGraph<Object, Object>(node1, 42);
+        BasicPredGraph<Object, Object> basicPredGraph2 = new BasicPredGraph<Object, Object>(node2, 43);
 
         basicPredGraph1.setPredecessor(basicPredGraph2);
 
@@ -70,9 +70,9 @@ public class BasicPredGraphTest {
     @Test
     public void testGetInternalNode() throws Exception {
 
-        InternalNode<Object> node = (InternalNode<Object>) Mockito.mock(InternalNode.class);
+        InternalNode<Object, Object> node = (InternalNode<Object, Object>) Mockito.mock(InternalNode.class);
 
-        BasicPredGraph<Object> basicPredGraph = new BasicPredGraph<Object>(node, 42);
+        BasicPredGraph<Object, Object> basicPredGraph = new BasicPredGraph<Object, Object>(node, 42);
         Assert.assertEquals(node, basicPredGraph.getInternalNode());
     }
 
@@ -83,21 +83,21 @@ public class BasicPredGraphTest {
         Object domainNode2 = new Object();
         Object domainNode3 = new Object();
 
-        InternalNode<Object> node1 = (InternalNode<Object>) Mockito.mock(InternalNode.class);
+        InternalNode<Object, Object> node1 = (InternalNode<Object, Object>) Mockito.mock(InternalNode.class);
         Mockito.when(node1.getWrappedNode()).thenReturn(domainNode1);
-        InternalNode<Object> node2 = (InternalNode<Object>) Mockito.mock(InternalNode.class);
+        InternalNode<Object, Object> node2 = (InternalNode<Object, Object>) Mockito.mock(InternalNode.class);
         Mockito.when(node2.getWrappedNode()).thenReturn(domainNode2);
-        InternalNode<Object> node3 = (InternalNode<Object>) Mockito.mock(InternalNode.class);
+        InternalNode<Object, Object> node3 = (InternalNode<Object, Object>) Mockito.mock(InternalNode.class);
         Mockito.when(node3.getWrappedNode()).thenReturn(domainNode3);
         List<Object> domainNodes = Arrays.asList(domainNode1, domainNode2, domainNode3);
 
-        BasicPredGraph<Object> basicPredGraph1 = new BasicPredGraph<Object>(node1, 42);
-        BasicPredGraph<Object> basicPredGraph2 = new BasicPredGraph<Object>(node2, 43);
-        BasicPredGraph<Object> basicPredGraph3 = new BasicPredGraph<Object>(node3, 44);
+        BasicPredGraph<Object, Object> basicPredGraph1 = new BasicPredGraph<Object, Object>(node1, 42);
+        BasicPredGraph<Object, Object> basicPredGraph2 = new BasicPredGraph<Object, Object>(node2, 43);
+        BasicPredGraph<Object, Object> basicPredGraph3 = new BasicPredGraph<Object, Object>(node3, 44);
 
         basicPredGraph1.setPredecessor(basicPredGraph2).setPredecessor(basicPredGraph3);
 
-        Iterator<InternalNode<Object>> it = basicPredGraph1.iterator();
+        Iterator<InternalNode<Object, Object>> it = basicPredGraph1.iterator();
         int i = 0;
         for (; it.hasNext(); i++) {
             Object obj = it.next().getWrappedNode();

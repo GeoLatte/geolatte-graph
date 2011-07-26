@@ -34,12 +34,13 @@ import org.geolatte.graph.InternalNode;
  * </p>
  *
  * @param <N> The type of domain node.
+ * @param <E> The edge label type.
  * @author Karel Measen
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-class HeuristicRelaxer<N> extends DefaultRelaxer<N> {
+class HeuristicRelaxer<N, E> extends DefaultRelaxer<N, E> {
 
     private final float heuristicWeight; // weight given to the heuristic component
     private final N destination;
@@ -59,7 +60,7 @@ class HeuristicRelaxer<N> extends DefaultRelaxer<N> {
         this.heuristicStrategy = heuristicStrategy;
     }
 
-    protected float update(InternalNode<N> nd, float baseWeight) {
+    protected float update(InternalNode<N, E> nd, float baseWeight) {
 
         return baseWeight + this.heuristicWeight * (heuristicStrategy.getValue(nd.getWrappedNode(), destination));
     }

@@ -25,14 +25,15 @@ package org.geolatte.graph;
 /**
  * A builder for graphs.
  *
- * @param <N> The type of node.
+ * @param <N> The domain node type.
+ * @param <E> The edge label type.
  * @author Karel Maesen
  * @author Bert Vanhooff
  */
-public interface GraphBuilder<N extends Locatable> {
+public interface GraphBuilder<N, E> {
 
     /**
-     * Adds the given nodes and a directed edge with the given label between.
+     * Adds the given nodes and a directed edge without label between them.
      *
      * @param fromNode   The node from which the edge starts.
      * @param toNode     The destination node for the edge.
@@ -41,11 +42,21 @@ public interface GraphBuilder<N extends Locatable> {
     public void addEdge(N fromNode, N toNode, EdgeWeight edgeWeight);
 
     /**
+     * Adds the given nodes and a directed edge with the given label between.
+     *
+     * @param fromNode   The node from which the edge starts.
+     * @param toNode     The destination node for the edge.
+     * @param edgeWeight The weight.
+     * @param edgeLabel  The label object that will be associated with the edge.
+     */
+    public void addEdge(N fromNode, N toNode, EdgeWeight edgeWeight, E edgeLabel);
+
+    /**
      * Builds the graph.
      *
      * @return The graph.
      * @throws BuilderException If the graph could not be built.
      */
-    public LocateableGraph<N> build() throws BuilderException;
+    public LocateableGraph<N, E> build() throws BuilderException;
 
 }

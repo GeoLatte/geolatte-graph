@@ -35,10 +35,10 @@ import java.util.Map;
  * @param <V>
  * @author Karel Maesen, Geovise BVBA
  */
-public class PMinQueue<V> {
+public class PMinQueue<V, E> {
 
-    private final PairingHeap<Element<V>> heap = new PairingHeap<Element<V>>();
-    private final Map<InternalNode<V>, PairNode<Element<V>>> index = new HashMap<InternalNode<V>, PairNode<Element<V>>>();
+    private final PairingHeap<Element<V, E>> heap = new PairingHeap<Element<V, E>>();
+    private final Map<InternalNode<V, E>, PairNode<Element<V, E>>> index = new HashMap<InternalNode<V, E>, PairNode<Element<V, E>>>();
 
     /**
      * Creates an instance of PMinQueue.
@@ -52,8 +52,8 @@ public class PMinQueue<V> {
      * @param value The value to add.
      * @param key   The priority.
      */
-    public void add(PredGraph<V> value, float key) {
-        PairNode<Element<V>> pn = heap.insert(new Element<V>(value, key));
+    public void add(PredGraph<V, E> value, float key) {
+        PairNode<Element<V, E>> pn = heap.insert(new Element<V, E>(value, key));
         this.index.put(value.getInternalNode(), pn);
     }
 
@@ -62,8 +62,8 @@ public class PMinQueue<V> {
      *
      * @return The element with the smallest key.
      */
-    public PredGraph<V> extractMin() {
-        PredGraph<V> val = heap.deleteMin().value;
+    public PredGraph<V, E> extractMin() {
+        PredGraph<V, E> val = heap.deleteMin().value;
         this.index.remove(val.getInternalNode());
         return val;
     }
@@ -74,8 +74,8 @@ public class PMinQueue<V> {
      * @param node The node.
      * @return A predecessor graph.
      */
-    public PredGraph<V> get(InternalNode<V> node) {
-        PairNode<Element<V>> pNode = this.index.get(node);
+    public PredGraph<V, E> get(InternalNode<V, E> node) {
+        PairNode<Element<V, E>> pNode = this.index.get(node);
         if (pNode == null) {
             return null;
         }
@@ -91,26 +91,26 @@ public class PMinQueue<V> {
         return this.heap.isEmpty();
     }
 
-    public void update(PredGraph<V> value, float r) {
-        PairNode<Element<V>> node = this.index.get(value.getInternalNode());
+    public void update(PredGraph<V, E> value, float r) {
+        PairNode<Element<V, E>> node = this.index.get(value.getInternalNode());
         if (node == null) {
             throw new RuntimeException("Node not in Pairing Heap.");
         }
-        Element<V> newElement = new Element<V>(value, r);
+        Element<V, E> newElement = new Element<V, E>(value, r);
         this.heap.decreaseKey(node, newElement);
     }
 
-    static class Element<V> implements Comparable<Element<V>> {
+    static class Element<V, E> implements Comparable<Element<V, E>> {
         private final Float key;
-        private final PredGraph<V> value;
+        private final PredGraph<V, E> value;
 
-        Element(PredGraph<V> value, Float key) {
+        Element(PredGraph<V, E> value, Float key) {
             this.key = key;
             this.value = value;
         }
 
 
-        public int compareTo(Element<V> o) {
+        public int compareTo(Element<V, E> o) {
             return this.key.compareTo(o.key);
         }
     }

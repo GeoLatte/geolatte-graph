@@ -44,11 +44,12 @@ package org.geolatte.graph;
  *
  * @param <N> The domain node type.
  * @param <C> The type of the context object.
+ * @param <E> The edge label type.
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface ContextualReachability<N, C> {
+public interface ContextualReachability<N, E, C> {
 
     /**
      * Determines whether there exists a usable edge from the current node (given by the set context, see
@@ -57,7 +58,7 @@ public interface ContextualReachability<N, C> {
      * @param node The node.
      * @return True if the given node is reachable, false otherwise.
      */
-    boolean isReachable(InternalNode<N> node);
+    boolean isReachable(InternalNode<N, E> node);
 
     /**
      * Sets the current context.

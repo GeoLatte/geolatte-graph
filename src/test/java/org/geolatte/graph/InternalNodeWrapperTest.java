@@ -49,17 +49,17 @@ public class InternalNodeWrapperTest {
     private Object domainNode2 = new Object();
     private Object domainNode3 = new Object();
 
-    private InternalNodeWrapper<Object> iNode1;
-    private InternalNodeWrapper<Object> iNode2;
-    private InternalNodeWrapper<Object> iNode3;
+    private InternalNodeWrapper<Object, Object> iNode1;
+    private InternalNodeWrapper<Object, Object> iNode2;
+    private InternalNodeWrapper<Object, Object> iNode3;
 
 
     @Before
     public void setup() {
 
-        iNode1 = new InternalNodeWrapper<Object>(domainNode1);
-        iNode2 = new InternalNodeWrapper<Object>(domainNode2);
-        iNode3 = new InternalNodeWrapper<Object>(domainNode3);
+        iNode1 = new InternalNodeWrapper<Object, Object>(domainNode1);
+        iNode2 = new InternalNodeWrapper<Object, Object>(domainNode2);
+        iNode3 = new InternalNodeWrapper<Object, Object>(domainNode3);
 
         iNode1.addEdge(iNode2, new BasicEdgeWeight(1.0f));
         iNode2.addEdge(iNode3, new BasicEdgeWeight(2.0f));
@@ -79,7 +79,7 @@ public class InternalNodeWrapperTest {
     public void testAddEdge() throws Exception {
 
         Object newDomainObject = new Object();
-        InternalNodeWrapper<Object> newInode = new InternalNodeWrapper<Object>(newDomainObject);
+        InternalNodeWrapper<Object, Object> newInode = new InternalNodeWrapper<Object, Object>(newDomainObject);
         EdgeWeight edgeWeight = new BasicEdgeWeight(6.0f);
 
         iNode1.addEdge(newInode, edgeWeight);

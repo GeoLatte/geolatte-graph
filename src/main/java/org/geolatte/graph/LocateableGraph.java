@@ -27,8 +27,9 @@ import java.util.List;
  * Representation of a graph of internal nodes, which have a X/Y location.
  *
  * @param <N> The type that represents the nodes.
+ * @param <E> The edge label type.
  */
-public interface LocateableGraph<N> extends Graph<N> {
+public interface LocateableGraph<N, E> extends Graph<N, E> {
 
     /**
      * Gets the nodes at the given location.
@@ -36,7 +37,7 @@ public interface LocateableGraph<N> extends Graph<N> {
      * @param loc A location.
      * @return A list of nodes.
      */
-    public List<InternalNode<N>> getNodesAt(Locatable loc);
+    public List<InternalNode<N, E>> getNodesAt(Locatable loc);
 
     /**
      * Searches the given number of nodes closest to the given location.
@@ -46,6 +47,6 @@ public interface LocateableGraph<N> extends Graph<N> {
      * @param maxDistance The maximum distance to search in.
      * @return A list of closest nodes.
      */
-    public List<InternalNode<N>> getClosestNodes(Locatable location, int number, int maxDistance);
+    public List<InternalNode<N, E>> getClosestNodes(Locatable location, int number, int maxDistance);
 
 }

@@ -34,23 +34,24 @@ import java.util.*;
  * <p/>
  *
  * @param <N> The type of domain node
+ * @param <E> The edge label type.
  */
-public class BFSDistanceLimited<N> implements GraphAlgorithm<Map<N, Float>> {
+public class BFSDistanceLimited<N, E> implements GraphAlgorithm<Map<N, Float>> {
 
-    private final Set<BFSState<N>> blackNodes = new HashSet<BFSState<N>>();
-    private final Queue<BFSState<N>> greyNodes = new LinkedList<BFSState<N>>();
-    private final InternalNode<N> source;
+    private final Set<BFSState<N, E>> blackNodes = new HashSet<BFSState<N, E>>();
+    private final Queue<BFSState<N, E>> greyNodes = new LinkedList<BFSState<N, E>>();
+    private final InternalNode<N, E> source;
     private final float maxDistance;
-    private final Graph<N> graph;
+    private final Graph<N, E> graph;
     private Map<N, Float> result;
     private final int weightIndex;
-    private final RoutingContextualReachability<N, BFSState<N>> contextualReachability;
+    private final RoutingContextualReachability<N, E, BFSState<N, E>> contextualReachability;
 
-    BFSDistanceLimited(Graph<N> graph, N source, float maxDistance, int weightIndex) {
-        this(graph, source, maxDistance, weightIndex, new EmptyContextualReachability<N, BFSState<N>>());
+    BFSDistanceLimited(Graph<N, E> graph, N source, float maxDistance, int weightIndex) {
+        this(graph, source, maxDistance, weightIndex, new EmptyContextualReachability<N, E, BFSState<N, E>>());
     }
 
-    BFSDistanceLimited(Graph<N> graph, N source, float maxDistance, int weightIndex, RoutingContextualReachability<N, BFSState<N>> contextualReachability) {
+    BFSDistanceLimited(Graph<N, E> graph, N source, float maxDistance, int weightIndex, RoutingContextualReachability<N, E, BFSState<N, E>> contextualReachability) {
         this.graph = graph;
         this.source = graph.getInternalNode(source);
         this.maxDistance = maxDistance;
@@ -62,13 +63,13 @@ public class BFSDistanceLimited<N> implements GraphAlgorithm<Map<N, Float>> {
 
     public void execute() {
 
-        BFSState<N> ws = new BFSState<N>(this.source);
+        BFSState<N, E> ws = new BFSState<N, E>(this.source);
         ws.distance = 0.f;
         ws.predecessor = null;
         greyNodes.add(ws);
 
         while (!greyNodes.isEmpty()) {
-            BFSState<N> wu = this.greyNodes.remove();
+            BFSState<N, E> wu = this.greyNodes.remove();
 
             if (wu.distance > maxDistance) {
                 continue; //don't expand when the internalNode is beyond maximum distance.
@@ -76,12 +77,12 @@ public class BFSDistanceLimited<N> implements GraphAlgorithm<Map<N, Float>> {
 
             // TODO : Is the context set correctly here?
             contextualReachability.setContext(wu);
-            Iterator<InternalNode<N>> outEdges = this.graph.getOutGoingEdges(wu.internalNode, contextualReachability);
+            Iterator<InternalNode<N, E>> outEdges = this.graph.getOutGoingEdges(wu.internalNode, contextualReachability);
             while (outEdges.hasNext()) {
-                InternalNode<N> v = outEdges.next();
-                BFSState<N> wv = new BFSState<N>(v);
+                InternalNode<N, E> v = outEdges.next();
+                BFSState<N, E> wv = new BFSState<N, E>(v);
                 if (greyNodes.contains(wv) || blackNodes.contains(wv)) {
-                    ; // do nothing
+                    // do nothing
                 } else {
                     wv.distance = wu.distance + wu.internalNode.getWeightTo(v, weightIndex);
                     wv.predecessor = wu.internalNode;
@@ -100,22 +101,22 @@ public class BFSDistanceLimited<N> implements GraphAlgorithm<Map<N, Float>> {
         return this.result;
     }
 
-    protected Map<N, Float> toMap(Set<BFSState<N>> nodes) {
+    protected Map<N, Float> toMap(Set<BFSState<N, E>> nodes) {
         Map<N, Float> map = new HashMap<N, Float>(nodes.size());
-        for (BFSState<N> wu : nodes) {
+        for (BFSState<N, E> wu : nodes) {
             map.put(wu.internalNode.getWrappedNode(), wu.distance);
         }
         return map;
 
     }
 
-    private static class BFSState<N> {
+    private static class BFSState<N, E> {
 
-        final InternalNode<N> internalNode;
+        final InternalNode<N, E> internalNode;
         float distance = Float.POSITIVE_INFINITY;
-        InternalNode<N> predecessor;
+        InternalNode<N, E> predecessor;
 
-        private BFSState(InternalNode<N> internalNode) {
+        private BFSState(InternalNode<N, E> internalNode) {
             this.internalNode = internalNode;
         }
 

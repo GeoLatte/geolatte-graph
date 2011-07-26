@@ -29,16 +29,17 @@ import java.util.Arrays;
  * @author Karel Maesen, Geovise BVBA
  *         creation-date: Apr 25, 2010
  */
-class InternalNodeWrapper<N> implements InternalNode<N> {
+class InternalNodeWrapper<N, E> implements InternalNode<N, E> {
 
 //InternalNodeWrapper objects should correspond one-to-one to their WrappedNodes.
     //Equals/hashcode implementation is therefore not necessary. For
     // performance reasons, it should not be implemented.
 
     final N wrappedNodal;
-    InternalNodeWrapper<N>[] toNodes = new InternalNodeWrapper[0];
+    InternalNodeWrapper<N, E>[] toNodes = new InternalNodeWrapper[0];
     EdgeWeight[] toWeights = new EdgeWeight[0];
-    private InternalNode<N>[] fromInternalNodes = new InternalNode[0];
+    Object[] toLabels = new Object[0];
+    private InternalNode<N, E>[] fromInternalNodes = new InternalNode[0];
 
     InternalNodeWrapper(N obj) {
         this.wrappedNodal = obj;
@@ -48,23 +49,28 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
         return this.wrappedNodal;
     }
 
-    public void addEdge(InternalNode<N> toInternalNode, EdgeWeight edgeWeight) {
+    public void addEdge(InternalNode<N, E> toInternalNode, EdgeWeight edgeWeight) {
+
+        addEdge(toInternalNode, edgeWeight, null);
+    }
+
+    public void addEdge(InternalNode<N, E> toInternalNode, EdgeWeight edgeWeight, E edgeLabel) {
 
         // TODO : do not add multiple edges between the same pair of nodes
 
         //add the outgoing edge (complete information)
         toNodes = Arrays.copyOf(toNodes, toNodes.length + 1);
         toWeights = Arrays.copyOf(toWeights, toWeights.length + 1);
-        toNodes[toNodes.length - 1] = (InternalNodeWrapper) toInternalNode;
+        toLabels = Arrays.copyOf(toLabels, toLabels.length + 1);
+        toNodes[toNodes.length - 1] = (InternalNodeWrapper<N, E>) toInternalNode;
         toWeights[toWeights.length - 1] = edgeWeight;
+        toLabels[toLabels.length - 1] = edgeLabel;
 
         //add the incoming edge info
         toInternalNode.addReachableFrom(this);
-
     }
 
-
-    protected InternalNode<? extends N>[] getConnected() {
+    protected InternalNode<? extends N, E>[] getConnected() {
         return this.toNodes;
     }
 
@@ -72,16 +78,16 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
         return String.format("InternalNodeWrapper, wraps: %s", this.wrappedNodal.toString());
     }
 
-    protected InternalNode<? extends N>[] getReachableFrom() {
+    protected InternalNode<? extends N, E>[] getReachableFrom() {
         return this.fromInternalNodes;
     }
 
-    public void addReachableFrom(InternalNode<N> fromInternalNode) {
+    public void addReachableFrom(InternalNode<N, E> fromInternalNode) {
         this.fromInternalNodes = Arrays.copyOf(this.fromInternalNodes, this.fromInternalNodes.length + 1);
         this.fromInternalNodes[this.fromInternalNodes.length - 1] = fromInternalNode;
     }
 
-    public float getWeightTo(InternalNode<N> toInternalNode, int weightKind) {
+    public float getWeightTo(InternalNode<N, E> toInternalNode, int weightKind) {
 
         for (int i = 0; i < this.toNodes.length; i++) {
             if (this.toNodes[i].wrappedNodal.equals(toInternalNode.getWrappedNode())) {
@@ -89,5 +95,16 @@ class InternalNodeWrapper<N> implements InternalNode<N> {
             }
         }
         return Float.MAX_VALUE;
+    }
+
+    @SuppressWarnings("unchecked")
+    public E getLabelTo(InternalNode<N, E> toNode) {
+
+        for (int i = 0; i < this.toNodes.length; i++) {
+            if (this.toNodes[i].wrappedNodal.equals(toNode.getWrappedNode())) {
+                return (E) this.toLabels[i];
+            }
+        }
+        return null;
     }
 }

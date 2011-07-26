@@ -60,7 +60,7 @@ public class TestDijkstra {
     public void testExecute() throws Exception {
         Envelope env = new Envelope(0, 200, 0, 200);
 
-        GraphBuilder<MyNode> builder = Graphs.createGridIndexedGraphBuilder(env, 10);
+        GraphBuilder<MyNode, Object> builder = Graphs.createGridIndexedGraphBuilder(env, 10);
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 if (weights[i][j] > 0f) {
@@ -76,8 +76,8 @@ public class TestDijkstra {
         }
 
 
-        LocateableGraph<MyNode> graph = builder.build();
-        for (InternalNode<MyNode> nd : graph) {
+        LocateableGraph<MyNode, Object> graph = builder.build();
+        for (InternalNode<MyNode, Object> nd : graph) {
             System.out.println(nd);
         }
 

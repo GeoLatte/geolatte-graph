@@ -26,12 +26,13 @@ package org.geolatte.graph;
  * clients. Use {@link Graphs} to build graphs based on existing domain objects.
  *
  * @param <N> The domain node type.
+ * @param <E> The edge label type.
  * @author Karel Maesen
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface InternalNode<N> {
+public interface InternalNode<N, E> {
 
     /**
      * Gets the wrapped domain node.
@@ -41,15 +42,23 @@ public interface InternalNode<N> {
     N getWrappedNode();
 
     /**
-     * Creates an edge from this node to a given node.
+     * Creates a label-less edge from this node to a given node.
      *
      * @param toNode     The node to connect to.
      * @param edgeWeight The weight of the edge between this node and the toNode.
      */
-    void addEdge(InternalNode<N> toNode, EdgeWeight edgeWeight);
+    void addEdge(InternalNode<N, E> toNode, EdgeWeight edgeWeight);
 
+    /**
+     * Creates an edge from this node to a given node with the a given label.
+     *
+     * @param toNode     The node to connect to.
+     * @param edgeWeight The weight of the edge between this node and the toNode.
+     * @param edgeLabel  The label object to associate with the edge.
+     */
+    void addEdge(InternalNode<N, E> toNode, EdgeWeight edgeWeight, E edgeLabel);
 
-    void addReachableFrom(InternalNode<N> fromNode);
+    void addReachableFrom(InternalNode<N, E> fromNode);
 
     /**
      * Gets the edge weight to get from this node to the given <code>toNode</code>, using the given weight index (see
@@ -59,5 +68,13 @@ public interface InternalNode<N> {
      * @param weightIndex Indicates which weight to use.
      * @return An edge weight.
      */
-    float getWeightTo(InternalNode<N> toNode, int weightIndex);
+    float getWeightTo(InternalNode<N, E> toNode, int weightIndex);
+
+    /**
+     * Gets the label associated with the edge to go from this node to the given <code>toNode</code>.
+     *
+     * @param toNode The connected 'to' node.
+     * @return The edge label.
+     */
+    E getLabelTo(InternalNode<N, E> toNode);
 }

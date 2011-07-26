@@ -27,11 +27,12 @@ import java.util.Iterator;
  * Representation of a graph of internal nodes.
  *
  * @param <N> The type that represents the nodes.
+ * @param <E> The edge label type.
  * @author Bert Vanhooff
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface Graph<N> extends Iterable<InternalNode<N>> {
+public interface Graph<N, E> extends Iterable<InternalNode<N, E>> {
 
     /**
      * Gets the internal node that represents the given domain node.
@@ -39,7 +40,7 @@ public interface Graph<N> extends Iterable<InternalNode<N>> {
      * @param node The domain node.
      * @return The internal node that corresponds to the domain node.
      */
-    InternalNode<N> getInternalNode(N node);
+    InternalNode<N, E> getInternalNode(N node);
 
     /**
      * Gets the edges that start from the given internalNode, depending on the given modus.
@@ -48,7 +49,7 @@ public interface Graph<N> extends Iterable<InternalNode<N>> {
      * @param contextualReachability An object to determine whether an edge can be used. Can be null.
      * @return A internalNode iterator for the outgoing nodes.
      */
-    Iterator<InternalNode<N>> getOutGoingEdges(InternalNode<N> internalNode, ContextualReachability<N, ?> contextualReachability);
+    Iterator<InternalNode<N, E>> getOutGoingEdges(InternalNode<N, E> internalNode, ContextualReachability<N, E, ?> contextualReachability);
     // TODO : getOutgoingEdges -> return iterable so it can be used in for loops
 
     // TODO: add this? would be very convenient for clients

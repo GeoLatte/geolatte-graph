@@ -35,20 +35,20 @@ import java.util.Set;
  *
  * @author Karel Maesen
  */
-public class Dijkstra<N> implements GraphAlgorithm<Path<N>> {
+public class Dijkstra<N, E> implements GraphAlgorithm<Path<N>> {
 
-    private final InternalNode<N> origin;
-    private final InternalNode<N> destination;
-    private final Graph<N> graph;
+    private final InternalNode<N, E> origin;
+    private final InternalNode<N, E> destination;
+    private final Graph<N, E> graph;
     private final int weightIndex;
     private Path<N> result;
 
 
-    private final PMinQueue<N> minQueue;
-    private final Relaxer<N> relaxer;
-    private RoutingContextualReachability<N, Traversal<N>> reachability;
+    private final PMinQueue<N, E> minQueue;
+    private final Relaxer<N, E> relaxer;
+    private RoutingContextualReachability<N, E, Traversal<N, E>> reachability;
 
-    protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N> relaxer, int weightIndex, RoutingContextualReachability<N, Traversal<N>> reachability) {
+    protected Dijkstra(Graph<N, E> graph, N origin, N destination, Relaxer<N, E> relaxer, int weightIndex, RoutingContextualReachability<N, E, Traversal<N, E>> reachability) {
 
         this.graph = graph;
 
@@ -56,37 +56,37 @@ public class Dijkstra<N> implements GraphAlgorithm<Path<N>> {
         this.destination = this.graph.getInternalNode(destination);
         this.weightIndex = weightIndex;
         this.relaxer = relaxer;
-        this.minQueue = new PMinQueue<N>();
+        this.minQueue = new PMinQueue<N, E>();
         this.reachability = reachability;
         this.reachability.setOriginDestination(this.origin.getWrappedNode(), this.destination.getWrappedNode());
     }
 
-    protected Dijkstra(Graph<N> graph, N origin, N destination, Relaxer<N> relaxer, int weightIndex) {
+    protected Dijkstra(Graph<N, E> graph, N origin, N destination, Relaxer<N, E> relaxer, int weightIndex) {
 
-        this(graph, origin, destination, relaxer, weightIndex, new EmptyContextualReachability<N, Traversal<N>>());
+        this(graph, origin, destination, relaxer, weightIndex, new EmptyContextualReachability<N, E, Traversal<N, E>>());
     }
 
     public void execute() {
-        Set<InternalNode<N>> closed = new HashSet<InternalNode<N>>();
-        BasicPredGraph<N> startPG = new BasicPredGraph<N>(this.origin, 0.0f);
+        Set<InternalNode<N, E>> closed = new HashSet<InternalNode<N, E>>();
+        BasicPredGraph<N, E> startPG = new BasicPredGraph<N, E>(this.origin, 0.0f);
         minQueue.add(startPG, Float.POSITIVE_INFINITY);
         while (!minQueue.isEmpty()) {
-            PredGraph<N> pu = minQueue.extractMin();
+            PredGraph<N, E> pu = minQueue.extractMin();
             closed.add(pu.getInternalNode());
             if (isDone(pu)) {
                 return;
             }
-            InternalNode<N> u = pu.getInternalNode();
+            InternalNode<N, E> u = pu.getInternalNode();
             reachability.setContext(pu);
-            Iterator<InternalNode<N>> outEdges = graph.getOutGoingEdges(u, reachability);
+            Iterator<InternalNode<N, E>> outEdges = graph.getOutGoingEdges(u, reachability);
             while (outEdges.hasNext()) {
-                InternalNode<N> v = outEdges.next();
+                InternalNode<N, E> v = outEdges.next();
                 if (closed.contains(v)) {
                     continue;
                 }
-                PredGraph<N> pv = minQueue.get(v);
+                PredGraph<N, E> pv = minQueue.get(v);
                 if (pv == null) {
-                    pv = new BasicPredGraph<N>(v,
+                    pv = new BasicPredGraph<N, E>(v,
                             Float.POSITIVE_INFINITY);
                     minQueue.add(pv, Float.POSITIVE_INFINITY);
                 }
@@ -97,7 +97,7 @@ public class Dijkstra<N> implements GraphAlgorithm<Path<N>> {
         }
     }
 
-    boolean isDone(PredGraph<N> pu) {
+    boolean isDone(PredGraph<N, E> pu) {
         if (pu.getInternalNode().equals(this.destination)) {
             this.result = toPath(pu);
             return true;
@@ -105,11 +105,11 @@ public class Dijkstra<N> implements GraphAlgorithm<Path<N>> {
         return false;
     }
 
-    private Path<N> toPath(PredGraph<N> p) {
+    private Path<N> toPath(PredGraph<N, E> p) {
         BasicPath<N> path = new BasicPath<N>();
         path.setTotalWeight(p.getWeight());
         path.insert(p.getInternalNode().getWrappedNode());
-        PredGraph<N> next = p.getPredecessor();
+        PredGraph<N, E> next = p.getPredecessor();
 
         while (next != null) {
             path.insert(next.getInternalNode().getWrappedNode());

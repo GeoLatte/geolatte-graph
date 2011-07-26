@@ -34,7 +34,7 @@ import java.util.*;
  * @author Bert Vanhooff
  * @since SDK1.5
  */
-class GridIndex<T extends Locatable> implements SpatialIndex<T> {
+class GridIndex<T extends Locatable, E> implements SpatialIndex<T, E> {
 
     private final Envelope env;
     private final int resolution;
@@ -59,7 +59,7 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public boolean contains(InternalNode<T> internalNode) {
+    public boolean contains(InternalNode<T, E> internalNode) {
         if (internalNode == null) {
             return false;
         }
@@ -77,10 +77,10 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<InternalNode<T>> getNClosest(Locatable locatable, int num, int maxDistance) {
+    public List<InternalNode<T, E>> getNClosest(Locatable locatable, int num, int maxDistance) {
 
         if (locatable == null) {
-            return new ArrayList<InternalNode<T>>();
+            return new ArrayList<InternalNode<T, E>>();
         }
         int maxX = (int) Math.min(locatable.getX() + maxDistance, this.env.getMaxX());
         int minX = (int) Math.max(locatable.getX() - maxDistance, this.env.getMinX());
@@ -126,21 +126,21 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         }
 
         Collections.sort(candidates);
-        List<InternalNode<T>> result = new ArrayList<InternalNode<T>>();
+        List<InternalNode<T, E>> result = new ArrayList<InternalNode<T, E>>();
         for (int i = 0; i < Math.min(num, candidates.size()); i++) {
-            result.add((InternalNode<T>) candidates.get(i).obj);
+            result.add((InternalNode<T, E>) candidates.get(i).obj);
         }
 
         return result;
     }
 
-    public List<InternalNode<T>> query(Envelope envelope) {
+    public List<InternalNode<T, E>> query(Envelope envelope) {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    public Iterator<InternalNode<T>> getInternalNodes() {
+    public Iterator<InternalNode<T, E>> getInternalNodes() {
 
-        return new Iterator<InternalNode<T>>() {
+        return new Iterator<InternalNode<T, E>>() {
 
             int ix = 0;
             int iy = 0;
@@ -159,10 +159,10 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
                 return ix < grid.length;
             }
 
-            public InternalNode<T> next() {
+            public InternalNode<T, E> next() {
 
                 if (hasNext()) {
-                    InternalNode<T> retVal = (InternalNode<T>) grid[ix][iy][i];
+                    InternalNode<T, E> retVal = (InternalNode<T, E>) grid[ix][iy][i];
                     incrementPointers();
                     return retVal;
 
@@ -195,8 +195,8 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         };
     }
 
-    public List<InternalNode<T>> getNodeAt(Locatable loc) {
-        List<InternalNode<T>> res = new ArrayList<InternalNode<T>>();
+    public List<InternalNode<T, E>> getNodeAt(Locatable loc) {
+        List<InternalNode<T, E>> res = new ArrayList<InternalNode<T, E>>();
         if (loc == null) {
             return res;
         }
@@ -206,7 +206,7 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         }
 
         for (Object o : cell) {
-            InternalNode<T> nd = (InternalNode<T>) o;
+            InternalNode<T, E> nd = (InternalNode<T, E>) o;
             Locatable c = nd.getWrappedNode();
             if (c.getX() == loc.getX()
                     && c.getY() == loc.getY()) {
