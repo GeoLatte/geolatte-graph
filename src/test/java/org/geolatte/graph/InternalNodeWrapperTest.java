@@ -49,6 +49,9 @@ public class InternalNodeWrapperTest {
     private Object domainNode2 = new Object();
     private Object domainNode3 = new Object();
 
+    private Object edgeLabel23 = new Object();
+    private Object edgeLabel13 = new Object();
+
     private InternalNodeWrapper<Object, Object> iNode1;
     private InternalNodeWrapper<Object, Object> iNode2;
     private InternalNodeWrapper<Object, Object> iNode3;
@@ -62,8 +65,8 @@ public class InternalNodeWrapperTest {
         iNode3 = new InternalNodeWrapper<Object, Object>(domainNode3);
 
         iNode1.addEdge(iNode2, new BasicEdgeWeight(1.0f));
-        iNode2.addEdge(iNode3, new BasicEdgeWeight(2.0f));
-        iNode1.addEdge(iNode3, new BasicEdgeWeight(3.0f));
+        iNode2.addEdge(iNode3, new BasicEdgeWeight(2.0f), edgeLabel23);
+        iNode1.addEdge(iNode3, new BasicEdgeWeight(3.0f), edgeLabel13);
     }
 
 
@@ -105,6 +108,14 @@ public class InternalNodeWrapperTest {
         Assert.assertEquals(3.0f, iNode1.getWeightTo(iNode3, 0), 0.005);
 
         Assert.assertEquals(Float.MAX_VALUE, iNode2.getWeightTo(iNode1, 0), 0.005);
+    }
+
+    @Test
+    public void testLabelTo() throws Exception {
+
+        Assert.assertEquals(null, iNode1.getLabelTo(iNode2));
+        Assert.assertEquals(edgeLabel23, iNode2.getLabelTo(iNode3));
+        Assert.assertEquals(edgeLabel13, iNode1.getLabelTo(iNode3));
     }
 
     @Test

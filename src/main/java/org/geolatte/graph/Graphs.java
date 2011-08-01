@@ -149,7 +149,7 @@ public class Graphs {
          */
         private static class OutEdgeIteratorImpl<N extends Locatable, E> implements Iterator<InternalNode<N, E>> {
 
-            Iterator<InternalNode<N, E>> reachableNodesIterator;
+            final Iterator<InternalNode<N, E>> reachableNodesIterator;
 
             private OutEdgeIteratorImpl(InternalNodeWrapper<N, E> from, ContextualReachability<N, E, ?> contextualReachability) {
 

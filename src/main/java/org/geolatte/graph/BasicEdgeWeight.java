@@ -32,7 +32,7 @@ package org.geolatte.graph;
  */
 public class BasicEdgeWeight implements EdgeWeight {
 
-    private float value;
+    private final float value;
 
     /**
      * Constructs a BasiEdgeWeight with the given weight value.

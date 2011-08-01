@@ -46,7 +46,7 @@ public class Dijkstra<N, E> implements GraphAlgorithm<Path<N>> {
 
     private final PMinQueue<N, E> minQueue;
     private final Relaxer<N, E> relaxer;
-    private RoutingContextualReachability<N, E, Traversal<N, E>> reachability;
+    private final RoutingContextualReachability<N, E, Traversal<N, E>> reachability;
 
     protected Dijkstra(Graph<N, E> graph, N origin, N destination, Relaxer<N, E> relaxer, int weightIndex, RoutingContextualReachability<N, E, Traversal<N, E>> reachability) {
 
