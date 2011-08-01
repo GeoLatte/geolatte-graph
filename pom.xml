@@ -25,7 +25,7 @@
     <groupId>org.geolatte</groupId>
     <artifactId>geolatte-graph</artifactId>
     <packaging>jar</packaging>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <name>graph</name>
     <url>http://www.geolatte.org/graph</url>
 
