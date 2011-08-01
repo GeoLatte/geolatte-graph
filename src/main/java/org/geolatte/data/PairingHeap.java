@@ -44,6 +44,7 @@ import java.util.List;
  * <p>
  * This pairing heap uses a left child / right sibling representation:
  * <p/>
+ * <pre>
  * 2
  * *
  * *
@@ -54,6 +55,7 @@ import java.util.List;
  * *      *
  * *      *
  * 12     16 <-> 18
+ * </pre>
  * <p/>
  * Remarks:
  * - The root never has a sibling

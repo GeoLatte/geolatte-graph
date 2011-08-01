@@ -30,10 +30,12 @@ import java.util.Comparator;
  * </p>
  * <p/>
  * <p>
+ * <pre>
  * n <---> next sibling <---> ..
  * /
  * /
  * left child <---> ..
+ * </pre>
  * </p>
  * <p>
  * See {@link PairingHeap} for additional documentation.

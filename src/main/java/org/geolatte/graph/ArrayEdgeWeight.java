@@ -25,7 +25,7 @@ import java.util.Arrays;
 
 /**
  * <p>
- * A simple implementation of {@link EdgeWeight} that can store an arbitrary set of weights can be stored.
+ * A simple implementation of {@link EdgeWeight} that can store an arbitrary set of weights.
  * </p>
  *
  * @author Bert Vanhooff
