@@ -21,7 +21,7 @@
 
 package org.geolatte.graph;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.geolatte.geom.Envelope;
 
 import java.util.*;
 

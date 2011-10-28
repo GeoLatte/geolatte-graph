@@ -21,7 +21,8 @@
 
 package org.geolatte.graph;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.geolatte.geom.Envelope;
+import org.geolatte.geom.crs.CrsId;
 import org.geolatte.graph.algorithms.GraphAlgorithm;
 import org.geolatte.graph.algorithms.GraphAlgorithms;
 import org.junit.Test;
@@ -58,7 +59,7 @@ public class TestDijkstra {
 
     @Test
     public void testExecute() throws Exception {
-        Envelope env = new Envelope(0, 200, 0, 200);
+        Envelope env = new Envelope(0d, 0d, 201d, 201d, CrsId.UNDEFINED);
 
         GraphBuilder<MyNode, Object> builder = Graphs.createGridIndexedGraphBuilder(env, 10);
         for (int i = 0; i < 5; i++) {
@@ -110,12 +111,6 @@ public class TestDijkstra {
         public int getID() {
             return this.id;
         }
-
-
-        public Envelope getEnvelope() {
-            return new Envelope(this.x, this.x, this.y, this.y);
-        }
-
 
         public float getX() {
             return this.x;
