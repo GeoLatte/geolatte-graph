@@ -41,8 +41,8 @@ class InternalNodeWrapper<N, E> implements InternalNode<N, E> {
     Object[] toLabels = new Object[0];
     private InternalNode<N, E>[] fromInternalNodes = new InternalNode[0];
 
-    InternalNodeWrapper(N obj) {
-        this.wrappedNodal = obj;
+    InternalNodeWrapper(N node) {
+        this.wrappedNodal = node;
     }
 
     public N getWrappedNode() {
@@ -70,7 +70,7 @@ class InternalNodeWrapper<N, E> implements InternalNode<N, E> {
         toInternalNode.addReachableFrom(this);
     }
 
-    protected InternalNode<? extends N, E>[] getConnected() {
+    protected InternalNode<N, E>[] getConnected() {
         return this.toNodes;
     }
 
@@ -78,7 +78,7 @@ class InternalNodeWrapper<N, E> implements InternalNode<N, E> {
         return String.format("InternalNodeWrapper, wraps: %s", this.wrappedNodal.toString());
     }
 
-    protected InternalNode<? extends N, E>[] getReachableFrom() {
+    protected InternalNode<N, E>[] getReachableFrom() {
         return this.fromInternalNodes;
     }
 
@@ -106,5 +106,19 @@ class InternalNodeWrapper<N, E> implements InternalNode<N, E> {
             }
         }
         return null;
+    }
+
+    /**
+     * @return The X-coordinate
+     */
+    public float getX() {
+        return 0;
+    }
+
+    /**
+     * @return The Y-coordinate
+     */
+    public float getY() {
+        return 0;
     }
 }

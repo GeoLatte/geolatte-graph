@@ -37,23 +37,22 @@ public class SpatialIndexes {
      * @param env        The envelope.
      * @param resolution The grid resolution.
      * @param <N>        Type of the domain nodes.
-     * @param <E>        The edge label type.
      * @return A builder for grid indexes.
      */
-    public static <N extends Locatable, E> SpatialIndexBuilder<N, E> createGridIndexBuilder(Envelope env, int resolution) {
-        return new GridIndexBuilder<N, E>(env, resolution);
+    public static <N extends Locatable> SpatialIndexBuilder<N> createGridIndexBuilder(Envelope env, int resolution) {
+        return new GridIndexBuilder<N>(env, resolution);
     }
 
 
     // Implementation Spatial Index Builders
-    private static class GridIndexBuilder<N extends Locatable, E> implements SpatialIndexBuilder<N, E> {
+    private static class GridIndexBuilder<N extends Locatable> implements SpatialIndexBuilder<N> {
 
         private final int resolution;
         private final Envelope env;
 
         //the resolution values satisfy the property:
         // value / resolution provides the cell number
-        private final List<InternalNode<N, E>>[][] grid;
+        private final List<Locatable>[][] grid;
         private final int xNumCells, yNumCells;
 
         @SuppressWarnings("unchecked")
@@ -72,31 +71,31 @@ public class SpatialIndexes {
 
         }
 
-        public boolean isWithinBounds(InternalNode<N, E> nd) {
-            N obj = nd.getWrappedNode();
-            if (obj.getX() < this.env.getMinX() || obj.getX() > this.env.getMaxX()) {
+        public boolean isWithinBounds(Locatable nd) {
+
+            if (nd.getX() < this.env.getMinX() || nd.getX() > this.env.getMaxX()) {
                 return false;
             }
-            if (obj.getY() < this.env.getMinY() || obj.getY() > this.env.getMaxY()) {
+            if (nd.getY() < this.env.getMinY() || nd.getY() > this.env.getMaxY()) {
                 return false;
             }
             return true;
         }
 
-        public void insert(InternalNode<N, E> node) {
+        public void insert(Locatable node) {
             if (!isWithinBounds(node)) {
                 throw new RuntimeException("Tried insert object that lies out of bounds: " + node);
             }
 
-            N obj = node.getWrappedNode();
+
 
             //calculate x/y cell index
-            int xCellIdx = (int) (obj.getX() - this.env.getMinX()) / this.resolution;
-            int yCellIdx = (int) (obj.getY() - this.env.getMinY()) / this.resolution;
+            int xCellIdx = (int) (node.getX() - this.env.getMinX()) / this.resolution;
+            int yCellIdx = (int) (node.getY() - this.env.getMinY()) / this.resolution;
 
-            List<InternalNode<N, E>> cell = this.grid[xCellIdx][yCellIdx];
+            List<Locatable> cell = this.grid[xCellIdx][yCellIdx];
             if (cell == null) {
-                cell = new ArrayList<InternalNode<N, E>>();
+                cell = new ArrayList<Locatable>();
                 this.grid[xCellIdx][yCellIdx] = cell;
 
             }
@@ -104,18 +103,18 @@ public class SpatialIndexes {
 
         }
 
-        public SpatialIndex<N, E> build() throws BuilderException {
-            GridIndex<N, E> index = new GridIndex<N, E>(this.env, this.resolution);
+        public SpatialIndex<N> build() throws BuilderException {
+            GridIndex<N> index = new GridIndex<N>(this.env, this.resolution);
             index.setGrid(toCompressedArray(this.grid));
             return index;
         }
 
-        private Object[][][] toCompressedArray(List<InternalNode<N, E>>[][] grid) {
+        private Object[][][] toCompressedArray(List<Locatable>[][] grid) {
             Object[][][] newGrid = new Object[this.xNumCells][this.yNumCells][];
             for (int xi = 0; xi < grid.length; xi++) {
-                List<InternalNode<N, E>>[] xar = grid[xi];
+                List<Locatable>[] xar = grid[xi];
                 for (int yi = 0; yi < xar.length; yi++) {
-                    List<InternalNode<N, E>> cell = xar[yi];
+                    List<Locatable> cell = xar[yi];
                     if (cell != null) {
                         newGrid[xi][yi] = cell.toArray();
                     }

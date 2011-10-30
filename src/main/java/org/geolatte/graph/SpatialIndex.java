@@ -27,12 +27,11 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A spatial indexes is used to optimize spatial queries.
+ * A spatial indexe stores is used to optimize spatial queries.
  *
- * @param <N> The type of the domain nodes.
- * @param <E> The edge label type.
+ * @param <T> The type of the domain nodes.
  */
-public interface SpatialIndex<N extends Locatable, E> {
+public interface SpatialIndex<T extends Locatable> {
 
     /**
      * Checks whether the given internalNode is contained in the index.
@@ -40,13 +39,13 @@ public interface SpatialIndex<N extends Locatable, E> {
      * @param internalNode The internalNode to search for.
      * @return True if the given internalNode is contained in the index, false otherwise.
      */
-    public boolean contains(InternalNode<N, E> internalNode);
+    public boolean contains(T internalNode);
 
     /**
      * @param envelope The bounds within which to search for nodes.
      * @return A list of all nodes within the given envelope
      */
-    public List<InternalNode<N, E>> query(Envelope envelope);
+    public List<T> query(Envelope envelope);
 
     /**
      * Searches the given number of node closest to the given node, within a maximum distance.
@@ -56,14 +55,14 @@ public interface SpatialIndex<N extends Locatable, E> {
      * @param maxDistance The maximum distance to search in.
      * @return A list of closest nodes.
      */
-    public List<InternalNode<N, E>> getNClosest(Locatable locatable, int num, int maxDistance);
+    public List<T> getNClosest(Locatable locatable, int num, int maxDistance);
 
     /**
      * An iterator over all internal nodes in the index.
      *
      * @return An internal node iterator.
      */
-    public Iterator<InternalNode<N, E>> getInternalNodes();
+    public Iterator<T> getInternalNodes();
 
     /**
      * Gets the internal node with the given location.
@@ -71,6 +70,6 @@ public interface SpatialIndex<N extends Locatable, E> {
      * @param loc The location.
      * @return An internal node.
      */
-    public List<InternalNode<N, E>> getNodeAt(Locatable loc);
+    public List<T> getNodeAt(Locatable loc);
 
 }

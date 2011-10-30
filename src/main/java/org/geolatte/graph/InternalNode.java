@@ -32,7 +32,7 @@ package org.geolatte.graph;
  * @author <a href="http://www.qmino.com">Qmino bvba</a>
  * @since SDK1.5
  */
-public interface InternalNode<N, E> {
+public interface InternalNode<N, E> extends Locatable {
 
     /**
      * Gets the wrapped domain node.
