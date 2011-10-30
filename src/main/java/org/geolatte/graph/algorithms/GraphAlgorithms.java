@@ -44,10 +44,10 @@ public class GraphAlgorithms {
      * @param <E>         The edge label type.
      * @return A ready-to-use BFS algorithm.
      */
-    public static <N extends Locatable, E> GraphAlgorithm<Map<N, Float>> createBFS(LocateableGraph<N, E> graph,
-                                                                                   N source,
-                                                                                   float maxDistance,
-                                                                                   int weightIndex) {
+    public static <N, E> GraphAlgorithm<Map<N, Float>> createBFS(Graph<N, E> graph,
+                                                                 N source,
+                                                                 float maxDistance,
+                                                                 int weightIndex) {
 
         return new BFSDistanceLimited<N, E>(graph, source, maxDistance, weightIndex);
     }
@@ -58,16 +58,16 @@ public class GraphAlgorithms {
      * @param graph       The graph on which to run the Dijkstra algorithm.
      * @param origin      The internalNode from which to start routing.
      * @param destination The destination internalNode to which to find a shortest path.
-     * @param weightKind  The index to lookup the weight.
+     * @param weightIndex  The index to lookup the weight.
      * @param <N>         Type of nodes in the graph.
      * @return A default Dijkstra algorithm.
      */
     public static <N, E> GraphAlgorithm<Path<N>> createDijkstra(Graph<N, E> graph,
                                                                 N origin,
                                                                 N destination,
-                                                                int weightKind) {
+                                                                int weightIndex) {
 
-        return new Dijkstra<N, E>(graph, origin, destination, GraphAlgorithms.<N, E>createDefaultRelaxer(), weightKind);
+        return new Dijkstra<N, E>(graph, origin, destination, GraphAlgorithms.<N, E>createDefaultRelaxer(), weightIndex);
     }
 
     /**

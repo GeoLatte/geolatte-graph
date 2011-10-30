@@ -47,7 +47,7 @@ public class Graphs {
     // Builder implementation
     private static class GridIndexedGraphBuilder<N extends Locatable, E> implements GraphBuilder<N, E> {
 
-        private final SpatialIndexBuilder<N, E> indexBuilder;
+        private final SpatialIndexBuilder<InternalNode<N, E>> indexBuilder;
         private final Map<N, InternalNode<N, E>> map = new HashMap<N, InternalNode<N, E>>(); // map is used to quickly locate Nodes based on node equality.
 
         private GridIndexedGraphBuilder(Envelope env, int resolution) {
@@ -63,7 +63,7 @@ public class Graphs {
             }
 
             map.clear(); // empty to save on memory.
-            SpatialIndex<N, E> index = this.indexBuilder.build();
+            SpatialIndex<InternalNode<N, E>> index = this.indexBuilder.build();
             return new GridIndexedGraph<N, E>(index);
         }
 
@@ -83,12 +83,12 @@ public class Graphs {
             InternalNode<N, E> fNw = this.map.get(fromNode);
             InternalNode<N, E> toNw = this.map.get(toNode);
             if (fNw == null) {
-                fNw = new InternalNodeWrapper<N, E>(fromNode);
+                fNw = new LocatedInternalNodeWrapper<N, E>(fromNode);
                 this.indexBuilder.insert(fNw);
                 this.map.put(fromNode, fNw);
             }
             if (toNw == null) {
-                toNw = new InternalNodeWrapper<N, E>(toNode);
+                toNw = new LocatedInternalNodeWrapper<N, E>(toNode);
                 this.indexBuilder.insert(toNw);
                 this.map.put(toNode, toNw);
             }
@@ -97,12 +97,11 @@ public class Graphs {
             fNw.addEdge(toNw, edgeWeight, edgeLabel);
         }
 
-
         private static class GridIndexedGraph<N extends Locatable, E> implements LocateableGraph<N, E> {
 
-            private final SpatialIndex<N, E> index;
+            private final SpatialIndex<InternalNode<N, E>> index;
 
-            private GridIndexedGraph(SpatialIndex<N, E> index) {
+            private GridIndexedGraph(SpatialIndex<InternalNode<N, E>> index) {
 
                 this.index = index;
             }

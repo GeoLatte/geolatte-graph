@@ -30,7 +30,7 @@ import java.util.*;
 
 /**
  * <p/>
- * Breath-first search algorithm that over a given maximum distance. (Documentation to be completed)
+ * Breath-first search algorithm that searches over a given maximum distance. (Documentation to be completed)
  * <p/>
  *
  * @param <N> The type of domain node
@@ -38,8 +38,6 @@ import java.util.*;
  */
 public class BFSDistanceLimited<N, E> implements GraphAlgorithm<Map<N, Float>> {
 
-    private final Set<BFSState<N, E>> blackNodes = new HashSet<BFSState<N, E>>();
-    private final Queue<BFSState<N, E>> greyNodes = new LinkedList<BFSState<N, E>>();
     private final InternalNode<N, E> source;
     private final float maxDistance;
     private final Graph<N, E> graph;
@@ -63,13 +61,19 @@ public class BFSDistanceLimited<N, E> implements GraphAlgorithm<Map<N, Float>> {
 
     public void execute() {
 
+
+        // List of new nodes with predecessors (as bfs state): nodes where we might still add a successor without going beyond the maxDistance.
+        Queue<BFSState<N, E>> greyNodes = new LinkedList<BFSState<N, E>>();
+        // Set of nodes that have are certain to lie within the max distance: we cannot add another node without going beyond the mxDistance.
+        Set<BFSState<N, E>> blackNodes = new HashSet<BFSState<N, E>>();
+
         BFSState<N, E> ws = new BFSState<N, E>(this.source);
         ws.distance = 0.f;
         ws.predecessor = null;
         greyNodes.add(ws);
 
         while (!greyNodes.isEmpty()) {
-            BFSState<N, E> wu = this.greyNodes.remove();
+            BFSState<N, E> wu = greyNodes.remove();
 
             if (wu.distance > maxDistance) {
                 continue; //don't expand when the internalNode is beyond maximum distance.
@@ -81,14 +85,13 @@ public class BFSDistanceLimited<N, E> implements GraphAlgorithm<Map<N, Float>> {
             while (outEdges.hasNext()) {
                 InternalNode<N, E> v = outEdges.next();
                 BFSState<N, E> wv = new BFSState<N, E>(v);
-                if (greyNodes.contains(wv) || blackNodes.contains(wv)) {
-                    // do nothing
-                } else {
+                if (!greyNodes.contains(wv) && !blackNodes.contains(wv)) {
                     wv.distance = wu.distance + wu.internalNode.getWeightTo(v, weightIndex);
                     wv.predecessor = wu.internalNode;
                     greyNodes.add(wv);
                 }
             }
+
             blackNodes.add(wu);
         }
 
@@ -96,7 +99,10 @@ public class BFSDistanceLimited<N, E> implements GraphAlgorithm<Map<N, Float>> {
 
     }
 
-
+    /**
+     * Gets the result of the algorithm execution.
+     * @return A map with all nodes mapped to their distance from the source.
+     */
     public Map<N, Float> getResult() {
         return this.result;
     }
