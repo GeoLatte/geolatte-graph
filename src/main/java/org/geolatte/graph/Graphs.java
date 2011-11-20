@@ -114,7 +114,7 @@ public class Graphs {
 
 
             public Iterator<InternalNode<N, E>> iterator() {
-                return this.index.getInternalNodes();
+                return this.index.getNodes();
             }
 
 

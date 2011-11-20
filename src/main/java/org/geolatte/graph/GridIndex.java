@@ -37,15 +37,28 @@ import java.util.*;
 class GridIndex<T extends Locatable> implements SpatialIndex<T> {
 
     private final Envelope env;
-    private final int resolution;
+    private final float resolution;
+    /*
+     * The actual grid, elements are always of type T
+     * grid[x][y][elements]
+     *
+     *      x
+     *    y ----------------
+     *      | [] | [] | [] |
+     *      ----------------
+     *      | [] | [] | [] |
+     *      ----------------
+     *      | [] | [] | [] |
+     *      ----------------
+     */
     private Object[][][] grid;
 
-    GridIndex(Envelope env, int resolution) {
+    GridIndex(Envelope env, float resolution) {
         this.env = env;
         this.resolution = resolution;
     }
 
-    public void setGrid(Object[][][] grid) {
+    void setGrid(Object[][][] grid) {
         this.grid = grid;
     }
 
@@ -53,23 +66,23 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         if (obj == null) {
             throw null;
         }
-        int ix = (int) (obj.getX() - this.env.getMinX()) / this.resolution;
-        int iy = (int) (obj.getY() - this.env.getMinY()) / this.resolution;
+        int ix = (int) ((obj.getX() - this.env.getMinX()) / this.resolution);
+        int iy = (int) ((obj.getY() - this.env.getMinY()) / this.resolution);
         return grid[ix][iy];
     }
 
     @SuppressWarnings("unchecked")
-    public boolean contains(T internalNode) {
-        if (internalNode == null) {
+    public boolean contains(T node) {
+        if (node == null) {
             return false;
         }
-        Object[] cell = getCellContaining(internalNode);
+        Object[] cell = getCellContaining(node);
         if (cell == null) {
             return false;
         }
         for (Object o : cell) {
             T c = (T) o;
-            if (c.equals(internalNode)) {
+            if (c.equals(node)) {
                 return true;
             }
         }
@@ -77,20 +90,23 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<T> getNClosest(Locatable locatable, int num, int maxDistance) {
+    public List<T> getNClosest(Locatable locatable, int num, float maxDistance) {
 
-        if (locatable == null) {
+        if (locatable == null || num == 0) {
             return new ArrayList<T>();
         }
-        int maxX = (int) Math.min(locatable.getX() + maxDistance, this.env.getMaxX());
-        int minX = (int) Math.max(locatable.getX() - maxDistance, this.env.getMinX());
-        int maxY = (int) Math.min(locatable.getY() + maxDistance, this.env.getMaxY());
-        int minY = (int) Math.max(locatable.getY() - maxDistance, this.env.getMinY());
 
-        int minIdxX = (int) (minX - this.env.getMinX()) / this.resolution;
-        int maxIdxX = (int) (maxX - this.env.getMinX()) / this.resolution;
-        int minIdxY = (int) (minY - this.env.getMinY()) / this.resolution;
-        int maxIdxY = (int) (maxY - this.env.getMinY()) / this.resolution;
+        // Real min and max values
+        double maxX = Math.min(locatable.getX() + maxDistance, this.env.getMaxX());
+        double minX = Math.max(locatable.getX() - maxDistance, this.env.getMinX());
+        double maxY = Math.min(locatable.getY() + maxDistance, this.env.getMaxY());
+        double minY = Math.max(locatable.getY() - maxDistance, this.env.getMinY());
+
+        // Convert values to grid indexes
+        int minIdxX = (int) ((minX - this.env.getMinX()) / this.resolution);
+        int maxIdxX = (int) ((maxX - this.env.getMinX()) / this.resolution);
+        int minIdxY = (int) ((minY - this.env.getMinY()) / this.resolution);
+        int maxIdxY = (int) ((maxY - this.env.getMinY()) / this.resolution);
 
         //define a utility class of labels
         class Label implements Comparable<Label> {
@@ -126,7 +142,7 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         }
 
         Collections.sort(candidates);
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<T>(Math.min(num, candidates.size()));
         for (int i = 0; i < Math.min(num, candidates.size()); i++) {
             result.add((T)candidates.get(i).obj); // TODO : not sure why this cast is required (does not compile without)
         }
@@ -138,7 +154,7 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    public Iterator<T> getInternalNodes() {
+    public Iterator<T> getNodes() {
 
         return new Iterator<T>() {
 

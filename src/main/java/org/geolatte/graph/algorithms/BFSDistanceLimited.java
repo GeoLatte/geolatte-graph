@@ -30,7 +30,9 @@ import java.util.*;
 
 /**
  * <p/>
- * Breath-first search algorithm that searches over a given maximum distance. (Documentation to be completed)
+ * Breath-first search algorithm that searches for all nodes within a maximum distance (according to a given weight)
+ * from a given starting node. The result of the algorithm is a list of nodes along with the total weight to get to
+ * them. Total weights are always lower or equal to the given maximum distance.
  * <p/>
  *
  * @param <N> The type of domain node

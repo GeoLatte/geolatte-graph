@@ -27,19 +27,19 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A spatial indexe stores is used to optimize spatial queries.
+ * A spatial index is used to optimize spatial queries over a set of locatable nodes.
  *
  * @param <T> The type of the domain nodes.
  */
 public interface SpatialIndex<T extends Locatable> {
 
     /**
-     * Checks whether the given internalNode is contained in the index.
+     * Checks whether the given node is contained in the index.
      *
-     * @param internalNode The internalNode to search for.
-     * @return True if the given internalNode is contained in the index, false otherwise.
+     * @param node The node to search for.
+     * @return True if the given node is contained in the index, false otherwise.
      */
-    public boolean contains(T internalNode);
+    public boolean contains(T node);
 
     /**
      * @param envelope The bounds within which to search for nodes.
@@ -48,27 +48,28 @@ public interface SpatialIndex<T extends Locatable> {
     public List<T> query(Envelope envelope);
 
     /**
-     * Searches the given number of node closest to the given node, within a maximum distance.
+     * Searches the nodes closest to the given center in straight line distance.
      *
-     * @param locatable   The center node.
-     * @param num         The number of closest nodes to find.
-     * @param maxDistance The maximum distance to search in.
-     * @return A list of closest nodes.
+     * @param center      The center from which to start the search.
+     * @param num         The (max) number nodes to find.
+     * @param maxDistance The maximum distance to search (inclusive).
+     * @return A list of closest nodes sorted according to ascending distance.
      */
-    public List<T> getNClosest(Locatable locatable, int num, int maxDistance);
+    public List<T> getNClosest(Locatable center, int num, float maxDistance);
 
     /**
-     * An iterator over all internal nodes in the index.
+     * An iterator over all nodes in the index.
      *
      * @return An internal node iterator.
      */
-    public Iterator<T> getInternalNodes();
+    public Iterator<T> getNodes();
 
     /**
-     * Gets the internal node with the given location.
+     * Gets the nodes at the given location.
      *
-     * @param loc The location.
-     * @return An internal node.
+     * @param loc The location. Null or a location outside the index envelope are allowed, this will yield an empty
+     *            list.
+     * @return A list of nodes on the given location.
      */
     public List<T> getNodeAt(Locatable loc);
 
