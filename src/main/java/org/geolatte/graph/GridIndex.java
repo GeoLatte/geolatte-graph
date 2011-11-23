@@ -27,7 +27,7 @@ import java.util.*;
 
 /**
  * <p>
- * A spatial index based on a grid over the considered surface.
+ * A spatial index based on a grid over the considered envelope, edges included.
  * </p>
  *
  * @author Karel Maessen

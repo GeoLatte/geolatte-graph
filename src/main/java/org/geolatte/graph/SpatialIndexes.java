@@ -34,7 +34,7 @@ public class SpatialIndexes {
     /**
      * Creates a builder for a spatial index.
      *
-     * @param env        The envelope.
+     * @param env        The envelope. Nodes can only be within or on the edges of the envelope.
      * @param resolution The grid resolution: size of a single cell. Must be a positive number. Should be smaller than
      *                   the envelope size.
      * @param <N>        Type of the domain nodes.
