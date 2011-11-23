@@ -21,7 +21,7 @@
 
 package org.geolatte.graph;
 
-import com.vividsolutions.jts.geom.Envelope;
+import org.geolatte.geom.Envelope;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,8 @@ public class SpatialIndexes {
      * Creates a builder for a spatial index.
      *
      * @param env        The envelope.
-     * @param resolution The grid resolution.
+     * @param resolution The grid resolution: size of a single cell. Must be a positive number. Should be smaller than
+     *                   the envelope size.
      * @param <N>        Type of the domain nodes.
      * @return A builder for grid indexes.
      */
@@ -47,7 +48,7 @@ public class SpatialIndexes {
     // Implementation Spatial Index Builders
     private static class GridIndexBuilder<N extends Locatable> implements SpatialIndexBuilder<N> {
 
-        private final int resolution;
+        private final float resolution;
         private final Envelope env;
 
         //the resolution values satisfy the property:
@@ -56,16 +57,16 @@ public class SpatialIndexes {
         private final int xNumCells, yNumCells;
 
         @SuppressWarnings("unchecked")
-        private GridIndexBuilder(Envelope env, int resolution) {
+        private GridIndexBuilder(Envelope env, float resolution) {
             this.env = env;
             if (resolution < 1) {
                 throw new IllegalArgumentException("Resolution must be larger than 1");
             }
             this.resolution = resolution;
 
-            //number of cells
-            this.xNumCells = (int) ((this.env.getMaxX() - this.env.getMinX()) + this.resolution) / this.resolution;
-            this.yNumCells = (int) ((this.env.getMaxY() - this.env.getMinY()) + this.resolution) / this.resolution;
+            // calculate number of cells, add one cell more to allow points on outer edges to be included
+            this.xNumCells = (int) ((this.env.getMaxX() - this.env.getMinX()) / this.resolution) + 1;
+            this.yNumCells = (int) ((this.env.getMaxY() - this.env.getMinY()) / this.resolution) + 1;
 
             this.grid = new List[this.xNumCells][this.yNumCells];
 
@@ -90,8 +91,8 @@ public class SpatialIndexes {
 
 
             //calculate x/y cell index
-            int xCellIdx = (int) (node.getX() - this.env.getMinX()) / this.resolution;
-            int yCellIdx = (int) (node.getY() - this.env.getMinY()) / this.resolution;
+            int xCellIdx = (int) ((node.getX() - this.env.getMinX()) / this.resolution);
+            int yCellIdx = (int) ((node.getY() - this.env.getMinY()) / this.resolution);
 
             List<Locatable> cell = this.grid[xCellIdx][yCellIdx];
             if (cell == null) {

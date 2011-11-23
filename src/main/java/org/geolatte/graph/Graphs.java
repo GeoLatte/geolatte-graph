@@ -21,7 +21,8 @@
 
 package org.geolatte.graph;
 
-import com.vividsolutions.jts.geom.Envelope;
+
+import org.geolatte.geom.Envelope;
 
 import java.util.*;
 
@@ -113,7 +114,7 @@ public class Graphs {
 
 
             public Iterator<InternalNode<N, E>> iterator() {
-                return this.index.getInternalNodes();
+                return this.index.getNodes();
             }
 
 
