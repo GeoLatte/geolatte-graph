@@ -4,6 +4,7 @@ import org.geolatte.geom.Envelope;
 import org.geolatte.graph.BasicEdgeWeight;
 import org.geolatte.graph.Graph;
 import org.geolatte.graph.GraphBuilder;
+import org.geolatte.graph.GraphTree;
 import org.geolatte.graph.Graphs;
 import org.geolatte.stubs.MyLocatableNode;
 import org.junit.Assert;
@@ -11,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.Map;
 
 /**
  * <p>
@@ -101,20 +101,20 @@ public class BFSDistanceLimitedTest {
     @Test
     public void testExecute() {
 
-        GraphAlgorithm<Map<MyLocatableNode, Float>> bfsAlgorithm = GraphAlgorithms.createBFS(graph, _0, 2, 0);
+        GraphAlgorithm<GraphTree<MyLocatableNode, Object>> bfsAlgorithm = GraphAlgorithms.createBFS(graph, _0, 2, 0);
         bfsAlgorithm.execute();
-        Map<MyLocatableNode, Float> result = bfsAlgorithm.getResult();
+        GraphTree<MyLocatableNode, Object> result = bfsAlgorithm.getResult();
 
-        Assert.assertEquals(7, result.size());
-        result.keySet().containsAll(Arrays.asList(_0, _1, _2, _4, _6, _7, _10));
+        Assert.assertEquals(7, result.toMap().size());
+        result.toMap().keySet().containsAll(Arrays.asList(_0, _1, _2, _4, _6, _7, _10));
 
         // Test again with a wider range
         bfsAlgorithm = GraphAlgorithms.createBFS(graph, _0, 3, 0);
         bfsAlgorithm.execute();
         result = bfsAlgorithm.getResult();
 
-        Assert.assertEquals(11, result.size());
-        result.keySet().containsAll(Arrays.asList(_0, _1, _2, _3, _4, _5, _6, _7, _8, _10, _11));
+        Assert.assertEquals(11, result.toMap().size());
+        result.toMap().keySet().containsAll(Arrays.asList(_0, _1, _2, _3, _4, _5, _6, _7, _8, _10, _11));
     }
 
 }

@@ -23,6 +23,8 @@ package org.geolatte.graph.algorithms;
 
 import org.geolatte.graph.EmptyContextualReachability;
 import org.geolatte.graph.Graph;
+import org.geolatte.graph.GraphTree;
+import org.geolatte.graph.GraphTreeIterator;
 import org.geolatte.graph.InternalNode;
 import org.geolatte.graph.RoutingContextualReachability;
 
@@ -38,12 +40,12 @@ import java.util.*;
  * @param <N> The type of domain node
  * @param <E> The edge label type.
  */
-public class BFSDistanceLimited<N, E> implements GraphAlgorithm<Map<N, Float>> {
+public class BFSDistanceLimited<N, E> implements GraphAlgorithm<GraphTree<N, E>> {
 
     private final InternalNode<N, E> source;
     private final float maxDistance;
     private final Graph<N, E> graph;
-    private Map<N, Float> result;
+    private GraphTree<N, E> result;
     private final int weightIndex;
     private final RoutingContextualReachability<N, E, BFSState<N, E>> contextualReachability;
 
@@ -71,15 +73,11 @@ public class BFSDistanceLimited<N, E> implements GraphAlgorithm<Map<N, Float>> {
 
         BFSState<N, E> ws = new BFSState<N, E>(this.source);
         ws.distance = 0.f;
-        ws.predecessor = null;
         greyNodes.add(ws);
 
         while (!greyNodes.isEmpty()) {
             BFSState<N, E> wu = greyNodes.remove();
 
-            if (wu.distance > maxDistance) {
-                continue; //don't expand when the internalNode is beyond maximum distance.
-            }
 
             // TODO : Is the context set correctly here?
             contextualReachability.setContext(wu);
@@ -89,40 +87,44 @@ public class BFSDistanceLimited<N, E> implements GraphAlgorithm<Map<N, Float>> {
                 BFSState<N, E> wv = new BFSState<N, E>(v);
                 if (!greyNodes.contains(wv) && !blackNodes.contains(wv)) {
                     wv.distance = wu.distance + wu.internalNode.getWeightTo(v, weightIndex);
-                    wv.predecessor = wu.internalNode;
-                    greyNodes.add(wv);
+                    if (wv.distance <= maxDistance) {
+                        wv.setPredecessor(wu);
+                        greyNodes.add(wv);
+                    }
                 }
             }
 
             blackNodes.add(wu);
         }
 
-        this.result = toMap(blackNodes);
+        this.result = new GraphTreeImpl<N, E>(ws);
 
     }
 
     /**
      * Gets the result of the algorithm execution.
+     *
      * @return A map with all nodes mapped to their distance from the source.
      */
-    public Map<N, Float> getResult() {
+    public GraphTree<N, E> getResult() {
         return this.result;
     }
 
-    protected Map<N, Float> toMap(Set<BFSState<N, E>> nodes) {
-        Map<N, Float> map = new HashMap<N, Float>(nodes.size());
-        for (BFSState<N, E> wu : nodes) {
-            map.put(wu.internalNode.getWrappedNode(), wu.distance);
-        }
-        return map;
-
-    }
+//    protected Map<N, Float> toMap(Set<BFSState<N, E>> nodes) {
+//        Map<N, Float> map = new HashMap<N, Float>(nodes.size());
+//        for (BFSState<N, E> wu : nodes) {
+//            map.put(wu.internalNode.getWrappedNode(), wu.distance);
+//        }
+//        return map;
+//
+//    }
 
     private static class BFSState<N, E> {
 
         final InternalNode<N, E> internalNode;
         float distance = Float.POSITIVE_INFINITY;
-        InternalNode<N, E> predecessor;
+        private BFSState<N, E> predecessor;
+        private final List<BFSState<N, E>> children = new LinkedList<BFSState<N, E>>();
 
         private BFSState(InternalNode<N, E> internalNode) {
             this.internalNode = internalNode;
@@ -159,7 +161,101 @@ public class BFSDistanceLimited<N, E> implements GraphAlgorithm<Map<N, Float>> {
             return true;
         }
 
+        public double getDistance() {
+            return distance;
+        }
+
+        public List<BFSState<N, E>> getChildren() {
+            return children;
+        }
+
+        public void addChild(BFSState<N, E> child) {
+            children.add(child);
+        }
+
+        public void setPredecessor(BFSState<N, E> predecessor) {
+            this.predecessor = predecessor;
+            predecessor.addChild(this);
+        }
+    }
+
+    private static class GraphTreeImpl<N, E> implements GraphTree<N, E> {
+
+        private final BFSState<N, E> root;
+
+        public GraphTreeImpl(BFSState<N, E> root) {
+            this.root = root;
+        }
+
+        public N getRoot() {
+            return this.root.internalNode.getWrappedNode();
+        }
+
+        public double getRootDistance() {
+            return this.root.getDistance();
+        }
+
+        public List<GraphTree<N, E>> getChildren() {
+            List<GraphTree<N, E>> children = new ArrayList<GraphTree<N, E>>(root.getChildren().size());
+            for (BFSState<N, E> bfsState : root.getChildren()) {
+                children.add(new GraphTreeImpl<N, E>(bfsState));
+            }
+            return children;
+        }
+
+        public Map<N, Double> toMap() {
+            Map<N,Double> result = new HashMap<N, Double>();
+
+            GraphTreeIterator<N,E> iterator = this.iterator();
+            while (iterator.next()){
+                result.put(iterator.getCurrentNode(), iterator.getCurrentDistance());
+            }
+            return result;
+        }
+
+        public GraphTreeIterator<N, E> iterator() {
+            return new GraphTreeIteratorImpl<N, E>(this.root);
+        }
+    }
+
+    private static class GraphTreeIteratorImpl<N, E> implements GraphTreeIterator<N, E> {
+
+        Queue<BFSState<N, E>> stack = new LinkedList<BFSState<N, E>>();
+        BFSState<N, E> current;
+
+
+        GraphTreeIteratorImpl(BFSState<N, E> root) {
+            stack.add(root);
+        }
+
+        public boolean next() {
+            current = stack.poll();
+            if (current == null) return false;
+            stack.addAll(current.getChildren());
+            return true;
+        }
+
+        public double getCurrentDistance() {
+            checkBounds();
+            return current.getDistance();
+        }
+
+        private void checkBounds() {
+            if (current == null) throw new IllegalStateException("No more elements");
+        }
+
+        public N getCurrentNode() {
+            checkBounds();
+            return current.internalNode.getWrappedNode();
+        }
+
+        public E getCurrentEdge() {
+            checkBounds();
+            if (current.predecessor == null) return null;
+            return current.predecessor.internalNode.getLabelTo(current.internalNode);
+        }
 
     }
+
 
 }
