@@ -21,8 +21,6 @@
 
 package org.geolatte.graph;
 
-import org.geolatte.geom.Envelope;
-import org.geolatte.geom.crs.CrsId;
 import org.geolatte.graph.algorithms.GraphAlgorithm;
 import org.geolatte.graph.algorithms.GraphAlgorithms;
 import org.geolatte.stubs.MyLocatableNode;
@@ -60,9 +58,9 @@ public class TestDijkstra {
 
     @Test
     public void testExecute() throws Exception {
-        Envelope env = new Envelope(0d, 0d, 201d, 201d, CrsId.UNDEFINED);
+        Extent extent = new Extent(0d, 0d, 201d, 201d);
 
-        GraphBuilder<MyLocatableNode, Object> builder = Graphs.createGridIndexedGraphBuilder(env, 10);
+        GraphBuilder<MyLocatableNode, Object> builder = Graphs.createGridIndexedGraphBuilder(extent, 10);
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
                 if (weights[i][j] > 0f) {

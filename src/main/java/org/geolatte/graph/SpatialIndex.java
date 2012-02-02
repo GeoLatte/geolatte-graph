@@ -21,8 +21,6 @@
 
 package org.geolatte.graph;
 
-import org.geolatte.geom.Envelope;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -42,10 +40,10 @@ public interface SpatialIndex<T extends Locatable> {
     public boolean contains(T node);
 
     /**
-     * @param envelope The bounds within which to search for nodes.
-     * @return A list of all nodes within the given envelope
+     * @param extent The bounds within which to search for nodes.
+     * @return A list of all nodes within the given extent
      */
-    public List<T> query(Envelope envelope);
+    public List<T> query(Extent extent);
 
     /**
      * Searches the nodes closest to the given center in straight line distance.
@@ -67,7 +65,7 @@ public interface SpatialIndex<T extends Locatable> {
     /**
      * Gets the nodes at the given location.
      *
-     * @param loc The location. Null or a location outside the index envelope are allowed, this will yield an empty
+     * @param loc The location. Null or a location outside the index extent are allowed, this will yield an empty
      *            list.
      * @return A list of nodes on the given location.
      */

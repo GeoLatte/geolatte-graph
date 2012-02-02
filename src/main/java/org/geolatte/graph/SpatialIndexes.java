@@ -21,8 +21,6 @@
 
 package org.geolatte.graph;
 
-import org.geolatte.geom.Envelope;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,14 +32,14 @@ public class SpatialIndexes {
     /**
      * Creates a builder for a spatial index.
      *
-     * @param env        The envelope. Nodes can only be within or on the edges of the envelope.
+     * @param extent     The extent of the index. Nodes can only be within or on the edges of the extent.
      * @param resolution The grid resolution: size of a single cell. Must be a positive number. Should be smaller than
-     *                   the envelope size.
+     *                   the extent size.
      * @param <N>        Type of the domain nodes.
      * @return A builder for grid indexes.
      */
-    public static <N extends Locatable> SpatialIndexBuilder<N> createGridIndexBuilder(Envelope env, int resolution) {
-        return new GridIndexBuilder<N>(env, resolution);
+    public static <N extends Locatable> SpatialIndexBuilder<N> createGridIndexBuilder(Extent extent, int resolution) {
+        return new GridIndexBuilder<N>(extent, resolution);
     }
 
 
@@ -49,7 +47,7 @@ public class SpatialIndexes {
     private static class GridIndexBuilder<N extends Locatable> implements SpatialIndexBuilder<N> {
 
         private final float resolution;
-        private final Envelope env;
+        private final Extent extent;
 
         //the resolution values satisfy the property:
         // value / resolution provides the cell number
@@ -57,16 +55,16 @@ public class SpatialIndexes {
         private final int xNumCells, yNumCells;
 
         @SuppressWarnings("unchecked")
-        private GridIndexBuilder(Envelope env, float resolution) {
-            this.env = env;
+        private GridIndexBuilder(Extent extent, float resolution) {
+            this.extent = extent;
             if (resolution < 1) {
                 throw new IllegalArgumentException("Resolution must be larger than 1");
             }
             this.resolution = resolution;
 
             // calculate number of cells, add one cell more to allow points on outer edges to be included
-            this.xNumCells = (int) ((this.env.getMaxX() - this.env.getMinX()) / this.resolution) + 1;
-            this.yNumCells = (int) ((this.env.getMaxY() - this.env.getMinY()) / this.resolution) + 1;
+            this.xNumCells = (int) ((this.extent.getMaxX() - this.extent.getMinX()) / this.resolution) + 1;
+            this.yNumCells = (int) ((this.extent.getMaxY() - this.extent.getMinY()) / this.resolution) + 1;
 
             this.grid = new List[this.xNumCells][this.yNumCells];
 
@@ -74,10 +72,10 @@ public class SpatialIndexes {
 
         public boolean isWithinBounds(Locatable nd) {
 
-            if (nd.getX() < this.env.getMinX() || nd.getX() > this.env.getMaxX()) {
+            if (nd.getX() < this.extent.getMinX() || nd.getX() > this.extent.getMaxX()) {
                 return false;
             }
-            if (nd.getY() < this.env.getMinY() || nd.getY() > this.env.getMaxY()) {
+            if (nd.getY() < this.extent.getMinY() || nd.getY() > this.extent.getMaxY()) {
                 return false;
             }
             return true;
@@ -91,8 +89,8 @@ public class SpatialIndexes {
 
 
             //calculate x/y cell index
-            int xCellIdx = (int) ((node.getX() - this.env.getMinX()) / this.resolution);
-            int yCellIdx = (int) ((node.getY() - this.env.getMinY()) / this.resolution);
+            int xCellIdx = (int) ((node.getX() - this.extent.getMinX()) / this.resolution);
+            int yCellIdx = (int) ((node.getY() - this.extent.getMinY()) / this.resolution);
 
             List<Locatable> cell = this.grid[xCellIdx][yCellIdx];
             if (cell == null) {
@@ -105,7 +103,7 @@ public class SpatialIndexes {
         }
 
         public SpatialIndex<N> build() throws BuilderException {
-            GridIndex<N> index = new GridIndex<N>(this.env, this.resolution);
+            GridIndex<N> index = new GridIndex<N>(this.extent, this.resolution);
             index.setGrid(toCompressedArray(this.grid));
             return index;
         }
@@ -125,6 +123,4 @@ public class SpatialIndexes {
         }
 
     }
-
-
 }
