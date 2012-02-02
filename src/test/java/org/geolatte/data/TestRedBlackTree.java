@@ -107,31 +107,31 @@ public class TestRedBlackTree {
     @Test
     public void testGet() {
         simpleTree.printTree(System.out);
-        Integer key = Integer.valueOf(15);
+        Integer key = 15;
         Data d = simpleTree.get(key);
         Data exp = simpleNodeMap.get(key);
         assertEquals(exp, d);
         assertTrue(d == exp);
 
-        key = Integer.valueOf(3);
+        key = 3;
         d = simpleTree.get(key);
         exp = simpleNodeMap.get(key);
         assertEquals(exp, d);
         assertTrue(d == exp);
 
-        key = Integer.valueOf(23);
+        key = 23;
         d = simpleTree.get(key);
         exp = simpleNodeMap.get(key);
         assertEquals(exp, d);
         assertTrue(d == exp);
 
-        key = Integer.valueOf(10);
+        key = 10;
         d = simpleTree.get(key);
         exp = simpleNodeMap.get(key);
         assertEquals(exp, d);
         assertTrue(d == exp);
 
-        key = Integer.valueOf(14);
+        key = 14;
         d = simpleTree.get(key);
         exp = simpleNodeMap.get(key);
         assertEquals(exp, d);

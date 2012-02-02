@@ -61,7 +61,7 @@ public interface InternalNode<N, E> extends Locatable {
     void addReachableFrom(InternalNode<N, E> fromNode);
 
     /**
-     * Gets the edge weight to get from this node to the given <code>toNode</code>, using the given weight index (see
+     * Gets the edge weight to get from this node to the given {@code toNode}, using the given weight index (see
      * also {@link EdgeWeight}).
      *
      * @param toNode      The node to which to get the edge weight.
@@ -71,7 +71,7 @@ public interface InternalNode<N, E> extends Locatable {
     float getWeightTo(InternalNode<N, E> toNode, int weightIndex);
 
     /**
-     * Gets the label associated with the edge to go from this node to the given <code>toNode</code>.
+     * Gets the label associated with the edge to go from this node to the given {@code toNode}.
      *
      * @param toNode The connected 'to' node.
      * @return The edge label.

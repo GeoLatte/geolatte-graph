@@ -221,9 +221,8 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
 
         for (Object o : cell) {
             T nd = (T) o;
-            Locatable c = nd;
-            if (c.getX() == loc.getX()
-                    && c.getY() == loc.getY()) {
+            if (nd.getX() == loc.getX()
+                    && nd.getY() == loc.getY()) {
                 res.add(nd);
             }
         }

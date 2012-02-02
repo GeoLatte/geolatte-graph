@@ -155,7 +155,7 @@ public class PairingHeap<E> {
     }
 
     /**
-     * Decreases the value of the given <code>node</code> to the new value. This will remove the tree rooted at the
+     * Decreases the value of the given {@code node} to the new value. This will remove the tree rooted at the
      * given node and then re-insert that tree in the heap.
      *
      * @param node     The node to decrease to the newValue.
@@ -195,15 +195,14 @@ public class PairingHeap<E> {
 
     /**
      * Compares the given elements using the comparator set at construction time. If no comparator is given, the
-     * getFirst
-     * element is cast to {@link Comparable<E>}.
+     * {@code element} is cast to {@link Comparable<E>}.
      *
      * @param element  The getFirst element to be compared.
      * @param newValue The second element to be compared.
      * @return negative integer, zero, or a positive integer as the getFirst argument is less than, equal to, or
      *         greater
      *         than the second.
-     * @throws ClassCastException When <code>element</code> does not implement {@link Comparable<E>} and no
+     * @throws ClassCastException When {@code element} does not implement {@link Comparable<E>} and no
      *                            {@link Comparator} was given at construction time.
      */
     private int compare(E element, E newValue) {
@@ -221,14 +220,15 @@ public class PairingHeap<E> {
      * @param first  The root of tree 1 (cannot be null and cannot have a sibling).
      * @param second The root of tree 2 (can be null).
      * @return Whichever of the two given nodes becomes the new root.
-     * @throws IllegalArgumentException When <code>getFirst</code> is null or has a sibling.
+     * @throws IllegalArgumentException When {@code first} is null or has a sibling.
      */
     private PairNode<E> compareAndLink(PairNode<E> first, PairNode<E> second) {
 
         if (root == null || root.getNextSibling() != null)
             throw new IllegalArgumentException("First argument must not be null and must not have a sibling");
 
-        if (second == null) return first;
+        if (second == null)
+            return first;
 
         if (second.compareTo(first) < 0) {
             //attach getFirst as leftmost child of second

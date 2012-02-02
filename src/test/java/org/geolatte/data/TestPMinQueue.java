@@ -21,13 +21,6 @@
 
 package org.geolatte.data;
 
-/**
- * Created by IntelliJ IDEA.
- * User: maesenka
- * Date: Apr 22, 2010
- * Time: 5:18:57 PM
- * To change this template use File | Settings | File Templates.
- */
 //public class TestPMinQueue {
 //
 //    PMinQueue<Float> minQueue;

@@ -42,9 +42,8 @@ import org.geolatte.graph.PredGraph;
 interface Relaxer<N, E> {
 
     /**
-     * Relaxes the edge from internalNode <code>u</code> to internalNode <code>v</internalNode>. Both are given by
-     * their
-     * predecessor graphs.
+     * Relaxes the edge from internalNode {@code u} to internalNode {@code v}. Both are given by their predecessor
+     * graphs.
      *
      * @param u           Predecessor graph representing current shortest path to internalNode u.
      * @param v           Predecessor graph representing current shortest path to internalNode v.
