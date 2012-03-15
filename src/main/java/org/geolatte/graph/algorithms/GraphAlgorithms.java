@@ -21,9 +21,13 @@
 
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.graph.*;
-
-import java.util.Map;
+import org.geolatte.graph.Graph;
+import org.geolatte.graph.GraphTree;
+import org.geolatte.graph.Locatable;
+import org.geolatte.graph.LocateableGraph;
+import org.geolatte.graph.Path;
+import org.geolatte.graph.RoutingContextualReachability;
+import org.geolatte.graph.Traversal;
 
 /**
  * Offers a number of static factory methods to instantiate pre-configured graph algorithms.
@@ -44,7 +48,7 @@ public class GraphAlgorithms {
      * @param <E>         The edge label type.
      * @return A ready-to-use BFS algorithm.
      */
-    public static <N, E> GraphAlgorithm<Map<N, Float>> createBFS(Graph<N, E> graph,
+    public static <N, E> GraphAlgorithm<GraphTree<N,E>> createBFS(Graph<N, E> graph,
                                                                  N source,
                                                                  float maxDistance,
                                                                  int weightIndex) {
