@@ -1,6 +1,5 @@
 package org.geolatte.graph;
 
-import org.geolatte.geom.Envelope;
 import org.geolatte.stubs.MyLocatable;
 import org.geolatte.stubs.MyLocatableNode;
 import org.junit.Assert;
@@ -52,7 +51,7 @@ public class GridIndexTest {
     @Before
     public void setup() throws Exception {
 
-        SpatialIndexBuilder<Locatable> builder = SpatialIndexes.createGridIndexBuilder(new Envelope(0, 0, 200, 200), 50);
+        SpatialIndexBuilder<Locatable> builder = SpatialIndexes.createGridIndexBuilder(new Extent(0, 0, 200, 200), 50);
         builder.insert(n1);
         builder.insert(n2);
         builder.insert(n3);

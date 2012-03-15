@@ -21,9 +21,6 @@
 
 package org.geolatte.graph;
 
-
-import org.geolatte.geom.Envelope;
-
 import java.util.*;
 
 /**
@@ -34,15 +31,15 @@ public class Graphs {
     /**
      * Creates a builder for directed grid-indexed graphs.
      *
-     * @param env        The envelope.
+     * @param extent     The extent that determines the bounds of the graph.
      * @param resolution The grid resolution.
      * @param <N>        Type of the domain nodes.
      * @param <E>        The edge label type.
      * @return A builder for grid indexed graphs.
      */
-    public static <N extends Locatable, E> GraphBuilder<N, E> createGridIndexedGraphBuilder(Envelope env, int resolution) {
+    public static <N extends Locatable, E> GraphBuilder<N, E> createGridIndexedGraphBuilder(Extent extent, int resolution) {
 
-        return new GridIndexedGraphBuilder<N, E>(env, resolution);
+        return new GridIndexedGraphBuilder<N, E>(extent, resolution);
     }
 
     // Builder implementation
@@ -51,9 +48,9 @@ public class Graphs {
         private final SpatialIndexBuilder<InternalNode<N, E>> indexBuilder;
         private final Map<N, InternalNode<N, E>> map = new HashMap<N, InternalNode<N, E>>(); // map is used to quickly locate Nodes based on node equality.
 
-        private GridIndexedGraphBuilder(Envelope env, int resolution) {
+        private GridIndexedGraphBuilder(Extent extent, int resolution) {
 
-            this.indexBuilder = SpatialIndexes.createGridIndexBuilder(env, resolution);
+            this.indexBuilder = SpatialIndexes.createGridIndexBuilder(extent, resolution);
         }
 
 

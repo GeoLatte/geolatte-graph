@@ -1,11 +1,6 @@
 package org.geolatte.graph.algorithms;
 
-import org.geolatte.geom.Envelope;
-import org.geolatte.graph.BasicEdgeWeight;
-import org.geolatte.graph.Graph;
-import org.geolatte.graph.GraphBuilder;
-import org.geolatte.graph.GraphTree;
-import org.geolatte.graph.Graphs;
+import org.geolatte.graph.*;
 import org.geolatte.stubs.MyLocatableNode;
 import org.junit.Assert;
 import org.junit.Before;
@@ -64,9 +59,9 @@ public class BFSDistanceLimitedTest {
     @Before
     public void setup() throws Exception {
 
-        Envelope env = new Envelope(0d, 0d, 200d, 200d);
+        Extent extent = new Extent(0d, 0d, 200d, 200d);
 
-        GraphBuilder<MyLocatableNode, Object> builder = Graphs.createGridIndexedGraphBuilder(env, 10);
+        GraphBuilder<MyLocatableNode, Object> builder = Graphs.createGridIndexedGraphBuilder(extent, 10);
 
         builder.addEdge(_0, _1, new BasicEdgeWeight(1));
         builder.addEdge(_1, _2, new BasicEdgeWeight(1));

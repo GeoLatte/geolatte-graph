@@ -21,13 +21,11 @@
 
 package org.geolatte.graph;
 
-import org.geolatte.geom.Envelope;
-
 import java.util.*;
 
 /**
  * <p>
- * A spatial index based on a grid over the considered surface.
+ * A spatial index based on a grid over the considered area (extent), edges included.
  * </p>
  *
  * @author Karel Maessen
@@ -36,7 +34,7 @@ import java.util.*;
  */
 class GridIndex<T extends Locatable> implements SpatialIndex<T> {
 
-    private final Envelope env;
+    private final Extent extent;
     private final float resolution;
     /*
      * The actual grid, elements are always of type T
@@ -53,8 +51,8 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
      */
     private Object[][][] grid;
 
-    GridIndex(Envelope env, float resolution) {
-        this.env = env;
+    GridIndex(Extent extent, float resolution) {
+        this.extent = extent;
         this.resolution = resolution;
     }
 
@@ -66,8 +64,8 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         if (obj == null) {
             throw null;
         }
-        int ix = (int) ((obj.getX() - this.env.getMinX()) / this.resolution);
-        int iy = (int) ((obj.getY() - this.env.getMinY()) / this.resolution);
+        int ix = (int) ((obj.getX() - this.extent.getMinX()) / this.resolution);
+        int iy = (int) ((obj.getY() - this.extent.getMinY()) / this.resolution);
         return grid[ix][iy];
     }
 
@@ -97,16 +95,16 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         }
 
         // Real min and max values
-        double maxX = Math.min(locatable.getX() + maxDistance, this.env.getMaxX());
-        double minX = Math.max(locatable.getX() - maxDistance, this.env.getMinX());
-        double maxY = Math.min(locatable.getY() + maxDistance, this.env.getMaxY());
-        double minY = Math.max(locatable.getY() - maxDistance, this.env.getMinY());
+        double maxX = Math.min(locatable.getX() + maxDistance, this.extent.getMaxX());
+        double minX = Math.max(locatable.getX() - maxDistance, this.extent.getMinX());
+        double maxY = Math.min(locatable.getY() + maxDistance, this.extent.getMaxY());
+        double minY = Math.max(locatable.getY() - maxDistance, this.extent.getMinY());
 
         // Convert values to grid indexes
-        int minIdxX = (int) ((minX - this.env.getMinX()) / this.resolution);
-        int maxIdxX = (int) ((maxX - this.env.getMinX()) / this.resolution);
-        int minIdxY = (int) ((minY - this.env.getMinY()) / this.resolution);
-        int maxIdxY = (int) ((maxY - this.env.getMinY()) / this.resolution);
+        int minIdxX = (int) ((minX - this.extent.getMinX()) / this.resolution);
+        int maxIdxX = (int) ((maxX - this.extent.getMinX()) / this.resolution);
+        int minIdxY = (int) ((minY - this.extent.getMinY()) / this.resolution);
+        int maxIdxY = (int) ((maxY - this.extent.getMinY()) / this.resolution);
 
         //define a utility class of labels
         class Label implements Comparable<Label> {
@@ -150,7 +148,7 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
         return result;
     }
 
-    public List<T> query(Envelope envelope) {
+    public List<T> query(Extent extent) {
         throw new UnsupportedOperationException("Not implemented yet.");
     }
 
@@ -223,9 +221,8 @@ class GridIndex<T extends Locatable> implements SpatialIndex<T> {
 
         for (Object o : cell) {
             T nd = (T) o;
-            Locatable c = nd;
-            if (c.getX() == loc.getX()
-                    && c.getY() == loc.getY()) {
+            if (nd.getX() == loc.getX()
+                    && nd.getY() == loc.getY()) {
                 res.add(nd);
             }
         }
