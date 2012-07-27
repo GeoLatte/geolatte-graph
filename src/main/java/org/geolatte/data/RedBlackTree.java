@@ -177,6 +177,22 @@ public class RedBlackTree<K, D> {
         return this.root;
     }
 
+    /**
+     * A factory method for creating new nodes.
+     *
+     * <p>This is provided to allow subclasses the posibility to create new <code>TreeNode</code>s, without making
+     * the <code>TreeNode</code> constructor public. </p>
+     *
+     * @param key
+     * @param data
+     * @param parent
+     * @param sentinel
+     * @return
+     */
+    protected TreeNode<K, D> newTreeNode(K key, D data, TreeNode<K, D> parent, TreeNode<K, D> sentinel){
+        return new TreeNode<K,D>(key, data, parent, sentinel);
+    }
+
     protected boolean isNil(TreeNode<K, D> node) {
         return (node == this.NIL);
     }
