@@ -1,3 +1,6 @@
+[![Build Status](http://teamcity.geolatte.org/app/rest/builds/buildType:(id:bt5)/statusIcon)](http://teamcity.geolatte.org/viewType.html?buildTypeId=bt5&guest=1)
+    
+
 geolatte-graph
 ==============
 
