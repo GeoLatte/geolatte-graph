@@ -137,6 +137,14 @@ public class Graphs {
                 }
                 return new OutEdgeIteratorImpl<N, E>((InternalNodeWrapper<N, E>) internalNode, contextualReachability);
             }
+
+            public Iterator<InternalNode<N, E>> getInComingEdges(InternalNode<N, E> internalNode, ContextualReachability<N, E, ?> contextualReachability) {
+
+                if (contextualReachability == null) {
+                    contextualReachability = new EmptyContextualReachability<N, E, Object>();
+                }
+                return new InEdgeIteratorImpl<N, E>((InternalNodeWrapper<N, E>) internalNode, contextualReachability);
+            }
         }
 
         /**
@@ -158,6 +166,43 @@ public class Graphs {
                     }
                 }
                 reachableNodesIterator = reachableNodes.iterator();
+            }
+
+            public boolean hasNext() {
+                return reachableNodesIterator.hasNext();
+            }
+
+            public InternalNode<N, E> next() {
+
+                return reachableNodesIterator.next();
+            }
+
+            public void remove() {
+
+                throw new UnsupportedOperationException();
+            }
+
+        }
+
+        /**
+         * Simple private implementation of InEdgeIterator.
+         *
+         * @param <N>
+         */
+        private static class InEdgeIteratorImpl<N extends Locatable, E> implements Iterator<InternalNode<N, E>> {
+
+            final Iterator<InternalNode<N, E>> reachableNodesIterator;
+
+            private InEdgeIteratorImpl(InternalNodeWrapper<N, E> to, ContextualReachability<N, E, ?> contextualReachability) {
+
+
+                List<InternalNode<N, E>> reachableFromNodes = new ArrayList<InternalNode<N, E>>();
+                for (InternalNode<N, E> node : to.getReachableFrom()) {
+                    if (contextualReachability.isReachable(node)) {
+                        reachableFromNodes.add(node);
+                    }
+                }
+                reachableNodesIterator = reachableFromNodes.iterator();
             }
 
             public boolean hasNext() {
